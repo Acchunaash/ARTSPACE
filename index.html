@@ -973,7 +973,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   pier.position.set(x,.1,z);pier.rotation.y=angle;pier.castShadow=true;room.add(pier);
   const reveal=new THREE.Mesh(new THREE.BoxGeometry(.035,5.65,.22),champagneMetal);
   reveal.position.set(x-Math.sin(angle)*.12,.1,z-Math.cos(angle)*.12);reveal.rotation.y=angle;room.add(reveal);
- }
+ });
  /* A deep, layered inner portal makes the transition from the glazed entrance feel architectural. */
  for(const side of [-1,1]){
   const jamb=new THREE.Mesh(new THREE.BoxGeometry(.22,4.65,.42),warmLimestone);
