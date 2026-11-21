@@ -184,10 +184,10 @@ if (!html.includes("new THREE.HemisphereLight(0xffffff,0x77776d,.48)") ||
   fail("Gallery lighting hierarchy, recessed cove, soft shadow tuning and floor bounce are missing.");
 }
 /* Rebuilt gallery architecture: layered curved cornice, ceiling raft, tactile finishes, portal and wall-wash lighting. */
-if (!html.includes("function makeMineralTexture(base,contrast,seed)") ||
+if (!html.includes("const makeMineralTexture=(base,contrast,seed)=>") ||
     !html.includes("wallMaterial.map=plasterTexture") ||
     !html.includes("floorMaterial.map=stoneFloorTexture") ||
-    !html.includes("function makeArcDetail(radius,y,material,tube=.025)") ||
+    !html.includes("const makeArcDetail=(radius,y,material,tube=.025)=>") ||
     !html.includes("makeArcDetail(wallRadius-.18,3.34,warmLimestone,.105)") ||
     !html.includes("new THREE.RingGeometry(7.15,7.72,128,1,wallStart,wallSweep)") ||
     !html.includes("for(let x=-6;x<=6;x+=2)") ||
