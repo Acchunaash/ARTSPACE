@@ -221,12 +221,12 @@ if (!modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") 
   fail("Pavilion requires continuous smooth curved panel geometry, not only individually angled box segments.");
 }
 /* Gallery atmosphere requires controlled soft shadows, warm cove lighting and directional wall washes. */
-if (!html.includes("new THREE.HemisphereLight(0xffffff,0x77776d,.34)") ||
+if (!html.includes("new THREE.HemisphereLight(0xffffff,0x77776d,.19)") ||
     !html.includes("keyLight.shadow.mapSize.set(window.innerWidth<700?512:1536") ||
     !html.includes("keyLight.shadow.normalBias=.025") ||
     !html.includes("new THREE.TubeGeometry(new THREE.CatmullRomCurve3(arcPoints(3.43,wallRadius-.2))") ||
-    !html.includes("new THREE.SpotLight(0xffe6c9,1.15,13,.52,.86,1.8)") ||
-    !html.includes("new THREE.PointLight(0xffdfbd,.18,8,2)") ||
+    !html.includes("new THREE.SpotLight(0xffe6c9,.48,13,.52,.86,1.8)") ||
+    !html.includes("new THREE.PointLight(0xffdfbd,.08,8,2)") ||
     !html.includes("roughness:.76,metalness:.015")) {
   fail("Gallery lighting hierarchy, recessed cove, soft shadow tuning and floor bounce are missing.");
 }
@@ -431,12 +431,12 @@ console.log("ARTSPACE boutique checks passed: six fashion styles, dressed 3D man
 
 /* Natural boutique exposure: subdued ambient/fill, controlled key and dress spots, ACES filmic roll-off. */
 if (!html.includes("renderer.toneMapping=THREE.ACESFilmicToneMapping") ||
-    !html.includes("renderer.toneMappingExposure=.92") ||
+    !html.includes("renderer.toneMappingExposure=.68") ||
     !html.includes("new THREE.HemisphereLight(0xffffff,0x77776d,.34)") ||
-    !html.includes("new THREE.DirectionalLight(0xffffff,.82)") ||
-    !html.includes("new THREE.DirectionalLight(0xe5e9ff,.16)") ||
-    !html.includes("new THREE.PointLight(0xffd1a0,.72,10,2)") ||
-    !html.includes("new THREE.SpotLight(0xffebd4,1.15,9")) {
+    !html.includes("new THREE.DirectionalLight(0xffffff,.46)") ||
+    !html.includes("new THREE.DirectionalLight(0xe5e9ff,.07)") ||
+    !html.includes("new THREE.PointLight(0xffd1a0,.28,10,2)") ||
+    !html.includes("new THREE.SpotLight(0xffebd4,.42,9")) {
  fail("The boutique must use restrained filmic exposure and balanced, non-blown-out model/dress lighting.");
 }
 /* Imported human figures must use relaxed MakeHuman arm poses and must not retain the fallback hair mesh. */
