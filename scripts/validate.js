@@ -169,7 +169,7 @@ if (!html.includes("glassFrameMat=new THREE.MeshStandardMaterial") ||
     !html.includes("for(let x=-8;x<=8;x+=4)") ||
     !html.includes("new THREE.IcosahedronGeometry(.43,1)") ||
     !html.includes("const exteriorFill=new THREE.DirectionalLight(0xfff4e4,.48)") ||
-    !html.includes("keyLight.shadow.mapSize.set(window.innerWidth<700?1024:1536,window.innerWidth<700?1024:1536)")) {
+    !html.includes("keyLight.shadow.mapSize.set(window.innerWidth<700?512:1536,window.innerWidth<700?512:1536)")) {
   fail("Museum exterior must retain its facade fins, side glazing, canopy lights, planting and tuned daylight/shadows.");
 }
 
@@ -222,7 +222,7 @@ if (!modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") 
 }
 /* Gallery atmosphere requires controlled soft shadows, warm cove lighting and directional wall washes. */
 if (!html.includes("new THREE.HemisphereLight(0xffffff,0x77776d,.48)") ||
-    !html.includes("keyLight.shadow.mapSize.set(window.innerWidth<700?1024:1536") ||
+    !html.includes("keyLight.shadow.mapSize.set(window.innerWidth<700?512:1536") ||
     !html.includes("keyLight.shadow.normalBias=.025") ||
     !html.includes("new THREE.TubeGeometry(new THREE.CatmullRomCurve3(arcPoints(3.43,wallRadius-.2))") ||
     !html.includes("new THREE.SpotLight(0xffe6c9,2.05,13,.52,.86,1.8)") ||
@@ -261,7 +261,7 @@ if (!html.includes("const makeMineralTexture=(base,contrast,seed)=>") ||
 }
 
 /* Fashion boutique interior: mannequins, garment silhouettes, fitting suites and rails replace gallery frames. */
-if (!html.includes("new THREE.LatheGeometry(points,48)") ||
+if (!html.includes("new THREE.LatheGeometry(points,64)") ||
     !html.includes("const dressPalette=[0xd8c7b1,0x654358,0x8c9b7d,0xb85f49,0x26344a,0x687c60]") ||
     !html.includes("const fittingFabric=new THREE.MeshStandardMaterial") ||
     !html.includes("addBoutiqueBox(room,2.35,3.5,.16,boutiqueWood") ||
