@@ -252,6 +252,7 @@ const products = [
 let current=0, selectedSize="A3", selectedFinish="Unframed", startX=0, dragging=false;
 let cart=[];try{cart=JSON.parse(localStorage.getItem("artspace-cart")||"[]");if(!Array.isArray(cart))cart=[];}catch(e){cart=[];}
 const sizeAdditions={A3:0,A2:1200,A1:2600},finishAdditions={"Unframed":0,"Black frame":1800,"Oak frame":2200};
+cart=cart.filter(item=>item&&Number.isInteger(item.productIndex)&&products[item.productIndex]&&Object.prototype.hasOwnProperty.call(sizeAdditions,item.size)&&Object.prototype.hasOwnProperty.call(finishAdditions,item.finish)&&Number.isInteger(item.quantity)&&item.quantity>0);
 const cartPrice=item=>products[item.productIndex].price+sizeAdditions[item.size]+finishAdditions[item.finish];
 const cartQuantity=()=>cart.reduce((sum,item)=>sum+item.quantity,0);
 const cards=[...document.querySelectorAll(".art-card")];
