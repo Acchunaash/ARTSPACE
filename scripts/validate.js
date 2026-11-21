@@ -139,7 +139,10 @@ if (!modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") 
     !modelBuilder.includes("const cube=cubeGeometry(),cyl=cylinderGeometry(),curve42=curvedPanelGeometry(64,.42/.16),curve58=curvedPanelGeometry(64,.58/2.45)") ||
     !modelBuilder.includes("mesh:shape*materials.length+m") ||
     !modelBuilder.includes("for(let shape=0;shape<5;shape++)") ||
-    !modelBuilder.includes("item.bow===.42?2:3") ||\n    !modelBuilder.includes("function flutedPanelGeometry(segments=48)") ||\n    !modelBuilder.includes("flutedPanel(0,.19,4.6,.28") ||\n    !modelBuilder.includes("Embedded, deterministic, tileable procedural material maps") ||
+    !modelBuilder.includes("item.bow===.42?2:3") ||
+    !modelBuilder.includes("function flutedPanelGeometry(segments=48)") ||
+    !modelBuilder.includes("flutedPanel(0,.19,4.6,.28") ||
+    !modelBuilder.includes("Embedded, deterministic, tileable procedural material maps") ||
     !modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") ||
     !modelBuilder.includes("Continuous, smoothly bowed architectural skins")) {
   fail("Pavilion requires continuous smooth curved panel geometry, not only individually angled box segments.");
