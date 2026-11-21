@@ -51,6 +51,16 @@ if (!html.includes('id="cartCheckout"') || !html.includes("Online payment is not
   fail("Checkout boundary messaging is missing.");
 }
 
+/* Reference recreation: first viewport must be the gallery and the WebGL room must have a concave exhibition wall. */
+if (!html.includes(".gallery-shell{position:relative;width:100%;height:100svh") ||
+    !html.includes(".intro{display:none!important}")) {
+  fail("The opening gallery must occupy the full viewport without the old hero section.");
+}
+if (!html.includes("new THREE.CylinderGeometry(wallRadius,wallRadius,7.1,96,1,true,wallStart,wallSweep)") ||
+    !html.includes("new THREE.TubeGeometry(new THREE.CatmullRomCurve3(arcPoints(y,r))")) {
+  fail("The 3D exhibition wall and its curved architectural trim are missing.");
+}
+
 
 // Guard the Three.js loader against a race with the application initializer.
 if (!html.includes("window.__artspaceThreeReady=new Promise") ||
