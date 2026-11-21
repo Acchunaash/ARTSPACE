@@ -76,6 +76,20 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
 .art-card.active .art-frame{box-shadow:0 34px 58px #1b211b28,0 8px 18px #1b211b12,inset 0 0 0 1px #0000000a}
 .gallery-arrow{backdrop-filter:blur(12px);box-shadow:0 4px 16px #2528200c}
 
+/* STEP 8 — full-screen artwork detail viewer */
+.art-viewer{position:fixed;inset:0;z-index:40;display:grid;grid-template-columns:64px minmax(0,1fr) 64px;align-items:center;gap:14px;padding:54px clamp(12px,5vw,70px) 30px;background:#111e;backdrop-filter:blur(18px);opacity:0;visibility:hidden;transition:opacity .28s,visibility .28s}
+.art-viewer.open{opacity:1;visibility:visible}
+.viewer-content{min-width:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+.viewer-content img{display:block;max-height:calc(100dvh - 150px);max-width:min(100%,560px);width:auto;aspect-ratio:3/4;object-fit:contain;background:#fff;padding:10px;box-shadow:0 28px 90px #0008}
+.viewer-caption{display:flex;flex-direction:column;align-items:center;gap:6px;color:#fff;text-align:center}
+.viewer-caption span:first-child{font:12px 'DM Mono',monospace;letter-spacing:1.5px}
+.viewer-caption span:last-child{font:9px 'DM Mono',monospace;color:#c9cbc4;letter-spacing:1px}
+.viewer-close,.viewer-arrow{border:1px solid #ffffff66;background:#ffffff16;color:white;border-radius:50%;width:44px;height:44px;font-size:22px;backdrop-filter:blur(12px)}
+.viewer-close{position:absolute;right:24px;top:20px}
+.viewer-arrow{justify-self:center}
+.selected-image-bg{cursor:zoom-in}
+@media(max-width:600px){.art-viewer{grid-template-columns:38px minmax(0,1fr) 38px;gap:4px;padding:60px 8px 24px}.viewer-arrow{width:34px;height:34px}.viewer-close{right:14px;top:14px}.viewer-content img{max-height:calc(100dvh - 150px);max-width:100%;padding:6px}}
+@media(prefers-reduced-motion:reduce){.art-viewer{transition:none}}
 /* STEP 6 — selected artwork reveal motion */
 @keyframes art-card-arrive{0%{filter:blur(2px);transform:translate3d(0,10px,0) scale(.96)}100%{filter:blur(0);}}
 @keyframes art-image-reveal{0%{opacity:.35;transform:scale(.975) translateY(8px)}100%{opacity:1;transform:scale(1) translateY(0)}}
@@ -195,6 +209,12 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
   </main>
 
   <footer id="contact"><a class="wordmark" href="#">ARTSPACE<span>®</span></a><span>ART FOR EVERYDAY SPACES · 2026</span><a href="mailto:hello@artspace.example">SAY HELLO ↗</a></footer>
+  <div class="art-viewer" id="artViewer" aria-hidden="true">
+    <button class="viewer-close" id="viewerClose" aria-label="Close artwork viewer">×</button>
+    <button class="viewer-arrow viewer-prev" id="viewerPrev" aria-label="Previous artwork">←</button>
+    <div class="viewer-content"><img id="viewerImage" alt=""><div class="viewer-caption"><span id="viewerTitle"></span><span id="viewerSubtitle"></span></div></div>
+    <button class="viewer-arrow viewer-next" id="viewerNext" aria-label="Next artwork">→</button>
+  </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="cart-backdrop" id="cartBackdrop"></div>
   <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping bag" aria-hidden="true">
@@ -249,6 +269,16 @@ function render(){
  document.getElementById("productSubtitle").textContent=p.subtitle;
  updatePrice();
 }
+const artViewer=document.getElementById("artViewer");
+function syncArtworkViewer(){document.getElementById("viewerImage").src=products[current].image;document.getElementById("viewerImage").alt=products[current].title;document.getElementById("viewerTitle").textContent=products[current].title;document.getElementById("viewerSubtitle").textContent=products[current].subtitle;}
+function openArtworkViewer(){syncArtworkViewer();artViewer.classList.add("open");artViewer.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";document.getElementById("viewerClose").focus();}
+function closeArtworkViewer(){artViewer.classList.remove("open");artViewer.setAttribute("aria-hidden","true");if(!drawer.classList.contains("open"))document.body.style.overflow="";}
+document.getElementById("selectedImage").addEventListener("click",openArtworkViewer);
+document.getElementById("viewerClose").addEventListener("click",closeArtworkViewer);
+document.getElementById("viewerPrev").addEventListener("click",()=>{move(-1);syncArtworkViewer()});
+document.getElementById("viewerNext").addEventListener("click",()=>{move(1);syncArtworkViewer()});
+artViewer.addEventListener("click",e=>{if(e.target===artViewer)closeArtworkViewer()});
+document.addEventListener("keydown",e=>{if(!artViewer.classList.contains("open"))return;if(e.key==="Escape")closeArtworkViewer();if(e.key==="ArrowRight"){move(1);syncArtworkViewer()}if(e.key==="ArrowLeft"){move(-1);syncArtworkViewer()}});
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
 function move(n){current=(current+n+products.length)%products.length;stage.classList.add("camera-shift");render();clearTimeout(move.cameraTimer);move.cameraTimer=setTimeout(()=>stage.classList.remove("camera-shift"),460)}
 function updatePrice(){
