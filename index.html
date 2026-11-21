@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#172333">
-  <meta name="description" content="Discover expressive art prints in an immersive 3D gallery. Explore the ARTSPACE collection and find art for everyday spaces.">
-  <meta name="keywords" content="art prints, wall art, contemporary prints, ARTSPACE, gallery">
+  <meta name="description" content="Discover a curated designer fashion collection in an immersive 3D boutique. Explore dresses, fit and colour at ARTSPACE.">
+  <meta name="keywords" content="designer dresses, fashion boutique, womenswear, ARTSPACE, clothing">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="ARTSPACE — Art for everyday spaces">
-  <meta property="og:description" content="Explore an immersive gallery of expressive art prints.">
+  <meta property="og:title" content="ARTSPACE — The modern dress boutique">
+  <meta property="og:description" content="Explore a sculptural 3D boutique and a considered collection of dresses.">
   <meta property="og:url" content="https://acchunaash.github.io/ARTSPACE/">
   <meta name="twitter:card" content="summary">
   <link rel="canonical" href="https://acchunaash.github.io/ARTSPACE/">
@@ -447,13 +447,24 @@ footer>a:last-child{color:#555850}
 .cart-checkout{background:#171816;color:#fff}
 .cart-checkout:disabled{background:#d8d9d2;color:#777a73}
 @media(max-width:700px){.collection-section{padding-top:12px}.cart-drawer{padding:22px 18px}}
+/* Boutique palette and product swatches */
+.gallery-shell{background:radial-gradient(ellipse at 50% 30%,#fff 0%,#f2eee8 45%,#e6e0d7 100%)}
+.art-frame{background:#f8f4ed;padding:0;box-shadow:0 22px 40px #211b171c}
+.art-frame img{aspect-ratio:3/4;object-fit:cover}
+.selected-image-bg{background:#f7f2eb;padding:0;box-shadow:0 28px 56px #17181620}
+.selected-image-bg img{aspect-ratio:3/4;object-fit:cover}
+#finishOptions .option{min-width:70px}
+#finishOptions .option[data-finish="Ivory"]{border-bottom:4px solid #e6d9c4}
+#finishOptions .option[data-finish="Black"]{border-bottom:4px solid #242424}
+#finishOptions .option[data-finish="Sage"]{border-bottom:4px solid #899b87}
+#sizeOptions .option{min-width:42px}
 </style>
 </head>
 <body>
   <header class="topbar">
     <a class="wordmark" href="#" aria-label="Artspace home">ARTSPACE<span>®</span></a>
     <nav class="desktop-nav" aria-label="Main navigation">
-      <a href="#gallery">COLLECTION</a><a href="#about">ABOUT</a><a href="#contact">CONTACT</a>
+      <a href="#gallery">COLLECTION</a><a href="#allArtworks">DRESSES</a><a href="#about">ABOUT</a><a href="#contact">CONTACT</a>
     </nav>
     <button class="bag-button" id="wishlistButton" aria-label="Saved artworks">SAVED <span id="savedCount">0</span></button>
     <button class="bag-button" id="bagButton" aria-label="Shopping bag">BAG <span id="bagCount">0</span></button>
@@ -462,90 +473,72 @@ footer>a:last-child{color:#555850}
   <main>
     <section class="intro" id="gallery-intro">
       <div>
-        <p class="eyebrow">INDEPENDENT PRINTS · EST. 2026</p>
-        <h1>Art that makes<br><em>you feel something.</em></h1>
+        <p class="eyebrow">THE ART OF GETTING DRESSED · EST. 2026</p>
+        <h1>Wear your<br><em>own kind of beautiful.</em></h1>
       </div>
-      <p class="intro-note">A considered collection of bold images,<br>made to live with you every day.</p>
+      <p class="intro-note">A considered edit of expressive dresses,<br>made to move with you every day.</p>
     </section>
 
-    <section class="gallery-shell" id="gallery" aria-label="Immersive three-dimensional art gallery">
-      <div class="gallery-topline"><span>THE PRINT COLLECTION</span><span id="counter">01 / 06</span></div>
+    <section class="gallery-shell" id="gallery" aria-label="Immersive three-dimensional fashion boutique">
+      <div class="gallery-topline"><span>THE DRESS COLLECTION</span><span id="counter">01 / 06</span></div>
       <div class="gallery-stage" id="galleryStage">
         <button class="gallery-arrow prev" id="prevBtn" aria-label="Previous artwork">←</button>
         <div class="gallery-track" id="galleryTrack">
-          <button class="art-card" data-index="0" aria-label="View The Beautiful Game">
-            <span class="art-frame"><img src="./assets/artworks/beautiful-game.svg" alt="The Beautiful Game art print"></span>
-            <span class="art-caption">01 — THE BEAUTIFUL GAME</span>
-          </button>
-          <button class="art-card" data-index="1" aria-label="View After the Rain">
-            <span class="art-frame"><img src="./assets/artworks/after-rain.svg" alt="After the Rain art print"></span>
-            <span class="art-caption">02 — AFTER THE RAIN</span>
-          </button>
-          <button class="art-card" data-index="2" aria-label="View Sunset Club">
-            <span class="art-frame"><img src="./assets/artworks/sunset-club.svg" alt="Sunset Club art print"></span>
-            <span class="art-caption">03 — SUNSET CLUB</span>
-          </button>
-          <button class="art-card" data-index="3" aria-label="View Blue Hour">
-            <span class="art-frame"><img src="./assets/artworks/blue-hour.svg" alt="Blue Hour art print"></span>
-            <span class="art-caption">04 — BLUE HOUR</span>
-          </button>
-          <button class="art-card" data-index="4" aria-label="View Form and Feel">
-            <span class="art-frame"><img src="./assets/artworks/form-and-feel.svg" alt="Form and Feel art print"></span>
-            <span class="art-caption">05 — FORM & FEEL</span>
-          </button>
-          <button class="art-card" data-index="5" aria-label="View Sunday in Color">
-            <span class="art-frame"><img src="./assets/artworks/sunday-in-color.svg" alt="Sunday in Color art print"></span>
-            <span class="art-caption">06 — SUNDAY IN COLOR</span>
-          </button>
+          <button class="art-card" data-index="0" aria-label="View The Solstice Dress"><span class="art-frame"><img src="./assets/fashion/solstice-dress.svg" alt="Model wearing The Solstice Dress"></span><span class="art-caption">01 — THE SOLSTICE DRESS</span></button>
+          <button class="art-card" data-index="1" aria-label="View The Atelier Slip"><span class="art-frame"><img src="./assets/fashion/atelier-slip.svg" alt="Model wearing The Atelier Slip"></span><span class="art-caption">02 — THE ATELIER SLIP</span></button>
+          <button class="art-card" data-index="2" aria-label="View The Sunday Shirt Dress"><span class="art-frame"><img src="./assets/fashion/sunday-shirt.svg" alt="Model wearing The Sunday Shirt Dress"></span><span class="art-caption">03 — THE SUNDAY SHIRT</span></button>
+          <button class="art-card" data-index="3" aria-label="View The Sculpted Midi"><span class="art-frame"><img src="./assets/fashion/sculpted-midi.svg" alt="Model wearing The Sculpted Midi"></span><span class="art-caption">04 — THE SCULPTED MIDI</span></button>
+          <button class="art-card" data-index="4" aria-label="View The Evening Column"><span class="art-frame"><img src="./assets/fashion/evening-column.svg" alt="Model wearing The Evening Column"></span><span class="art-caption">05 — THE EVENING COLUMN</span></button>
+          <button class="art-card" data-index="5" aria-label="View The Garden Wrap"><span class="art-frame"><img src="./assets/fashion/garden-wrap.svg" alt="Model wearing The Garden Wrap"></span><span class="art-caption">06 — THE GARDEN WRAP</span></button>
         </div>
         <button class="gallery-arrow next" id="nextBtn" aria-label="Next artwork">→</button>
       </div>
-      <div class="gallery-bottomline"><span>DRAG OR USE ARROWS TO EXPLORE</span><button id="exploreBtn">EXPLORE SELECTED ↗</button></div>
+      <div class="gallery-bottomline"><span>DRAG TO EXPLORE THE BOUTIQUE</span><button id="exploreBtn">VIEW SELECTED DRESS ↗</button></div>
     </section>
 
     <section class="selected-section" id="selectedProduct" aria-hidden="true" inert>
-      <div class="product-detail-topline"><span>ARTSPACE <i>/</i> ARTWORK DETAIL</span><button class="product-detail-close" id="productDetailClose" type="button" aria-label="Close product details">×</button></div>
+      <div class="product-detail-topline"><span>ARTSPACE <i>/</i> DRESS DETAIL</span><button class="product-detail-close" id="productDetailClose" type="button" aria-label="Close product details">×</button></div>
       <div class="selected-image-wrap">
-        <div class="selected-image-bg"><img id="selectedImage" src="./assets/artworks/beautiful-game.svg" alt="Selected artwork"></div>
+        <div class="selected-image-bg"><img id="selectedImage" src="./assets/fashion/solstice-dress.svg" alt="Model wearing The Solstice Dress"></div>
         <span class="image-index" id="imageIndex">01 / 06</span>
       </div>
       <div class="product-info">
-        <p class="eyebrow">FEATURED ARTWORK · LIMITED EDITION</p>
-        <h2 id="productTitle">THE BEAUTIFUL GAME</h2>
-        <p class="product-subtitle" id="productSubtitle">BURKINA FASO — 2026</p>
-        <p class="product-description">A celebration of movement, culture and the beautiful moments that bring us together. Printed with care on heavyweight, archival-quality paper.</p>
+        <p class="eyebrow">THE SIGNATURE EDIT · DESIGNED TO BE WORN</p>
+        <h2 id="productTitle">THE SOLSTICE DRESS</h2>
+        <p class="product-subtitle" id="productSubtitle">FLUID SATIN · WARM IVORY</p>
+        <p class="product-description" id="productDescription">A softly sculpted silhouette with a fluid drape, designed for effortless movement from day to evening.</p>
         <div class="price-row"><strong id="productPrice">₹5,800</strong><span>INCL. TAXES</span></div>
         <div class="option-group">
-          <div class="option-heading"><span>SIZE</span><span id="sizeValue">A3 · 29.7 × 42 CM</span></div>
+          <div class="option-heading"><span>SIZE</span><span id="sizeValue">S · UK 8</span></div>
           <div class="option-buttons" id="sizeOptions">
-            <button class="option active" data-size="A3">A3</button><button class="option" data-size="A2">A2</button><button class="option" data-size="A1">A1</button>
+            <button class="option" data-size="XS">XS</button><button class="option active" data-size="S">S</button><button class="option" data-size="M">M</button><button class="option" data-size="L">L</button><button class="option" data-size="XL">XL</button>
           </div>
         </div>
         <div class="option-group">
-          <div class="option-heading"><span>FINISH</span><span id="finishValue">UNFRAMED</span></div>
+          <div class="option-heading"><span>COLOUR</span><span id="finishValue">IVORY</span></div>
           <div class="option-buttons" id="finishOptions">
-            <button class="option active" data-finish="Unframed">UNFRAMED</button><button class="option" data-finish="Black frame">BLACK FRAME</button><button class="option" data-finish="Oak frame">OAK FRAME</button>
+            <button class="option active" data-finish="Ivory">IVORY</button><button class="option" data-finish="Black">BLACK</button><button class="option" data-finish="Sage">SAGE</button>
           </div>
         </div>
         <button class="add-button" id="addButton">ADD TO BAG <span>↗</span></button>
         <button class="save-button" id="saveButton" type="button" aria-pressed="false">♡ SAVE TO WISHLIST</button>
         <button class="share-button" id="shareButton" type="button">↗ SHARE ARTWORK</button>
-        <p class="shipping-note">Complimentary shipping on orders over ₹8,000.</p>
-        <details><summary>DELIVERY & RETURNS</summary><p>Made to order and carefully packed. Delivery estimates are shown at checkout. Returns accepted on damaged or incorrect items.</p></details>
-        <details><summary>PRINT DETAILS</summary><p>Premium matte paper, rich pigment inks and a smooth, gallery-quality finish.</p></details>
+        <p class="shipping-note">Complimentary delivery on orders over ₹8,000.</p>
+        <details><summary>FIT & FABRIC</summary><p>Designed for a relaxed, considered fit. Check the garment measurements before ordering; fabric and care details are listed for each style.</p></details>
+        <details><summary>DELIVERY & RETURNS</summary><p>Carefully packed and delivered across India. Returns are subject to the store policy.</p></details>
       </div>
     </section>
 
     <section class="collection-section" id="allArtworks">
-      <div class="collection-heading"><div><p class="eyebrow">THE COMPLETE EDIT</p><h2>Find your favourite.</h2></div><span>06 ORIGINAL PRINTS</span></div>
-      <div class="collection-tools"><div class="collection-filters" id="collectionFilters"><button class="filter-chip active" data-filter="ALL">ALL</button><button class="filter-chip" data-filter="SPORT">SPORT</button><button class="filter-chip" data-filter="NATURE">NATURE</button><button class="filter-chip" data-filter="LANDSCAPE">LANDSCAPE</button><button class="filter-chip" data-filter="ABSTRACT">ABSTRACT</button><button class="filter-chip" data-filter="COLOR">COLOR</button></div><input class="collection-search" id="collectionSearch" type="search" placeholder="Search artworks" aria-label="Search artworks"></div>
+      <div class="collection-heading"><div><p class="eyebrow">THE WARDROBE EDIT</p><h2>Find your silhouette.</h2></div><span>06 SIGNATURE DRESSES</span></div>
+      <div class="collection-tools"><div class="collection-filters" id="collectionFilters"><button class="filter-chip active" data-filter="ALL">ALL</button><button class="filter-chip" data-filter="DAY">DAY DRESSES</button><button class="filter-chip" data-filter="EVENING">EVENING</button><button class="filter-chip" data-filter="STATEMENT">STATEMENT</button></div><input class="collection-search" id="collectionSearch" type="search" placeholder="Search dresses" aria-label="Search dresses"></div>
       <div class="collection-grid" id="collectionGrid" aria-live="polite"></div>
     </section>
 
-    <section class="about-strip" id="about"><span>MADE TO BE SEEN.</span><span>MADE TO BE KEPT.</span><span>MADE TO INSPIRE.</span></section>
+    <section class="about-strip" id="about"><span>THOUGHTFUL SILHOUETTES.</span><span>FEEL-GOOD FABRICS.</span><span>MADE TO MOVE WITH YOU.</span></section>
   </main>
 
-  <footer id="contact"><a class="wordmark" href="#">ARTSPACE<span>®</span></a><span>ART FOR EVERYDAY SPACES · 2026</span><a href="mailto:hello@artspace.example">SAY HELLO ↗</a></footer>
+  <footer id="contact"><a class="wordmark" href="#">ARTSPACE<span>®</span></a><span>DESIGNED FOR EVERYDAY ELEGANCE · 2026</span><a href="mailto:hello@artspace.example">SAY HELLO ↗</a></footer>
   <div class="art-viewer" id="artViewer" aria-hidden="true">
     <button class="viewer-close" id="viewerClose" aria-label="Close artwork viewer">×</button>
     <button class="viewer-arrow viewer-prev" id="viewerPrev" aria-label="Previous artwork">←</button>
@@ -603,7 +596,7 @@ window.__artspaceGLTFReady=window.__artspaceThreeReady.then(loaded=>new Promise(
   "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/GLTFLoader.js"
  ];
  const load=index=>{
-  if(index>=sources.length){console.warn("ARTSPACE GLTFLoader unavailable; retaining fallback exterior.");resolve(false);return;}
+  if(index>=sources.length){console.warn("ARTSPACE GLTFLoader unavailable; retaining boutique exterior.");resolve(false);return;}
   const script=document.createElement("script");script.src=sources[index];script.async=true;
   script.onload=()=>{if(window.THREE&&window.THREE.GLTFLoader)resolve(true);else load(index+1);};
   script.onerror=()=>load(index+1);document.head.appendChild(script);
@@ -613,19 +606,19 @@ window.__artspaceGLTFReady=window.__artspaceThreeReady.then(loaded=>new Promise(
 </script>
 <script>
 const products = [
- {title:"THE BEAUTIFUL GAME",subtitle:"BURKINA FASO — 2026",price:5800,image:"./assets/artworks/beautiful-game.svg"},
- {title:"AFTER THE RAIN",subtitle:"A STUDY IN COLOR — 2026",price:4600,image:"./assets/artworks/after-rain.svg"},
- {title:"SUNSET CLUB",subtitle:"NO. 03 — SUMMER",price:4900,image:"./assets/artworks/sunset-club.svg"},
- {title:"BLUE HOUR",subtitle:"AN EVENING IN MOTION",price:5200,image:"./assets/artworks/blue-hour.svg"},
- {title:"FORM & FEEL",subtitle:"ABSTRACT COMPOSITION",price:4300,image:"./assets/artworks/form-and-feel.svg"},
- {title:"SUNDAY IN COLOR",subtitle:"LIMITED ART PRINT",price:4800,image:"./assets/artworks/sunday-in-color.svg"}
+ {title:"THE SOLSTICE DRESS",subtitle:"FLUID SATIN · WARM IVORY",price:6490,image:"./assets/fashion/solstice-dress.svg",description:"A softly sculpted A-line silhouette in fluid satin, with a clean neckline and an elegant swing hem."},
+ {title:"THE ATELIER SLIP",subtitle:"SILK BLEND · DEEP PLUM",price:5890,image:"./assets/fashion/atelier-slip.svg",description:"A refined bias-cut slip dress with delicate straps and a fluid, elongated drape."},
+ {title:"THE SUNDAY SHIRT",subtitle:"COTTON POPLIN · SOFT SAGE",price:5290,image:"./assets/fashion/sunday-shirt.svg",description:"An easy shirt dress with a defined waist, relaxed sleeves and a softly pleated skirt."},
+ {title:"THE SCULPTED MIDI",subtitle:"TEXTURED CREPE · TERRACOTTA",price:7290,image:"./assets/fashion/sculpted-midi.svg",description:"A structured midi dress with a shaped bodice and a confident architectural skirt."},
+ {title:"THE EVENING COLUMN",subtitle:"MATTE CREPE · MIDNIGHT",price:8490,image:"./assets/fashion/evening-column.svg",description:"A sleek column silhouette with an elegant neckline and a long, uninterrupted line."},
+ {title:"THE GARDEN WRAP",subtitle:"PRINTED COTTON · BOTANICAL",price:6190,image:"./assets/fashion/garden-wrap.svg",description:"A wrap dress with a softly gathered waist, gentle movement and a relaxed day-to-evening feel."}
 ];
-let current=0, selectedSize="A3", selectedFinish="Unframed", startX=0, dragging=false;
+let current=0, selectedSize="S", selectedFinish="Ivory", startX=0, dragging=false;
 const sharedArtwork=location.hash.match(/^#artwork-(\d+)$/);if(sharedArtwork){const sharedIndex=Number(sharedArtwork[1])-1;if(sharedIndex>=0&&sharedIndex<products.length)current=sharedIndex;}
 let wishlist=[];try{wishlist=JSON.parse(localStorage.getItem("artspace-wishlist")||"[]");if(!Array.isArray(wishlist))wishlist=[];}catch(e){wishlist=[];}
 wishlist=wishlist.filter(i=>Number.isInteger(i)&&i>=0&&i<products.length);
 let cart=[];try{cart=JSON.parse(localStorage.getItem("artspace-cart")||"[]");if(!Array.isArray(cart))cart=[];}catch(e){cart=[];}
-const sizeAdditions={A3:0,A2:1200,A1:2600},finishAdditions={"Unframed":0,"Black frame":1800,"Oak frame":2200};
+const sizeAdditions={XS:0,S:0,M:0,L:0,XL:0},finishAdditions={"Ivory":0,"Black":0,"Sage":0};
 cart=cart.filter(item=>item&&Number.isInteger(item.productIndex)&&products[item.productIndex]&&Object.prototype.hasOwnProperty.call(sizeAdditions,item.size)&&Object.prototype.hasOwnProperty.call(finishAdditions,item.finish)&&Number.isInteger(item.quantity)&&item.quantity>0&&item.quantity<=10);
 const cartPrice=item=>products[item.productIndex].price+sizeAdditions[item.size]+finishAdditions[item.finish];
 const cartQuantity=()=>cart.reduce((sum,item)=>sum+item.quantity,0);
@@ -660,9 +653,10 @@ function render(){
  document.getElementById("counter").textContent=`${String(current+1).padStart(2,"0")} / 06`;
  document.getElementById("imageIndex").textContent=`${String(current+1).padStart(2,"0")} / 06`;
  const featuredImage=document.getElementById("selectedImage");
- featuredImage.classList.remove("art-reveal");void featuredImage.offsetWidth;featuredImage.src=p.image;featuredImage.alt=p.title;featuredImage.classList.add("art-reveal");
+ featuredImage.classList.remove("art-reveal");void featuredImage.offsetWidth;featuredImage.src=p.image;featuredImage.alt="Model wearing "+p.title;featuredImage.classList.add("art-reveal");
  document.getElementById("productTitle").textContent=p.title;
  document.getElementById("productSubtitle").textContent=p.subtitle;
+ document.getElementById("productDescription").textContent=p.description;
  updatePrice();
  if(window.updateArtspace3D)window.updateArtspace3D();
 }
@@ -709,19 +703,19 @@ function syncWishlistButton(){const b=document.getElementById("saveButton");if(!
 document.getElementById("saveButton").addEventListener("click",()=>{if(wishlist.includes(current))wishlist=wishlist.filter(i=>i!==current);else wishlist.push(current);try{localStorage.setItem("artspace-wishlist",JSON.stringify(wishlist));}catch(e){}syncWishlistButton();toast(wishlist.includes(current)?"Saved to your wishlist":"Removed from your wishlist");});
 document.getElementById("shareButton").addEventListener("click",async()=>{const url=location.href.split("#")[0]+"#artwork-"+(current+1);const data={title:products[current].title,text:"Explore this ARTSPACE print: "+products[current].title,url};if(navigator.share){try{await navigator.share(data);}catch(e){if(e.name!=="AbortError")toast("Could not open the share menu");}}else if(navigator.clipboard&&navigator.clipboard.writeText){try{await navigator.clipboard.writeText(url);toast("Artwork link copied");}catch(e){toast("Copy is unavailable in this browser");}}else toast("Sharing is not available in this browser");});
 let activeCollectionFilter="ALL";
-const collectionCategory=["SPORT","NATURE","LANDSCAPE","LANDSCAPE","ABSTRACT","COLOR"];
-function renderCollection(){const grid=document.getElementById("collectionGrid"),query=document.getElementById("collectionSearch").value.trim().toLowerCase();const matches=products.map((p,index)=>({p,index})).filter(({p,index})=>(activeCollectionFilter==="ALL"||collectionCategory[index]===activeCollectionFilter)&&(p.title+" "+p.subtitle+" "+collectionCategory[index]).toLowerCase().includes(query));grid.innerHTML=matches.length?matches.map(({p,index})=>'<button class="collection-card" type="button" data-collection-index="'+index+'" aria-label="View '+p.title+'"><img src="'+p.image+'" alt="'+p.title+' art print" loading="lazy"><strong>'+p.title+'</strong><span>'+p.subtitle+'</span><em>'+money(p.price)+' · VIEW PRINT ↗</em></button>').join(""):'<p class="collection-empty">No artworks match your search. Try another title or category.</p>';}
+const collectionCategory=["DAY","EVENING","DAY","STATEMENT","EVENING","DAY"];
+function renderCollection(){const grid=document.getElementById("collectionGrid"),query=document.getElementById("collectionSearch").value.trim().toLowerCase();const matches=products.map((p,index)=>({p,index})).filter(({p,index})=>(activeCollectionFilter==="ALL"||collectionCategory[index]===activeCollectionFilter)&&(p.title+" "+p.subtitle+" "+collectionCategory[index]).toLowerCase().includes(query));grid.innerHTML=matches.length?matches.map(({p,index})=>'<button class="collection-card" type="button" data-collection-index="'+index+'" aria-label="View '+p.title+'"><img src="'+p.image+'" alt="'+p.title+' dress" loading="lazy"><strong>'+p.title+'</strong><span>'+p.subtitle+'</span><em>'+money(p.price)+' · VIEW DRESS ↗</em></button>').join(""):'<p class="collection-empty">No dresses match your search. Try another style or colour.</p>';}
 document.getElementById("collectionFilters").addEventListener("click",e=>{const b=e.target.closest("[data-filter]");if(!b)return;activeCollectionFilter=b.dataset.filter;document.querySelectorAll("#collectionFilters .filter-chip").forEach(x=>x.classList.toggle("active",x===b));renderCollection();});
 document.getElementById("collectionSearch").addEventListener("input",renderCollection);
 document.getElementById("collectionGrid").addEventListener("click",e=>{const card=e.target.closest("[data-collection-index]");if(!card)return;current=Number(card.dataset.collectionIndex);render();document.getElementById("selectedProduct").scrollIntoView({behavior:"smooth"});});
 renderCollection();
 function updatePrice(){
  const base=products[current].price;
- const sizeAdd={A3:0,A2:1200,A1:2600}[selectedSize];
- const finishAdd={"Unframed":0,"Black frame":1800,"Oak frame":2200}[selectedFinish];
+ const sizeAdd={XS:0,S:0,M:0,L:0,XL:0}[selectedSize];
+ const finishAdd={Ivory:0,Black:0,Sage:0}[selectedFinish];
  document.getElementById("productPrice").textContent=money(base+sizeAdd+finishAdd);
- document.getElementById("sizeValue").textContent=selectedSize+" · "+({A3:"29.7 × 42 CM",A2:"42 × 59.4 CM",A1:"59.4 × 84.1 CM"}[selectedSize]);
- document.getElementById("finishValue").textContent=selectedFinish.toUpperCase();const preview=document.querySelector(".selected-image-bg");preview.classList.remove("finish-unframed","finish-black-frame","finish-oak-frame","size-a3","size-a2","size-a1");preview.classList.add("finish-"+selectedFinish.toLowerCase().replace(" ","-"),"size-"+selectedSize.toLowerCase());
+ document.getElementById("sizeValue").textContent=selectedSize+" · "+({XS:"UK 6",S:"UK 8",M:"UK 10",L:"UK 12",XL:"UK 14"}[selectedSize]);
+ document.getElementById("finishValue").textContent=selectedFinish.toUpperCase();const preview=document.querySelector(".selected-image-bg");preview.classList.remove("finish-unframed","finish-black-frame","finish-oak-frame","size-a3","size-a2","size-a1");preview.classList.add("size-"+selectedSize.toLowerCase());
 }
 document.getElementById("prevBtn").addEventListener("click",()=>move(-1));
 document.getElementById("nextBtn").addEventListener("click",()=>move(1));
@@ -762,7 +756,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  if(!loaded||!window.THREE){
   let status=stage.querySelector(".webgl-status");
   if(!status){status=document.createElement("div");status.className="webgl-status";status.setAttribute("role","status");stage.appendChild(status);}
-  status.textContent="3D library could not load. Check your connection; artwork preview remains available.";
+  status.textContent="3D library could not load. Check your connection; fashion preview remains available.";
   console.error("ARTSPACE: both Three.js sources failed to load.");
   return;
  }
@@ -772,7 +766,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   if(!status){status=document.createElement("div");status.className="webgl-status";status.setAttribute("role","status");stage.appendChild(status);}
   status.textContent=message;status.hidden=false;
  }
- if(!window.THREE){show3DStatus("3D gallery could not load. Showing artwork preview.");console.error("ARTSPACE: Three.js unavailable after primary and fallback CDN attempts.");return;}
+ if(!window.THREE){show3DStatus("3D boutique could not load. Showing fashion preview.");console.error("ARTSPACE: Three.js unavailable after primary and fallback CDN attempts.");return;}
  const THREE=window.THREE;
  const scene=new THREE.Scene();
  const camera=new THREE.PerspectiveCamera(40,1,.1,100);
@@ -793,7 +787,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  renderer.shadowMap.enabled=true;
  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  renderer.domElement.className="artspace-webgl";
- renderer.domElement.setAttribute("aria-label","Interactive three-dimensional artwork gallery");
+ renderer.domElement.setAttribute("aria-label","Interactive three-dimensional fashion boutique");
  stage.prepend(renderer.domElement);
  scene.add(new THREE.HemisphereLight(0xffffff,0x77776d,.48));
  scene.add(new THREE.HemisphereLight(0xf3f6ff,0x77766e,.12));
@@ -1349,7 +1343,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  renderer.domElement.style.cursor="grab";
  renderer.domElement.tabIndex=0;
  renderer.domElement.setAttribute("role","application");
- renderer.domElement.setAttribute("aria-label","Interactive 3D art gallery. Drag to rotate, use arrow keys to browse, and press Enter to open the selected artwork.");
+ renderer.domElement.setAttribute("aria-label","Interactive 3D fashion boutique. Drag to explore, use arrow keys to browse, and press Enter to view a dress.");
  renderer.domElement.addEventListener("webglcontextlost",event=>{
   event.preventDefault();
   stage.classList.remove("webgl-ready");
@@ -1437,7 +1431,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   }catch(error){
    console.error("ARTSPACE WebGL frame rendering failed:",error);
    stage.classList.remove("webgl-ready");
-   show3DStatus("3D rendering failed. Showing artwork preview.");
+   show3DStatus("3D rendering failed. Showing fashion preview.");
    cancelAnimationFrame(raf);raf=0;return;
   }
  }
@@ -1501,7 +1495,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  console.error("ARTSPACE 3D startup failed:",error);
  let status=stage.querySelector(".webgl-status");
  if(!status){status=document.createElement("div");status.className="webgl-status";status.setAttribute("role","status");stage.appendChild(status);}
- status.textContent="3D gallery could not start. Artwork preview remains available.";
+ status.textContent="3D boutique could not start. Fashion preview remains available.";
 });
 
 </script>
