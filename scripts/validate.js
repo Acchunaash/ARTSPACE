@@ -153,6 +153,19 @@ if (!modelBuilder.includes("const curvedBox=") ||
   fail("The pavilion must include rotated curved rainscreen panels, a bowed canopy/portal and upgraded PBR material values.");
 }
 
+/* Architectural glazing must stay transparent and receive a lightweight studio reflection environment. */
+if (!html.includes("new THREE.PMREMGenerator(renderer)") ||
+    !html.includes("scene.environment=architecturalEnvironment.texture") ||
+    !html.includes("material.envMapIntensity=1.35") ||
+    !html.includes("new THREE.PointLight(0xffe5c9,intensity,15,2)") ||
+    !html.includes("material.depthWrite=false")) {
+  fail("The exterior glazing requires environment reflections, depth-safe transparency and warm interior illumination.");
+}
+if (!modelBuilder.includes('["low-iron-glass",[.78,.88,.89,.22],.06,.045]') ||
+    !modelBuilder.includes('["deep-glass",[.24,.36,.39,.38],.12,.085]')) {
+  fail("The GLB low-iron and deep-glass PBR materials are not tuned for clear architectural glazing.");
+}
+
 if (!modelBuilder.includes("ARTSPACE architectural pavilion builder") ||
     !modelBuilder.includes("low-iron-glass") ||
     !modelBuilder.includes("champagne-bronze") ||
