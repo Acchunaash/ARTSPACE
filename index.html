@@ -508,8 +508,8 @@ window.__artspaceThreeReady.then(loaded=>{
  renderer.domElement.className="artspace-webgl";
  renderer.domElement.setAttribute("aria-label","Interactive three-dimensional artwork gallery");
  stage.prepend(renderer.domElement);
- scene.add(new THREE.HemisphereLight(0xffffff,0x77776d,1.35));
- const keyLight=new THREE.DirectionalLight(0xffffff,2.0);
+ scene.add(new THREE.HemisphereLight(0xffffff,0x77776d,.78));
+ const keyLight=new THREE.DirectionalLight(0xffffff,1.15);
  keyLight.position.set(-3,6,8);keyLight.castShadow=true;scene.add(keyLight);
  const fillLight=new THREE.DirectionalLight(0xe5e9ff,.65);
  fillLight.position.set(5,1,4);scene.add(fillLight);
@@ -545,7 +545,7 @@ window.__artspaceThreeReady.then(loaded=>{
  [-3.5,0,3.5].forEach(x=>{
   const lamp=new THREE.Mesh(new THREE.CylinderGeometry(.13,.17,.055,24),new THREE.MeshBasicMaterial({color:0xffd5a1}));
   lamp.rotation.x=Math.PI/2;lamp.position.set(x,3.29,1.1);room.add(lamp);
-  const glow=new THREE.PointLight(0xffd1a0,8.5,13,2);
+  const glow=new THREE.PointLight(0xffd1a0,2.6,10,2);
   glow.position.set(x,2.75,1.0);room.add(glow);
  });
  /* Visible architectural details make the room read as a physical gallery. */
@@ -571,11 +571,12 @@ window.__artspaceThreeReady.then(loaded=>{
  const gallery=new THREE.Group();scene.add(gallery);
  const cards3D=[];
  const textureLoader=new THREE.TextureLoader();
+ let textureLoadsComplete=0,textureLoadFailures=0;
  products.forEach((product,index)=>{
   const group=new THREE.Group();
   const frame=new THREE.Mesh(new THREE.BoxGeometry(2.38,3.18,.14),new THREE.MeshStandardMaterial({color:0xf5f4ef,roughness:.78,metalness:.02}));
   frame.castShadow=true;frame.receiveShadow=true;group.add(frame);
-  const texture=textureLoader.load(product.image);
+  const texture=textureLoader.load(product.image,()=>{textureLoadsComplete++;},undefined,error=>{textureLoadsComplete++;textureLoadFailures++;console.error("ARTSPACE artwork texture failed:",product.title,error);});
   texture.encoding=THREE.sRGBEncoding;
   const print=new THREE.Mesh(new THREE.PlaneGeometry(2.17,2.89),new THREE.MeshStandardMaterial({map:texture,roughness:.86,metalness:0}));
   print.position.z=.078;print.castShadow=true;group.add(print);
@@ -634,7 +635,7 @@ window.__artspaceThreeReady.then(loaded=>{
   });
   try{
    renderer.render(scene,camera);
-   if(!stage.classList.contains("webgl-ready")){
+   if(textureLoadsComplete===products.length&&!textureLoadFailures&&!stage.classList.contains("webgl-ready")){
     stage.classList.add("webgl-ready");
     const status=stage.querySelector(".webgl-status");if(status)status.hidden=true;
    }
