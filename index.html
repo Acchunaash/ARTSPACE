@@ -466,7 +466,7 @@ footer>a:last-child{color:#555850}
     <nav class="desktop-nav" aria-label="Main navigation">
       <a href="#gallery">COLLECTION</a><a href="#allArtworks">DRESSES</a><a href="#about">ABOUT</a><a href="#contact">CONTACT</a>
     </nav>
-    <button class="bag-button" id="wishlistButton" aria-label="Saved artworks">SAVED <span id="savedCount">0</span></button>
+    <button class="bag-button" id="wishlistButton" aria-label="Saved dresses">SAVED <span id="savedCount">0</span></button>
     <button class="bag-button" id="bagButton" aria-label="Shopping bag">BAG <span id="bagCount">0</span></button>
   </header>
 
@@ -540,7 +540,7 @@ footer>a:last-child{color:#555850}
 
   <footer id="contact"><a class="wordmark" href="#">ARTSPACE<span>®</span></a><span>DESIGNED FOR EVERYDAY ELEGANCE · 2026</span><a href="mailto:hello@artspace.example">SAY HELLO ↗</a></footer>
   <div class="art-viewer" id="artViewer" aria-hidden="true">
-    <button class="viewer-close" id="viewerClose" aria-label="Close artwork viewer">×</button>
+    <button class="viewer-close" id="viewerClose" aria-label="Close dress viewer">×</button>
     <button class="viewer-arrow viewer-prev" id="viewerPrev" aria-label="Previous artwork">←</button>
     <div class="viewer-content"><img id="viewerImage" alt=""><div class="viewer-caption"><span id="viewerTitle"></span><span id="viewerSubtitle"></span></div></div>
     <button class="viewer-arrow viewer-next" id="viewerNext" aria-label="Next artwork">→</button>
@@ -614,7 +614,7 @@ const products = [
  {title:"THE GARDEN WRAP",subtitle:"PRINTED COTTON · BOTANICAL",price:6190,image:"./assets/fashion/garden-wrap.svg",description:"A wrap dress with a softly gathered waist, gentle movement and a relaxed day-to-evening feel."}
 ];
 let current=0, selectedSize="S", selectedFinish="Ivory", startX=0, dragging=false;
-const sharedArtwork=location.hash.match(/^#artwork-(\d+)$/);if(sharedArtwork){const sharedIndex=Number(sharedArtwork[1])-1;if(sharedIndex>=0&&sharedIndex<products.length)current=sharedIndex;}
+const sharedArtwork=location.hash.match(/^#dress-(\d+)$/);if(sharedArtwork){const sharedIndex=Number(sharedArtwork[1])-1;if(sharedIndex>=0&&sharedIndex<products.length)current=sharedIndex;}
 let wishlist=[];try{wishlist=JSON.parse(localStorage.getItem("artspace-wishlist")||"[]");if(!Array.isArray(wishlist))wishlist=[];}catch(e){wishlist=[];}
 wishlist=wishlist.filter(i=>Number.isInteger(i)&&i>=0&&i<products.length);
 let cart=[];try{cart=JSON.parse(localStorage.getItem("artspace-cart")||"[]");if(!Array.isArray(cart))cart=[];}catch(e){cart=[];}
@@ -695,13 +695,13 @@ document.addEventListener("keydown",e=>{
 });
 window.addEventListener("popstate",closeProductDetail);
 function move(n){current=(current+n+products.length)%products.length;stage.classList.add("camera-shift");render();clearTimeout(move.cameraTimer);move.cameraTimer=setTimeout(()=>stage.classList.remove("camera-shift"),460)}
-function renderWishlist(){document.getElementById("savedCount").textContent=wishlist.length;const list=document.getElementById("savedItems");if(!wishlist.length){list.innerHTML='<div class="cart-empty">No saved artworks yet.<br>Tap “Save to wishlist” on a print you love.</div>';return;}list.innerHTML=wishlist.map(index=>{const p=products[index];return '<article class="cart-item"><div class="cart-thumb"><img src="'+p.image+'" alt=""></div><div><h3>'+p.title+'</h3><div class="cart-meta">'+p.subtitle+'<br>'+money(p.price)+'</div><button class="saved-view" data-saved-view="'+index+'">VIEW ARTWORK ↗</button></div><button class="cart-close" data-saved-remove="'+index+'" aria-label="Remove '+p.title+'">×</button></article>';}).join("");}
+function renderWishlist(){document.getElementById("savedCount").textContent=wishlist.length;const list=document.getElementById("savedItems");if(!wishlist.length){list.innerHTML='<div class="cart-empty">No saved dresses yet.<br>Save a dress to your wardrobe edit.</div>';return;}list.innerHTML=wishlist.map(index=>{const p=products[index];return '<article class="cart-item"><div class="cart-thumb"><img src="'+p.image+'" alt=""></div><div><h3>'+p.title+'</h3><div class="cart-meta">'+p.subtitle+'<br>'+money(p.price)+'</div><button class="saved-view" data-saved-view="'+index+'">VIEW ARTWORK ↗</button></div><button class="cart-close" data-saved-remove="'+index+'" aria-label="Remove '+p.title+'">×</button></article>';}).join("");}
 function openWishlist(){closeCart();renderWishlist();document.getElementById("savedDrawer").classList.add("open");document.getElementById("savedBackdrop").classList.add("open");document.body.classList.add("wishlist-open");document.getElementById("savedDrawer").setAttribute("aria-hidden","false");document.getElementById("savedClose").focus();}
 function closeWishlist(){document.getElementById("savedDrawer").classList.remove("open");document.getElementById("savedBackdrop").classList.remove("open");document.body.classList.remove("wishlist-open");document.getElementById("savedDrawer").setAttribute("aria-hidden","true");}
 document.getElementById("wishlistButton").addEventListener("click",openWishlist);document.getElementById("savedClose").addEventListener("click",closeWishlist);document.getElementById("savedBackdrop").addEventListener("click",closeWishlist);document.getElementById("savedItems").addEventListener("click",e=>{const view=e.target.closest("[data-saved-view]"),remove=e.target.closest("[data-saved-remove]");if(view){current=Number(view.dataset.savedView);render();closeWishlist();document.getElementById("selectedProduct").scrollIntoView({behavior:"smooth"});}if(remove){wishlist=wishlist.filter(i=>i!==Number(remove.dataset.savedRemove));try{localStorage.setItem("artspace-wishlist",JSON.stringify(wishlist));}catch(e){}renderWishlist();syncWishlistButton();}});
 function syncWishlistButton(){const b=document.getElementById("saveButton");if(!b)return;const saved=wishlist.includes(current);b.setAttribute("aria-pressed",String(saved));b.textContent=saved?"♥ SAVED TO WISHLIST":"♡ SAVE TO WISHLIST";document.getElementById("savedCount").textContent=wishlist.length;}
 document.getElementById("saveButton").addEventListener("click",()=>{if(wishlist.includes(current))wishlist=wishlist.filter(i=>i!==current);else wishlist.push(current);try{localStorage.setItem("artspace-wishlist",JSON.stringify(wishlist));}catch(e){}syncWishlistButton();toast(wishlist.includes(current)?"Saved to your wishlist":"Removed from your wishlist");});
-document.getElementById("shareButton").addEventListener("click",async()=>{const url=location.href.split("#")[0]+"#artwork-"+(current+1);const data={title:products[current].title,text:"Explore this ARTSPACE print: "+products[current].title,url};if(navigator.share){try{await navigator.share(data);}catch(e){if(e.name!=="AbortError")toast("Could not open the share menu");}}else if(navigator.clipboard&&navigator.clipboard.writeText){try{await navigator.clipboard.writeText(url);toast("Artwork link copied");}catch(e){toast("Copy is unavailable in this browser");}}else toast("Sharing is not available in this browser");});
+document.getElementById("shareButton").addEventListener("click",async()=>{const url=location.href.split("#")[0]+"#artwork-"+(current+1);const data={title:products[current].title,text:"Explore this ARTSPACE dress: "+products[current].title,url};if(navigator.share){try{await navigator.share(data);}catch(e){if(e.name!=="AbortError")toast("Could not open the share menu");}}else if(navigator.clipboard&&navigator.clipboard.writeText){try{await navigator.clipboard.writeText(url);toast("Artwork link copied");}catch(e){toast("Copy is unavailable in this browser");}}else toast("Sharing is not available in this browser");});
 let activeCollectionFilter="ALL";
 const collectionCategory=["DAY","EVENING","DAY","STATEMENT","EVENING","DAY"];
 function renderCollection(){const grid=document.getElementById("collectionGrid"),query=document.getElementById("collectionSearch").value.trim().toLowerCase();const matches=products.map((p,index)=>({p,index})).filter(({p,index})=>(activeCollectionFilter==="ALL"||collectionCategory[index]===activeCollectionFilter)&&(p.title+" "+p.subtitle+" "+collectionCategory[index]).toLowerCase().includes(query));grid.innerHTML=matches.length?matches.map(({p,index})=>'<button class="collection-card" type="button" data-collection-index="'+index+'" aria-label="View '+p.title+'"><img src="'+p.image+'" alt="'+p.title+' dress" loading="lazy"><strong>'+p.title+'</strong><span>'+p.subtitle+'</span><em>'+money(p.price)+' · VIEW DRESS ↗</em></button>').join(""):'<p class="collection-empty">No dresses match your search. Try another style or colour.</p>';}
@@ -732,7 +732,7 @@ const drawer=document.getElementById("cartDrawer"),backdrop=document.getElementB
 function renderCart(){
  const count=cartQuantity();document.getElementById("bagCount").textContent=count;document.getElementById("cartItemCount").textContent=count?"· "+count:"";
  const list=document.getElementById("cartItems");
- if(!cart.length)list.innerHTML='<div class="cart-empty">Your bag is feeling a little empty.<br>Find a print that feels like you.</div>';
+ if(!cart.length)list.innerHTML='<div class="cart-empty">Your wardrobe edit starts here.<br>Find a dress that feels like you.</div>';
  else list.innerHTML=cart.map((item,index)=>{const p=products[item.productIndex];return `<article class="cart-item"><div class="cart-thumb"><img src="${p.image}" alt=""></div><div><h3>${p.title}</h3><div class="cart-meta">${item.size} · ${item.finish.toUpperCase()}<br>${money(cartPrice(item))} EACH</div><div class="cart-actions"><button data-cart-action="minus" data-index="${index}" aria-label="Decrease quantity">−</button><span>${item.quantity}</span><button data-cart-action="plus" data-index="${index}" aria-label="Increase quantity" ${item.quantity>=10?"disabled":""}>+</button><button class="remove-item" data-cart-action="remove" data-index="${index}">REMOVE</button></div></div><strong class="cart-price">${money(cartPrice(item)*item.quantity)}</strong></article>`;}).join("");
  const total=cart.reduce((sum,item)=>sum+cartPrice(item)*item.quantity,0);document.getElementById("cartTotal").textContent=money(total);document.getElementById("cartCheckout").disabled=true;const progress=Math.min(100,total/8000*100);document.getElementById("shippingProgressFill").style.width=progress+"%";document.getElementById("shippingProgressText").textContent=total>=8000?"You unlocked complimentary shipping.":"Add "+money(8000-total)+" more for complimentary shipping.";
 }
@@ -1267,8 +1267,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  addGalleryBox(2.78,.035,.035,champagneMetal,0,.435,.34,visitorBench);
  const gallery=new THREE.Group();gallery.position.set(0,0,wallCenterZ);scene.add(gallery);
  const cards3D=[];
- const textureLoader=new THREE.TextureLoader();
- let textureLoadsComplete=0,textureLoadFailures=0;
+ 
  /* Fashion showroom fittings: polished rails, fitting-room portals and full-height mirrors. */
  const railMetal=new THREE.MeshStandardMaterial({color:0x9c8060,metalness:.78,roughness:.28});
  const fittingFabric=new THREE.MeshStandardMaterial({color:0xe7dfd2,roughness:.98});
