@@ -19,7 +19,7 @@ for (const id of new Set(referencedIds)) {
 const inlineScripts = [...html.matchAll(/<script\b(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)];
 if (!inlineScripts.length) fail("No inline application scripts found.");
 inlineScripts.forEach((match, index) => {
-  try { new Function(match[1]); }
+  try { new (require("node:vm").Script)(match[1], {filename:"inline-script-" + (index + 1)}); }
   catch (error) { fail("Inline script " + (index + 1) + " has a syntax error: " + error.stack); }
 });
 
