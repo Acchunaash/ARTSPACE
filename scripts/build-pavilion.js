@@ -27,7 +27,7 @@ box(7,17.8,.10,22.6,0,3.46,-.25);
 // Deep cantilevered entrance canopy and bronze shadow line.
 box(0,19.8,.22,2.5,0,3.35,11.2);box(2,19.85,.08,.16,0,3.20,12.35);box(3,19.9,.09,.14,0,3.12,12.42);
 // Limestone wings and back wall; side elevations have alternating solid and glazed bays.
-box(0,6.1,4.55,.48,-6.55,1.05,11.62);box(0,6.1,4.55,.48,6.55,1.05,11.62);
+// Side wings are assembled from separated piers and recessed window bays below; no solid wall hides the glazing.
 box(0,18.5,4.55,.45,0,1.05,-12.25);
 box(0,.42,5,23.5,-9.25,1,-.25);box(0,.42,5,23.5,9.25,1,-.25);
 // Curtain wall lobby, door leaves, transoms and bronze handles.
@@ -75,9 +75,7 @@ for(const side of [-1,1]){
 box(1,6.45,.09,.18,0,2.96,12.48);box(2,6.45,.07,.2,0,3.1,12.52);
 const curvedPanel=(m,w,h,d,x,y,z,bow)=>groups[m].push({s:[w,h,d],p:[x,y,z],curved:true,bow});
 // Continuous, smoothly bowed architectural skins sit behind the fine segmented joints.
-for(const side of [-1,1]){
- curvedPanel(0,6.05,4.42,.16,side*6.55,1.05,12.13,.42);
-}
+// Side elevations use individual piers and open glazing bays instead of a continuous sheet.
 curvedPanel(0,19.65,.28,2.45,0,3.48,12.05,.58);
 // Curved architectural pass: segmented stone rainscreen, bowed portal brow and a sweeping canopy edge.
 // Every segment follows a shallow continuous curve, with tangent rotation to avoid a box-like facade.
@@ -86,20 +84,34 @@ const curvedBox=(m,w,h,d,x,y,z,angle)=>{
 };
 const facadeCurve=(x)=>.82*(1-Math.pow(x/9.7,2));
 const facadeSlope=(x)=>-.164*x/9.7;
+/* Open, recessed facade bays: structural piers carry the cladding while glazing remains visibly exposed. */
 for(const side of [-1,1]){
- for(let row=0;row<6;row++){
-  const y=-.72+row*.69;
-  for(let i=0;i<12;i++){
-   const x=side*(3.48+i*.49),z=12.04+facadeCurve(x),angle=-Math.atan(facadeSlope(x));
-   curvedBox((row+i)%5===0?1:0,.455,.61,.16,x,y,z,angle);
-  }
+ for(let i=0;i<6;i++){
+  const x=side*(3.62+i*1.02),z=12.08+facadeCurve(x),angle=-Math.atan(facadeSlope(x));
+  curvedBox(0,.22,4.55,.62,x,1.02,z,angle);
+  curvedBox(1,.255,4.58,.075,x,1.02,z+.31,angle);
+  curvedBox(2,.055,4.35,.12,x,1.02,z+.37,angle);
  }
- // Deep horizontal joints read as continuous shadow lines across the bowed stone skin.
- for(let row=0;row<5;row++){
-  const y=-.39+row*.69;
-  for(let i=0;i<12;i++){
-   const x=side*(3.48+i*.49),z=12.135+facadeCurve(x),angle=-Math.atan(facadeSlope(x));
-   curvedBox(1,.47,.035,.035,x,y,z,angle);
+ for(let bay=0;bay<5;bay++){
+  const x=side*(4.15+bay*1.02),z=12.08+facadeCurve(x),angle=-Math.atan(facadeSlope(x));
+  curvedBox(3,.91,3.42,.10,x,.88,z-.18,angle);
+  curvedBox(5,.79,3.12,.035,x,.88,z-.245,angle);
+  for(const dx of [-.445,.445]){
+   curvedBox(3,.065,3.28,.24,x+dx,.88,z-.03,angle);
+   curvedBox(2,.026,3.22,.08,x+dx,.88,z+.105,angle);
+  }
+  curvedBox(0,.99,.16,.48,x,-.82,z+.13,angle);
+  curvedBox(1,1.02,.045,.5,x,-.925,z+.14,angle);
+  curvedBox(0,.99,.14,.42,x,2.58,z+.12,angle);
+  curvedBox(2,1.01,.035,.46,x,2.67,z+.15,angle);
+  for(const yy of [-.45,.25,.95,1.65,2.18])curvedBox(3,.79,.028,.07,x,yy,z-.10,angle);
+  curvedBox(2,.035,3.05,.075,x,.88,z+.12,angle);
+ }
+ for(const y of [-1.12,3.18]){
+  for(let i=0;i<6;i++){
+   const x=side*(3.62+i*1.02),z=12.08+facadeCurve(x);
+   curvedBox(1,.96,.055,.22,x,y,z+.34,-Math.atan(facadeSlope(x)));
+   curvedBox(2,.96,.025,.24,x,y+.055,z+.38,-Math.atan(facadeSlope(x)));
   }
  }
 }
@@ -115,11 +127,7 @@ for(let i=0;i<16;i++){
  curvedBox(1,.49,.12,.22,x,3.18,z,angle);
  curvedBox(2,.49,.075,.24,x,3.31,z+.015,angle);
 }
-// Fine vertical joints and bronze blades follow the same curved facade datum.
-for(const side of [-1,1])for(let i=0;i<13;i++){
- const x=side*(3.38+i*.49),z=12.17+facadeCurve(x),angle=-Math.atan(facadeSlope(x));
- curvedBox(2,.035,4.12,.075,x,1.02,z+.035,angle);
-}
+// Vertical bronze blades are integrated into the structural piers in the recessed-bay assembly.
 
 
 /* Sculptural roof and entrance refinement: layered curved canopy, deep soffit and a shaped portal. */
@@ -157,18 +165,11 @@ for(let i=0;i<25;i++){
 /* Detailed architectural pass: fluted stone profiles, deep window pockets and layered metalwork. */
 const flutedPanel=(m,w,h,d,x,y,z)=>groups[m].push({s:[w,h,d],p:[x,y,z],fluted:true});
 for(const side of [-1,1]){
-  // Deeply recessed glazing bays sit behind stone jambs and projecting sill/head courses.
-  for(let bay=0;bay<5;bay++){
-    const x=side*(4.15+bay*1.02);
-    box(3,.075,3.72,.34,x,.82,11.68);
-    box(5,.78,3.05,.045,x,.86,11.48);
-    box(2,.92,.085,.42,x,-.82,11.52);
-    box(1,.92,.075,.42,x,2.56,11.52);
-    for(const dx of [-.43,.43])box(3,.055,3.15,.24,x+dx,.86,11.43);
-    for(const yy of [-.68,.05,.78,1.51,2.24])box(2,.82,.025,.06,x,yy,11.40);
+  // Fluted limestone pilasters align with the structural piers and catch grazing daylight.
+  for(let i=0;i<6;i++){
+    const x=side*(3.62+i*1.02),z=12.43+facadeCurve(x);
+    flutedPanel(0,.22,4.48,.34,x,1.02,z);
   }
-  // Fluted pilaster blades add a real profile rather than another flat rectangular strip.
-  for(let i=0;i<8;i++)flutedPanel(0,.19,4.6,.28,side*(3.55+i*.78),1.02,12.38);
   // Fine shadow reveals and bronze capillary joints separate each rainscreen course.
   for(let row=0;row<5;row++){
     const y=-.92+row*.92;
@@ -394,9 +395,20 @@ function embedTexture(png,name){
 const textureSets=["stone","concrete","oak"].map(kind=>texturePixels(kind));
 const albedoTextures=textureSets.map((set,i)=>embedTexture(makePng(set.size,set.size,set.pix),["limestone-albedo","concrete-albedo","oak-albedo"][i]));
 const normalTextures=textureSets.map((set,i)=>embedTexture(makePng(set.size,set.size,normalPixels(set.height,set.size,i===2?8:5)),["limestone-normal","concrete-normal","oak-normal"][i]));
-for(const [materialIndex,textureIndex] of [[0,0],[1,0],[2,0],[3,1],[6,1],[7,2]]){
+function metalRoughPixels(set,roughness,metallic){
+ const out=Buffer.alloc(set.size*set.size*3);
+ for(let i=0;i<set.height.length;i++){
+  const grain=(set.height[i]-.5)*.42;
+  out[i*3]=0;out[i*3+1]=Math.max(0,Math.min(255,Math.round((roughness+grain)*255)));
+  out[i*3+2]=Math.round(metallic*255);
+ }
+ return out;
+}
+const mrTextures=textureSets.map((set,i)=>embedTexture(makePng(set.size,set.size,metalRoughPixels(set,[.78,.94,.58][i],[.015,.015,.015][i])),["stone-metal-roughness","concrete-metal-roughness","oak-metal-roughness"][i]));
+for(const [materialIndex,textureIndex] of [[0,0],[1,0],[6,1],[7,2]]){
  gltfMaterials[materialIndex].pbrMetallicRoughness.baseColorTexture={index:albedoTextures[textureIndex]};
- gltfMaterials[materialIndex].normalTexture={index:normalTextures[textureIndex],scale:.32};
+ gltfMaterials[materialIndex].pbrMetallicRoughness.metallicRoughnessTexture={index:mrTextures[textureIndex]};
+ gltfMaterials[materialIndex].normalTexture={index:normalTextures[textureIndex],scale:.42};
 }
 const json={asset:{version:"2.0",generator:"ARTSPACE detailed architectural pavilion builder"},scene:0,scenes:[{nodes:nodes.map((_,i)=>i)}],nodes,meshes:meshDefs,materials:gltfMaterials,images:imageDefs,textures:textureDefs,samplers:[{magFilter:9729,minFilter:9987,wrapS:10497,wrapT:10497}],accessors,bufferViews:views,buffers:[{byteLength:offset}]};
 
