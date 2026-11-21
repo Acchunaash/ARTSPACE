@@ -627,7 +627,7 @@ window.__artspaceThreeReady.then(loaded=>{
   const seam=new THREE.Mesh(new THREE.BoxGeometry(.018,.012,16),tileMat);
   seam.position.set(x,-1.704,-1.2);room.add(seam);
  }
- const gallery=new THREE.Group();scene.add(gallery);
+ const gallery=new THREE.Group();gallery.position.set(0,0,wallCenterZ);scene.add(gallery);
  const cards3D=[];
  const textureLoader=new THREE.TextureLoader();
  let textureLoadsComplete=0,textureLoadFailures=0;
@@ -665,16 +665,21 @@ window.__artspaceThreeReady.then(loaded=>{
   const w=Math.max(1,stage.clientWidth),h=Math.max(1,stage.clientHeight);
   camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false);
  }
+ /* Mount every artwork directly onto the concave wall. The gallery group is
+    pivoted at the wall centre so each frame stays attached while browsing. */
  function layoutCards(){
   cards3D.forEach((group,index)=>{
    let d=index-current;if(d>3)d-=6;if(d< -3)d+=6;
-   const angle=d*.52;
-   group.userData.targetX=Math.sin(angle)*4.55;
-   group.userData.targetY=-Math.abs(d)*.055;
-   group.userData.targetZ=(Math.cos(angle)-1)*2.25;
-   group.userData.targetRY=-angle*.78;
-   group.userData.targetScale=d===0?1.08:Math.max(.72,1-Math.abs(d)*.105);
-   if(!introFinished){group.position.set(group.userData.targetX+(index-2.5)*1.05,-.32,group.userData.targetZ-3.8);group.rotation.y=group.userData.targetRY+(index-2.5)*.16;}
+   const wallAngle=Math.PI+d*.255;
+   const mountRadius=wallRadius-.072;
+   group.userData.wallAngle=wallAngle;
+   group.userData.targetX=Math.sin(wallAngle)*mountRadius;
+   group.userData.targetY=.1;
+   group.userData.targetZ=Math.cos(wallAngle)*mountRadius;
+   group.userData.targetRY=wallAngle+Math.PI;
+   group.userData.targetScale=d===0?1.08:Math.max(.78,1-Math.abs(d)*.075);
+   group.position.set(group.userData.targetX,group.userData.targetY,group.userData.targetZ);
+   group.rotation.set(0,group.userData.targetRY,0);
   });
  }
  window.updateArtspace3D=layoutCards;
@@ -690,10 +695,8 @@ window.__artspaceThreeReady.then(loaded=>{
   if(!introFinished){
    if(introSegment===0){camera.position.lerpVectors(introCameraStart,introCameraMid,introEase);camera.lookAt(introLookTarget.lerpVectors(introLookStart,introLookMid,introEase));}
    else{camera.position.lerpVectors(introCameraMid,introCameraEnd,introEase);camera.lookAt(introLookTarget.lerpVectors(introLookMid,introLookEnd,introEase));}
-   gallery.rotation.y=(1-introRaw)*-.22;
    if(introRaw>=1){introFinished=true;camera.position.copy(introCameraEnd);camera.lookAt(introLookEnd);gallery.rotation.y=0;}
   }
-  if(introFinished&&!isDragging3D&&!reducedMotion){const idleAngle=Math.sin(performance.now()*.00022)*.045;gallery.rotation.y+=(idleAngle-gallery.rotation.y)*.012;}
   const ease=reducedMotion?1:(introFinished?.105:.075);
   cards3D.forEach(group=>{
    const u=group.userData;
@@ -728,7 +731,7 @@ window.__artspaceThreeReady.then(loaded=>{
  renderer.domElement.addEventListener("pointermove",event=>{
   if(!isDragging3D)return;
   const dx=event.clientX-lastPointerX;lastPointerX=event.clientX;totalDrag+=dx;
-  if(Math.abs(totalDrag)>5){gallery.rotation.y+=dx*.006;suppressCanvasClick=true;}
+  if(Math.abs(totalDrag)>5){suppressCanvasClick=true;}
   event.stopPropagation();
  });
  function finish3DDrag(event){
