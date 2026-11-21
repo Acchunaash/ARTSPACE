@@ -332,6 +332,34 @@ body.product-detail-open #selectedProduct .product-info>*:nth-child(4){animation
  #selectedProduct,body.product-detail-open #selectedProduct .selected-image-bg,body.product-detail-open #selectedProduct .product-info>*{transition:none!important;animation:none!important}
 }
 
+
+/* FINAL VISUAL SYSTEM — bright, quiet gallery surfaces throughout the storefront. */
+:root{--paper:#f7f7f4;--ink:#171816;--muted:#777a73;--line:#dcded7;--accent:#b58a60}
+.collection-section{background:#f7f7f4;color:#171816}
+.collection-heading h2{color:#171816}
+.collection-heading>span{color:#777a73}
+.filter-chip{border-color:#dcded7;color:#171816;background:transparent}
+.filter-chip.active{background:#171816;border-color:#171816;color:#fff}
+.collection-search{border-color:#dcded7;color:#171816;background:#fff}
+.collection-card{color:#171816}
+.collection-card span{color:#777a73}
+.collection-card em{color:#8b6947}
+.about-strip{background:#eeefeb;color:#555850}
+footer{background:#f7f7f4;color:#171816;border-top:1px solid #e4e4de}
+footer .wordmark{color:#171816}
+footer>span{color:#777a73}
+footer>a:last-child{color:#555850}
+.cart-backdrop{background:#17181655}
+.cart-drawer{background:#fbfbf8;color:#171816;border-left:1px solid #deded8;box-shadow:-18px 0 55px #17181612}
+.cart-head{border-color:#deded8}
+.cart-head h2{color:#171816}
+.cart-close{color:#171816;border-color:#d8d9d2;background:#fff}
+.cart-item{border-color:#e1e1dc}
+.cart-item h3,.cart-price{color:#171816}
+.cart-meta,.cart-note{color:#777a73}
+.cart-checkout{background:#171816;color:#fff}
+.cart-checkout:disabled{background:#d8d9d2;color:#777a73}
+@media(max-width:700px){.collection-section{padding-top:12px}.cart-drawer{padding:22px 18px}}
 </style>
 </head>
 <body>
