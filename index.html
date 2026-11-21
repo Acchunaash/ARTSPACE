@@ -57,6 +57,9 @@ h1 em{font-family:'Playfair Display',Georgia,serif;font-weight:500}
 .option.active{background:var(--ink);color:white;border-color:var(--ink)}
 .add-button{width:100%;margin-top:28px;background:var(--ink);color:white;border:0;padding:18px 20px;display:flex;justify-content:space-between;font:11px 'DM Mono',monospace;letter-spacing:1.3px}
 .add-button:hover{background:var(--accent)}
+.save-button{width:100%;margin-top:10px;padding:13px 16px;border:1px solid var(--line);background:transparent;color:var(--ink);font:10px 'DM Mono',monospace;letter-spacing:1px;transition:background .2s,border-color .2s}
+.save-button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:#d65b430b}
+.save-button:hover{border-color:var(--ink)}
 .shipping-note{font-size:10px;color:#777;text-align:center;margin:14px 0 25px}
 details{border-top:1px solid var(--line);padding:15px 0}details summary{font-size:9px;cursor:pointer}details p{font-size:12px;line-height:1.7;color:#777}
 .about-strip{background:#e8e9e4;padding:34px 9vw;display:flex;justify-content:space-between;font:10px 'DM Mono',monospace;letter-spacing:1px}
@@ -210,7 +213,7 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
         <p class="product-description">A celebration of movement, culture and the beautiful moments that bring us together. Printed with care on heavyweight, archival-quality paper.</p>
         <div class="price-row"><strong id="productPrice">₹5,800</strong><span>INCL. TAXES</span></div>
         <div class="option-group">
-          <div class="option-heading"><span>SIZE</span><span id="sizeValue">A2 · 42 × 59.4 CM</span></div>
+          <div class="option-heading"><span>SIZE</span><span id="sizeValue">A3 · 29.7 × 42 CM</span></div>
           <div class="option-buttons" id="sizeOptions">
             <button class="option active" data-size="A3">A3</button><button class="option" data-size="A2">A2</button><button class="option" data-size="A1">A1</button>
           </div>
@@ -222,6 +225,7 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
           </div>
         </div>
         <button class="add-button" id="addButton">ADD TO BAG <span>↗</span></button>
+        <button class="save-button" id="saveButton" type="button" aria-pressed="false">♡ SAVE TO WISHLIST</button>
         <p class="shipping-note">Complimentary shipping on orders over ₹8,000.</p>
         <details><summary>DELIVERY & RETURNS</summary><p>Made to order and carefully packed. Delivery estimates are shown at checkout. Returns accepted on damaged or incorrect items.</p></details>
         <details><summary>PRINT DETAILS</summary><p>Premium matte paper, rich pigment inks and a smooth, gallery-quality finish.</p></details>
@@ -256,6 +260,8 @@ const products = [
  {title:"SUNDAY IN COLOR",subtitle:"LIMITED ART PRINT",price:4800,image:"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSI0MjAiIGhlaWdodD0iNTYwIiBmaWxsPSIjZDdlNGRmIi8+PGNpcmNsZSBjeD0iMjEwIiBjeT0iMTkwIiByPSIxMTIiIGZpbGw9IiNmMGI3NWUiLz48cGF0aCBkPSJNMCAzNjAgUTEyMCAyNjAgMjIwIDM2MCBUNDIwIDM1MCBWNTYwIEgwWiIgZmlsbD0iIzI4NTM0YSIvPjxwYXRoIGQ9Ik0wIDQ1MCBRMTMwIDM2MCAyNDAgNDU1IFQ0MjAgNDQwIFY1NjAgSDBaIiBmaWxsPSIjZDQ1YjQzIi8+PHBhdGggZD0iTTk1IDM4MCBRMjEwIDIyMCAzMjUgMzgwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmMWU4ZDgiIHN0cm9rZS13aWR0aD0iMTQiLz48Y2lyY2xlIGN4PSIyMTAiIGN5PSIzMjAiIHI9IjI4IiBmaWxsPSIjZjFlOGQ4Ii8+CiAgICA8dGV4dCB4PSIyNCIgeT0iNTA1IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNyIgZm9udC13ZWlnaHQ9IjcwMCIgbGV0dGVyLXNwYWNpbmc9IjMiIGZpbGw9IiMyMjIiPlNVTkRBWSBJTiBDT0xPUjwvdGV4dD4KICAgIDx0ZXh0IHg9IjI0IiB5PSI1MzAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBsZXR0ZXItc3BhY2luZz0iMiIgZmlsbD0iIzMzMyI+TElNSVRFRCBBUlQgUFJJTlQ8L3RleHQ+CiAgICA8L3N2Zz4="}
 ];
 let current=0, selectedSize="A3", selectedFinish="Unframed", startX=0, dragging=false;
+let wishlist=[];try{wishlist=JSON.parse(localStorage.getItem("artspace-wishlist")||"[]");if(!Array.isArray(wishlist))wishlist=[];}catch(e){wishlist=[];}
+wishlist=wishlist.filter(i=>Number.isInteger(i)&&i>=0&&i<products.length);
 let cart=[];try{cart=JSON.parse(localStorage.getItem("artspace-cart")||"[]");if(!Array.isArray(cart))cart=[];}catch(e){cart=[];}
 const sizeAdditions={A3:0,A2:1200,A1:2600},finishAdditions={"Unframed":0,"Black frame":1800,"Oak frame":2200};
 cart=cart.filter(item=>item&&Number.isInteger(item.productIndex)&&products[item.productIndex]&&Object.prototype.hasOwnProperty.call(sizeAdditions,item.size)&&Object.prototype.hasOwnProperty.call(finishAdditions,item.finish)&&Number.isInteger(item.quantity)&&item.quantity>0);
@@ -286,6 +292,7 @@ function render(){
    card.setAttribute("aria-pressed",String(d===0));
  });
  const p=products[current];
+ syncWishlistButton();
  document.getElementById("counter").textContent=`${String(current+1).padStart(2,"0")} / 06`;
  document.getElementById("imageIndex").textContent=`${String(current+1).padStart(2,"0")} / 06`;
  const featuredImage=document.getElementById("selectedImage");
@@ -307,6 +314,8 @@ artViewer.addEventListener("click",e=>{if(e.target===artViewer)closeArtworkViewe
 document.addEventListener("keydown",e=>{if(!artViewer.classList.contains("open"))return;if(e.key==="Escape")closeArtworkViewer();if(e.key==="ArrowRight"){move(1);syncArtworkViewer()}if(e.key==="ArrowLeft"){move(-1);syncArtworkViewer()}});
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
 function move(n){current=(current+n+products.length)%products.length;stage.classList.add("camera-shift");render();clearTimeout(move.cameraTimer);move.cameraTimer=setTimeout(()=>stage.classList.remove("camera-shift"),460)}
+function syncWishlistButton(){const b=document.getElementById("saveButton");if(!b)return;const saved=wishlist.includes(current);b.setAttribute("aria-pressed",String(saved));b.textContent=saved?"♥ SAVED TO WISHLIST":"♡ SAVE TO WISHLIST";}
+document.getElementById("saveButton").addEventListener("click",()=>{if(wishlist.includes(current))wishlist=wishlist.filter(i=>i!==current);else wishlist.push(current);try{localStorage.setItem("artspace-wishlist",JSON.stringify(wishlist));}catch(e){}syncWishlistButton();toast(wishlist.includes(current)?"Saved to your wishlist":"Removed from your wishlist");});
 function updatePrice(){
  const base=products[current].price;
  const sizeAdd={A3:0,A2:1200,A1:2600}[selectedSize];
