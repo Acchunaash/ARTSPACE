@@ -93,25 +93,30 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
     !html.includes("addBox(exterior,19.5,.52,24.6,facadeMat,0,4,-1.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,-6.3,1.05,9.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,6.3,1.05,9.15)") ||
-    !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(0,1.65,22),new THREE.Vector3(0,1.65,14),new THREE.Vector3(0,1.65,9.5),new THREE.Vector3(0,1.65,4.7)],false,\"centripetal\")") ||
-    !html.includes("new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,1.65,8),new THREE.Vector3(0,1.65,0),introLookEnd],false,\"centripetal\")") ||
+    !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(-5.2,8.2,25),new THREE.Vector3(-6.2,6.25,19.2),new THREE.Vector3(-4.2,4.35,14.6),new THREE.Vector3(-1.8,2.35,10.8),new THREE.Vector3(-.35,1.72,8.9),introCameraEnd],false,\"centripetal\")") ||
+    !html.includes("new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,1.8,8),new THREE.Vector3(0,1.8,5),new THREE.Vector3(0,1.65,1),introLookEnd],false,\"centripetal\")") ||
     !html.includes("introCameraPath.getPointAt(pathT)") ||
-    !html.includes("const introDuration=reducedMotion?0:4200;") ||
-    !html.includes("if(introRaw<.04){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}") ||
-    !html.includes("const pathT=easeCamera((introRaw-.04)/.96);") ||
+    !html.includes("const introDuration=reducedMotion?0:5200;") ||
+    !html.includes("if(introRaw<.02){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}") ||
+    !html.includes("const pathT=easeCamera((introRaw-.02)/.98);") ||
     !html.includes("introLookPath.getPointAt(pathT)") ||
     !html.includes("introCameraPath.points[0].copy(introCameraStart)") ||
-    !html.includes("camera.position.x=0;") ||
-    !html.includes("camera.position.y=Math.min(camera.position.y,1.72);") ||
-    !html.includes("introCameraStart.y=1.65;") ||
+    !html.includes("introCameraStart.y=9.2;") ||
+    html.includes("camera.position.x=0;") ||
+    html.includes("camera.position.y=Math.min(camera.position.y,1.72);") ||
     !html.includes("introCameraStart.z=Math.max(31,9.8/(Math.tan(THREE.MathUtils.degToRad(18))*Math.max(.35,aspect)))")) {
   fail("Curved exterior sweep, portal alignment, and continuous curved-gallery camera transition are missing.");
 }
 if (!html.includes("new THREE.PlaneGeometry(17,19),floorMaterial") ||
     !html.includes("leftWall.position.set(-8.5,.15,-1.15)") ||
     !html.includes("rightWall.position.set(8.5,.15,-1.15)") ||
-    !html.includes("new THREE.PlaneGeometry(17,19),ceilingMaterial")) {
-  fail("Gallery interior room geometry is missing or misaligned.");
+    !html.includes("const vaultY=x=>3.65+.52*(1-Math.pow(x/8.5,2))") ||
+    !html.includes("new THREE.Float32BufferAttribute(vaultPositions,3)") ||
+    !html.includes("const vaultedCeiling=new THREE.Mesh(vaultGeometry,ceilingMaterial)") ||
+    !html.includes("new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),96,.022,8,false)") ||
+    !html.includes("new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),48,.032,8,false)") ||
+    !html.includes("Curved plaster panel joints and end piers give the exhibition wall architectural scale.")) {
+  fail("Gallery interior must have a vaulted ceiling, curved ceiling ribs, linear light channels and detailed curved-wall panel joints.");
 }
 if (!html.includes("if(!stage.classList.contains(\"webgl-ready\"))") ||
     !html.includes("new THREE.CanvasTexture(fallbackCanvas)")) {
