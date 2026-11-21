@@ -144,6 +144,15 @@ if (!modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") 
     !modelBuilder.includes("Continuous, smoothly bowed architectural skins")) {
   fail("Pavilion requires continuous smooth curved panel geometry, not only individually angled box segments.");
 }
+/* Interior artwork presentation requires individual wall lights, a gallery mat, title plaque and refined collection styling. */
+if (!html.includes("new THREE.SpotLight(0xffedda,1.65,9.5") ||
+    !html.includes("group.userData.artworkTarget.position.set") ||
+    !html.includes("new THREE.BoxGeometry(2.29,3.09,.035)") ||
+    !html.includes("new THREE.PlaneGeometry(2.12,.4)") ||
+    !html.includes("plaqueContext.fillText(product.title,24,61)") ||
+    !html.includes(".collection-card em{display:flex;justify-content:space-between")) {
+  fail("Interior artwork mounting, per-piece lighting, title plaques and refined collection presentation are missing.");
+}
 /* Sculptural entrance and roof require layered continuous curves, deep soffit and portal ribs. */
 if (!modelBuilder.includes("Sculptural roof and entrance refinement") ||
     !modelBuilder.includes("curvedPanel(0,19.9,.24,3.35,0,3.56,11.05,.88)") ||
