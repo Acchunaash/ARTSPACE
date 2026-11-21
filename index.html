@@ -676,11 +676,11 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  renderer.domElement.className="artspace-webgl";
  renderer.domElement.setAttribute("aria-label","Interactive three-dimensional artwork gallery");
  stage.prepend(renderer.domElement);
- scene.add(new THREE.HemisphereLight(0xffffff,0x77776d,.78));
- scene.add(new THREE.HemisphereLight(0xf3f6ff,0x77766e,.22));
- const keyLight=new THREE.DirectionalLight(0xffffff,1.15);
- keyLight.position.set(-12,17,18);keyLight.castShadow=true;keyLight.shadow.mapSize.set(1024,1024);keyLight.shadow.camera.left=-24;keyLight.shadow.camera.right=24;keyLight.shadow.camera.top=22;keyLight.shadow.camera.bottom=-22;keyLight.shadow.bias=-.00035;scene.add(keyLight);
- const fillLight=new THREE.DirectionalLight(0xe5e9ff,.65);
+ scene.add(new THREE.HemisphereLight(0xffffff,0x77776d,.48));
+ scene.add(new THREE.HemisphereLight(0xf3f6ff,0x77766e,.12));
+ const keyLight=new THREE.DirectionalLight(0xffffff,1.3);
+ keyLight.position.set(-12,17,18);keyLight.castShadow=true;keyLight.shadow.mapSize.set(window.innerWidth<700?1024:1536,window.innerWidth<700?1024:1536);keyLight.shadow.camera.left=-15;keyLight.shadow.camera.right=15;keyLight.shadow.camera.top=17;keyLight.shadow.camera.bottom=-17;keyLight.shadow.bias=-.00025;keyLight.shadow.normalBias=.025;keyLight.shadow.radius=3;scene.add(keyLight);
+ const fillLight=new THREE.DirectionalLight(0xe5e9ff,.38);
  fillLight.position.set(5,1,4);scene.add(fillLight);
 
  /* Soft studio environment: broad ceiling panels create readable, restrained reflections
@@ -863,7 +863,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  const room=new THREE.Group();scene.add(room);
  const wallMaterial=new THREE.MeshStandardMaterial({color:0xf4f4f1,roughness:.96,metalness:0});
  const sideMaterial=new THREE.MeshStandardMaterial({color:0xe8e8e4,roughness:.96,metalness:0});
- const floorMaterial=new THREE.MeshStandardMaterial({color:0xe6e6e1,roughness:.9,metalness:.05});
+ const floorMaterial=new THREE.MeshStandardMaterial({color:0xe9e7e0,roughness:.76,metalness:.015});
  const ceilingMaterial=new THREE.MeshStandardMaterial({color:0xfafaf8,roughness:1,metalness:0});
  const floor=new THREE.Mesh(new THREE.PlaneGeometry(17,19),floorMaterial);
  floor.rotation.x=-Math.PI/2;floor.position.set(0,-1.72,-1.15);floor.receiveShadow=true;room.add(floor);
@@ -898,8 +898,25 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  [-3.5,0,3.5].forEach(x=>{
   const lamp=new THREE.Mesh(new THREE.CylinderGeometry(.13,.17,.055,24),new THREE.MeshBasicMaterial({color:0xffd5a1}));
   lamp.rotation.x=Math.PI/2;lamp.position.set(x,3.29,1.1);room.add(lamp);
-  const glow=new THREE.PointLight(0xffd1a0,2.6,10,2);
+  const glow=new THREE.PointLight(0xffd1a0,1.45,10,2);
   glow.position.set(x,2.75,1.0);room.add(glow);
+ });
+ /* Recessed ceiling coves and aimed gallery wash create a calm museum lighting hierarchy. */
+ const coveMaterial=new THREE.MeshStandardMaterial({color:0xffe7c9,emissive:0xffc987,emissiveIntensity:.52,roughness:.38,metalness:.08});
+ const coveStrip=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(arcPoints(3.43,wallRadius-.2)),128,.022,8,false),coveMaterial);
+ room.add(coveStrip);
+ const ceilingPanelMaterial=new THREE.MeshBasicMaterial({color:0xfff1dc});
+ [-3.5,0,3.5].forEach((x,i)=>{
+  const panel=new THREE.Mesh(new THREE.BoxGeometry(1.65,.035,.52),ceilingPanelMaterial);
+  panel.position.set(x,3.61,.9);room.add(panel);
+  const target=new THREE.Object3D();target.position.set(x*.82,.05,-4.25);room.add(target);
+  const wash=new THREE.SpotLight(0xffe6c9,2.05,13,.52,.86,1.8);
+  wash.position.set(x,3.12,.9);wash.target=target;wash.castShadow=false;room.add(wash);
+ });
+ /* Low-level reflected warmth keeps the stone floor from reading as a flat grey plane. */
+ [-1,1].forEach(side=>{
+  const bounce=new THREE.PointLight(0xffdfbd,.32,8,2);
+  bounce.position.set(side*6,-.35,-1.4);room.add(bounce);
  });
  /* Visible architectural details make the room read as a physical gallery. */
  const accentMat=new THREE.MeshStandardMaterial({color:0xc49a70,emissive:0x5a3218,emissiveIntensity:.32,roughness:.45,metalness:.4});
