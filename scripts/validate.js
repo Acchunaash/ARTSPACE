@@ -134,6 +134,15 @@ if (!html.includes("https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.j
 
 /* The deployed exterior is a real glTF scene asset generated during build, not runtime box construction. */
 const modelBuilder = fs.readFileSync("scripts/build-pavilion.js", "utf8");
+if (!modelBuilder.includes("const curvedBox=") ||
+    !modelBuilder.includes("const facadeCurve=(x)=>") ||
+    !modelBuilder.includes("Curved architectural pass") ||
+    !modelBuilder.includes("rotation:item.r") ||
+    !modelBuilder.includes("[.91,.885,.82,1]") ||
+    !modelBuilder.includes("[.69,.81,.82,.32]")) {
+  fail("The pavilion must include rotated curved rainscreen panels, a bowed canopy/portal and upgraded PBR material values.");
+}
+
 if (!modelBuilder.includes("ARTSPACE architectural pavilion builder") ||
     !modelBuilder.includes("low-iron-glass") ||
     !modelBuilder.includes("champagne-bronze") ||
