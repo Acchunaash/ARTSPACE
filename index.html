@@ -647,14 +647,15 @@ window.__artspaceThreeReady.then(loaded=>{
  renderer.domElement.setAttribute("aria-label","Interactive three-dimensional artwork gallery");
  stage.prepend(renderer.domElement);
  scene.add(new THREE.HemisphereLight(0xffffff,0x77776d,.78));
+ scene.add(new THREE.HemisphereLight(0xf3f6ff,0x77766e,.22));
  const keyLight=new THREE.DirectionalLight(0xffffff,1.15);
- keyLight.position.set(-3,6,8);keyLight.castShadow=true;scene.add(keyLight);
+ keyLight.position.set(-12,17,18);keyLight.castShadow=true;keyLight.shadow.mapSize.set(1024,1024);keyLight.shadow.camera.left=-24;keyLight.shadow.camera.right=24;keyLight.shadow.camera.top=22;keyLight.shadow.camera.bottom=-22;keyLight.shadow.bias=-.00035;scene.add(keyLight);
  const fillLight=new THREE.DirectionalLight(0xe5e9ff,.65);
  fillLight.position.set(5,1,4);scene.add(fillLight);
 
   /* Exterior museum pavilion: complete building silhouette and glazed central entrance. */
   const exterior=new THREE.Group();scene.add(exterior);
-  const facadeMat=new THREE.MeshStandardMaterial({color:0xf4f3ef,roughness:.82,metalness:.02}),stoneMat=new THREE.MeshStandardMaterial({color:0xdedfd9,roughness:.9}),darkMetal=new THREE.MeshStandardMaterial({color:0x303b40,roughness:.38,metalness:.72}),glassMat=new THREE.MeshStandardMaterial({color:0x9eb8bd,roughness:.12,metalness:.18,transparent:true,opacity:.28,side:THREE.DoubleSide,depthWrite:false});
+  const facadeMat=new THREE.MeshStandardMaterial({color:0xf2f1ec,roughness:.66,metalness:.04}),stoneMat=new THREE.MeshStandardMaterial({color:0xd5d5ce,roughness:.78,metalness:.02}),darkMetal=new THREE.MeshStandardMaterial({color:0x29383d,roughness:.3,metalness:.78}),glassMat=new THREE.MeshStandardMaterial({color:0xa9c3c7,roughness:.075,metalness:.22,transparent:true,opacity:.2,side:THREE.DoubleSide,depthWrite:false}),glassFrameMat=new THREE.MeshStandardMaterial({color:0x52666b,roughness:.28,metalness:.72});
   const addBox=(parent,w,h,d,material,x,y,z)=>{const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh;};
   const exteriorGround=new THREE.Mesh(new THREE.PlaneGeometry(70,70),new THREE.MeshStandardMaterial({color:0xe5e5df,roughness:1}));
   exteriorGround.rotation.x=-Math.PI/2;exteriorGround.position.set(0,-1.79,2);exteriorGround.receiveShadow=true;exterior.add(exteriorGround);
@@ -671,7 +672,44 @@ window.__artspaceThreeReady.then(loaded=>{
   if(signCtx){signCtx.fillStyle="#263238";signCtx.font="600 104px Arial";signCtx.textAlign="center";signCtx.fillText("ARTSPACE",512,132);signCtx.font="26px Arial";signCtx.fillText("CONTEMPORARY ART GALLERY",512,184);}
   const signTexture=new THREE.CanvasTexture(signCanvas);signTexture.encoding=THREE.sRGBEncoding;
   const sign=new THREE.Mesh(new THREE.PlaneGeometry(4.9,1.05),new THREE.MeshBasicMaterial({map:signTexture,transparent:true,side:THREE.DoubleSide}));sign.position.set(0,3.15,8.91);exterior.add(sign);
- /* Architectural gallery shell: floor, rear wall, side walls and ceiling. */
+ /*   /* Layered facade: shadow gaps, vertical fins, curtain-wall mullions and glazed side ribbons. */
+  const revealMat=new THREE.MeshStandardMaterial({color:0xb9b9b1,roughness:.82,metalness:.04});
+  addBox(exterior,19.85,.16,.34,stoneMat,0,3.72,9.15);
+  addBox(exterior,20.25,.12,2.55,darkMetal,0,4.25,9.48);
+  addBox(exterior,19.6,.075,2.15,facadeMat,0,4.235,9.45);
+  for(let side of [-1,1]){
+   for(let k=0;k<6;k++){
+    const x=side*(3.55+k*.91);
+    addBox(exterior,.105,5.05,.18,facadeMat,x,1.02,9.405);
+    addBox(exterior,.025,4.82,.025,revealMat,x-side*.22,1.02,9.385);
+   }
+   const ribbon=new THREE.Mesh(new THREE.BoxGeometry(.055,1.32,7.8),glassMat);
+   ribbon.position.set(side*9.015,1.95,-2.8);exterior.add(ribbon);
+   addBox(exterior,.09,.09,8.0,glassFrameMat,side*8.98,2.68,-2.8);
+   addBox(exterior,.09,.09,8.0,glassFrameMat,side*8.98,1.22,-2.8);
+   for(let k=0;k<5;k++)addBox(exterior,.07,1.5,.07,glassFrameMat,side*8.98,1.95,-6+k*1.6);
+  }
+  /* Fine steel grid and discreet pull handles make the entrance read as real glass doors. */
+  [-1.38,0,1.38].forEach(x=>addBox(exterior,.045,4.0,.075,glassFrameMat,x,.72,8.91));
+  [0,.9,1.8].forEach(y=>addBox(exterior,5.45,.035,.075,glassFrameMat,0,y-1.28,8.91));
+  addBox(exterior,.045,1.0,.07,darkMetal,-.22,.62,8.82);addBox(exterior,.045,1.0,.07,darkMetal,.22,.62,8.82);
+  /* Canopy soffit and warm recessed downlights. */
+  const soffitMat=new THREE.MeshStandardMaterial({color:0xe7e5df,roughness:.72});
+  addBox(exterior,19.75,.09,2.28,soffitMat,0,4.245,9.48);
+  for(let x=-8;x<=8;x+=4){
+   const downlight=new THREE.Mesh(new THREE.CylinderGeometry(.105,.105,.025,20),new THREE.MeshBasicMaterial({color:0xffe6bd}));
+   downlight.position.set(x,4.185,9.15);exterior.add(downlight);
+   const beam=new THREE.PointLight(0xffdfb5,.42,7,2);beam.position.set(x,3.95,9.1);exterior.add(beam);
+  }
+  /* Paved forecourt, low architectural planters and restrained planting. */
+  const pavingMat=new THREE.MeshStandardMaterial({color:0xc9c9c2,roughness:.92}),planterMat=new THREE.MeshStandardMaterial({color:0x777e78,roughness:.88}),leafMat=new THREE.MeshStandardMaterial({color:0x66796a,roughness:.9});
+  for(let z=12.2;z<22;z+=1.45)addBox(exterior,5.6,.035,.055,pavingMat,0,-1.725,z);
+  [-7.1,7.1].forEach(x=>{
+   addBox(exterior,2.7,.58,1.25,planterMat,x,-1.47,12.5);
+   for(let n=0;n<5;n++){const shrub=new THREE.Mesh(new THREE.IcosahedronGeometry(.43,1),leafMat);shrub.position.set(x-1+n*.5,-.98,12.5);shrub.scale.set(1,.82,1);shrub.castShadow=true;exterior.add(shrub);}
+  });
+  const exteriorFill=new THREE.DirectionalLight(0xfff4e4,.48);exteriorFill.position.set(12,8,18);exterior.add(exteriorFill);
+Architectural gallery shell: floor, rear wall, side walls and ceiling. */
  const room=new THREE.Group();scene.add(room);
  const wallMaterial=new THREE.MeshStandardMaterial({color:0xf4f4f1,roughness:.96,metalness:0});
  const sideMaterial=new THREE.MeshStandardMaterial({color:0xe8e8e4,roughness:.96,metalness:0});
