@@ -1383,7 +1383,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
    group.userData.wallAngle=wallAngle;
    group.userData.targetX=Math.sin(wallAngle)*mountRadius;
    group.userData.targetY=-1.72;
-   group.userData.targetZ=wallCenterZ+Math.cos(wallAngle)*mountRadius;
+   group.userData.targetZ=Math.cos(wallAngle)*mountRadius;
    group.userData.targetRY=wallAngle+Math.PI;
    group.userData.targetScale=1;
    group.position.set(group.userData.targetX,group.userData.targetY,group.userData.targetZ);
