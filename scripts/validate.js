@@ -93,7 +93,7 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
     !html.includes("addBox(exterior,19.5,.52,24.6,facadeMat,0,4,-1.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,-6.3,1.05,9.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,6.3,1.05,9.15)") ||
-    !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(-5.2,8.2,25),new THREE.Vector3(-6.2,6.25,19.2),new THREE.Vector3(-4.2,4.35,14.6),new THREE.Vector3(-1.8,2.35,10.8),new THREE.Vector3(-.35,1.72,8.9),introCameraEnd],false,\"centripetal\")") ||
+    !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(-5.2,8.2,25),new THREE.Vector3(-6.2,6.25,19.2),new THREE.Vector3(-3.2,3.8,14.6),new THREE.Vector3(-1.0,2.15,10.8),new THREE.Vector3(-.2,1.68,8.9),introCameraEnd],false,\"centripetal\")") ||
     !html.includes("new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,1.8,8),new THREE.Vector3(0,1.8,5),new THREE.Vector3(0,1.65,1),introLookEnd],false,\"centripetal\")") ||
     !html.includes("introCameraPath.getPointAt(pathT)") ||
     !html.includes("const introDuration=reducedMotion?0:5200;") ||
