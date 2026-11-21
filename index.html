@@ -347,7 +347,7 @@ window.__artspaceThreeReady=new Promise(resolve=>{
   const script=document.createElement("script");
   script.src=sources[index];
   script.async=true;
-  script.onload=()=>resolve(!!window.THREE);
+  script.onload=()=>{if(window.THREE)resolve(true);else load(index+1);};
   script.onerror=()=>{console.warn("ARTSPACE Three.js source failed:",sources[index]);load(index+1);};
   document.head.appendChild(script);
  };
