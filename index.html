@@ -79,6 +79,7 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
 /* ADVANCED WEBGL GALLERY LAYER */
 .gallery-stage.webgl-ready .gallery-track{z-index:1}
 .artspace-webgl{position:absolute;inset:0;width:100%;height:100%;z-index:2;display:block;touch-action:pan-y;outline:none}
+.webgl-status{position:absolute;z-index:6;left:50%;bottom:18px;transform:translateX(-50%);max-width:calc(100% - 32px);padding:10px 14px;border:1px solid #c9a77d;background:#172333ed;color:#fff;font:10px "DM Mono",monospace;letter-spacing:.4px;text-align:center;box-shadow:0 8px 24px #0003}.webgl-status[hidden]{display:none}
 .gallery-stage.webgl-ready .art-card{opacity:0!important;pointer-events:none!important}
 /* STEP 1 — immersive 3D environment foundation */
 .gallery-shell{isolation:isolate;background:radial-gradient(ellipse at 50% 38%,#fff 0%,#f0f1ec 34%,#e8e9e3 100%);border:1px solid #e3e4de;box-shadow:inset 0 1px #ffffffb8,0 28px 70px #2528200a}
@@ -324,8 +325,18 @@ footer{background:#070a10;color:#f3f0e9}footer .wordmark{color:#f3f0e9}footer>sp
     <div class="cart-items" id="cartItems"></div>
     <div class="cart-summary"><div class="cart-total"><span>SUBTOTAL</span><span id="cartTotal">₹0</span></div><div class="shipping-progress"><div class="shipping-progress-track"><span id="shippingProgressFill"></span></div><p class="cart-note" id="shippingProgressText">Add ₹8,000 more for complimentary shipping.</p></div><p class="cart-note">Shipping and taxes are finalized at checkout. Online payment is not enabled yet.</p><button class="cart-checkout" id="cartCheckout" disabled>CONTINUE TO CHECKOUT ↗</button></div>
   </aside>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
-  <script>window.addEventListener("error",event=>{if(event.target&&event.target.tagName==="SCRIPT")console.warn("ARTSPACE dependency failed to load:",event.target.src);},true);if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script>
+  <script>
+window.addEventListener("error",event=>{
+ if(event.target&&event.target.tagName==="SCRIPT"){
+  console.error("ARTSPACE dependency failed to load:",event.target.src);
+ }
+},true);
+if("serviceWorker" in navigator){
+ window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(error=>console.warn("ARTSPACE offline cache unavailable:",error)));
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"
+ onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';"></script>
 <script>
 const products = [
  {title:"THE BEAUTIFUL GAME",subtitle:"BURKINA FASO — 2026",price:5800,image:"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSI0MjAiIGhlaWdodD0iNTYwIiBmaWxsPSIjZThkN2JkIi8+PHBhdGggZD0iTTAgMzkwIFExMjAgMjYwIDIzMCAzNDAgVDQyMCAyNTAgVjU2MCBIMFoiIGZpbGw9IiNiZDNkMmMiLz48Y2lyY2xlIGN4PSIyODUiIGN5PSIxNTAiIHI9IjgyIiBmaWxsPSIjZTVhMzNlIi8+PHBhdGggZD0iTTkwIDQzMCBMMTUwIDE4MCBMMjI1IDQzMFoiIGZpbGw9IiMxODNlMzYiLz48cGF0aCBkPSJNMTcwIDQzMCBMMjYwIDIzMCBMMzUwIDQzMFoiIGZpbGw9IiNmMWU3ZDciLz48Y2lyY2xlIGN4PSIyMTAiIGN5PSIyNzUiIHI9IjM0IiBmaWxsPSIjMjUyMzIzIi8+PHBhdGggZD0iTTE5MCAzMDggTDE3MCAzOTAgTDI0NSAzOTAgTDIzMCAzMTBaIiBmaWxsPSIjMjUyMzIzIi8+PHBhdGggZD0iTTIwOCAzNDAgTDEyNSAzOTUgTTIyNSAzNDAgTDI5NSAzOTAiIHN0cm9rZT0iIzI1MjMyMyIgc3Ryb2tlLXdpZHRoPSIxOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8dGV4dCB4PSIyNCIgeT0iNTA1IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNyIgZm9udC13ZWlnaHQ9IjcwMCIgbGV0dGVyLXNwYWNpbmc9IjMiIGZpbGw9IiMyMjIiPlRIRSBCRUFVVElGVUwgR0FNRTwvdGV4dD4KICAgIDx0ZXh0IHg9IjI0IiB5PSI1MzAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBsZXR0ZXItc3BhY2luZz0iMiIgZmlsbD0iIzMzMyI+QlVSS0lOQSBGQVNPPC90ZXh0PgogICAgPC9zdmc+"},
@@ -451,14 +462,19 @@ render();
 
 /* ADVANCED 3D GALLERY — WebGL scene with graceful CSS fallback */
 (function initArtspaceWebGL(){
- if(!window.THREE)return;
+ function show3DStatus(message){
+  let status=stage.querySelector(".webgl-status");
+  if(!status){status=document.createElement("div");status.className="webgl-status";status.setAttribute("role","status");stage.appendChild(status);}
+  status.textContent=message;status.hidden=false;
+ }
+ if(!window.THREE){show3DStatus("3D gallery could not load. Showing artwork preview.");console.error("ARTSPACE: Three.js unavailable after primary and fallback CDN attempts.");return;}
  const THREE=window.THREE;
  const scene=new THREE.Scene();
  const camera=new THREE.PerspectiveCamera(36,1,.1,100);
  camera.position.set(0,.12,11.8);
  let renderer;
  try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:"high-performance"});}
- catch(error){console.warn("ARTSPACE 3D renderer unavailable; using the CSS gallery.",error);return;}
+ catch(error){console.error("ARTSPACE WebGL renderer creation failed:",error);show3DStatus("3D is unavailable in this browser. Showing artwork preview.");return;}
  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,window.innerWidth<700?1.15:1.6));
  renderer.setClearColor(0x000000,0);
  renderer.outputEncoding=THREE.sRGBEncoding;
@@ -467,7 +483,6 @@ render();
  renderer.domElement.className="artspace-webgl";
  renderer.domElement.setAttribute("aria-label","Interactive three-dimensional artwork gallery");
  stage.prepend(renderer.domElement);
- stage.classList.add("webgl-ready");
  scene.add(new THREE.HemisphereLight(0xffffff,0x77776d,1.35));
  const keyLight=new THREE.DirectionalLight(0xffffff,2.0);
  keyLight.position.set(-3,6,8);keyLight.castShadow=true;scene.add(keyLight);
@@ -584,7 +599,18 @@ render();
    const scale=group.scale.x+(target-group.scale.x)*ease;
    group.scale.setScalar(scale);
   });
-  renderer.render(scene,camera);
+  try{
+   renderer.render(scene,camera);
+   if(!stage.classList.contains("webgl-ready")){
+    stage.classList.add("webgl-ready");
+    const status=stage.querySelector(".webgl-status");if(status)status.hidden=true;
+   }
+  }catch(error){
+   console.error("ARTSPACE WebGL frame rendering failed:",error);
+   stage.classList.remove("webgl-ready");
+   show3DStatus("3D rendering failed. Showing artwork preview.");
+   cancelAnimationFrame(raf);raf=0;return;
+  }
  }
  renderer.domElement.addEventListener("pointerdown",event=>{
   if(event.button!==undefined&&event.button!==0)return;
