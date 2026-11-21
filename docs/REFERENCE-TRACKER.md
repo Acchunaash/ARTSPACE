@@ -102,3 +102,10 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Increased artwork texture anisotropy up to the device-supported maximum of 8 and explicitly retained mipmapped linear filtering to improve oblique viewing sharpness.
 - Added validator requirements for the neutral frame finishes, label hierarchy and texture filtering. Wall positions, camera path, exterior, floor, and shopping interactions remain unchanged.
 - Visual acceptance is pending: source checks do not establish the rendered frame appearance, texture sharpness on the user's device, or whether the artwork style matches a yet-to-be-supplied reference.
+
+### Curated artwork collection rebuild — 2026-11-22
+- Inspected all six live SVGs before editing. The previous prints relied on simple flat shapes and repeated scenic compositions, so the collection read more like basic placeholders than a considered gallery selection.
+- Reworked all six individual local SVG assets with more layered compositions, differentiated subject matter and palettes, atmospheric gradients, fine grain/pattern details, and clearer print typography. The six pieces remain distinct: figurative/sport landscape, rainy waterscape, sunset scene, blue-hour mountain landscape, abstract form study, and geometric color composition.
+- Preserved the existing asset filenames and viewBox, so product records, gallery wall mounting, artwork selection, and shopping/cart wiring remain unchanged.
+- Extended the source validator to check the individual compositions' expected SVG structures and finish details.
+- These are original vector illustrations, not photographic or hand-painted scans. The design source is upgraded; rendered visual acceptance and comparison against the missing exact Pinterest reference remain pending until a real browser capture/reference image is available.
