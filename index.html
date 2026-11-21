@@ -775,14 +775,15 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  if(!window.THREE){show3DStatus("3D gallery could not load. Showing artwork preview.");console.error("ARTSPACE: Three.js unavailable after primary and fallback CDN attempts.");return;}
  const THREE=window.THREE;
  const scene=new THREE.Scene();
- const camera=new THREE.PerspectiveCamera(36,1,.1,100);
- const introCameraStart=new THREE.Vector3(0,9.2,31),introCameraEnd=new THREE.Vector3(0,1.65,4.7);
-  /* Cinematic two-stage move: reveal the complete pavilion, arc toward the portal, then settle to human eye height before crossing the threshold. */
-  const introCameraPath=new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(-5.2,8.2,25),new THREE.Vector3(-6.2,6.25,19.2),new THREE.Vector3(-3.2,3.8,14.6),new THREE.Vector3(-1.0,2.15,10.8),new THREE.Vector3(-.2,1.68,8.9),introCameraEnd],false,"centripetal");
+ const camera=new THREE.PerspectiveCamera(40,1,.1,100);
+ const introCameraStart=new THREE.Vector3(13.5,9.2,31),introCameraEnd=new THREE.Vector3(0,1.65,4.7);
+  /* New eight-second cinematic: high front-right establishing orbit, a broad descending S-curve,
+     precise centre-door alignment, then a steady eye-level glide into the curved gallery. */
+  const introCameraPath=new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(15.2,8.3,25.8),new THREE.Vector3(13.4,6.8,21.2),new THREE.Vector3(9.2,5.0,17.2),new THREE.Vector3(4.8,3.25,14.6),new THREE.Vector3(1.25,1.9,12.55),new THREE.Vector3(0,1.65,10.95),introCameraEnd],false,"centripetal");
  camera.position.copy(introCameraStart);
- const introLookStart=new THREE.Vector3(0,1.7,8),introLookEnd=new THREE.Vector3(0,1.5,-5.3),introLookTarget=new THREE.Vector3();
-  /* The gaze turns toward the real doorway, then continues into the curved exhibition room. */
-  const introLookPath=new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,1.8,8),new THREE.Vector3(0,1.8,5),new THREE.Vector3(0,1.65,1),introLookEnd],false,"centripetal");
+ const introLookStart=new THREE.Vector3(0,1.9,2),introLookEnd=new THREE.Vector3(0,1.5,-5.3),introLookTarget=new THREE.Vector3();
+  /* Keep the gaze on the pavilion mass, then the portal, before carrying it into the exhibition room. */
+  const introLookPath=new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,2.0,6),new THREE.Vector3(0,1.9,10),new THREE.Vector3(0,1.75,10.8),new THREE.Vector3(0,1.65,4),introLookEnd],false,"centripetal");
  let introStartedAt=0,introFinished=false,introReady=false,introLoadTimeout=0,introPausedAt=0,pendingArchitecturalPavilion=null;
  const settleIntro=reason=>{if(introReady)return;introReady=true;introStartedAt=performance.now();if(!pageVisible)introPausedAt=introStartedAt;if(introLoadTimeout)clearTimeout(introLoadTimeout);console.info("ARTSPACE: exterior intro ready — "+reason+".");};
  let renderer;
@@ -1352,6 +1353,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   camera.aspect=aspect;camera.updateProjectionMatrix();renderer.setSize(w,h,false);
   /* Keep the complete exterior within the opening frame on narrow phone screens. */
   introCameraStart.z=Math.max(31,9.8/(Math.tan(THREE.MathUtils.degToRad(18))*Math.max(.35,aspect)));
+   introCameraStart.x=13.5;
    introCameraStart.y=9.2;
    introCameraPath.points[0].copy(introCameraStart);
    introCameraPath.points[1].z=Math.max(25,introCameraStart.z*.8);
@@ -1382,21 +1384,22 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  function animate(){
   if(!pageVisible)return;
   raf=requestAnimationFrame(animate);
-  const introDuration=reducedMotion?0:5200;
+  const introDuration=reducedMotion?0:7800;
    const introRaw=introReady?(introDuration?Math.min(1,(performance.now()-introStartedAt)/introDuration):1):0;
-   const easeCamera=t=>t*t*(3-2*t);
+   const easeCamera=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
    if(!introReady){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}
    else if(!introFinished){
     if(introRaw<.02){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}
     else{
      const pathT=easeCamera((introRaw-.02)/.98);
      camera.position.copy(introCameraPath.getPointAt(pathT));
-     camera.position.y+=Math.sin(pathT*Math.PI*6)*.012;
-     /* Preserve the exterior arc; descend only on the final aligned approach through the portal. */
+     camera.fov=THREE.MathUtils.lerp(40,36,pathT);camera.updateProjectionMatrix();
+     /* The final two spline segments pass through the centred glazed portal at y=1.65,
+        below the canopy soffit and inside the clear jamb width, then continue into the room. */
      camera.lookAt(introLookTarget.copy(introLookPath.getPointAt(pathT)));
     }
     if(introRaw>=1){
-    introFinished=true;camera.position.copy(introCameraEnd);camera.lookAt(introLookEnd);gallery.rotation.y=0;
+    introFinished=true;camera.position.copy(introCameraEnd);camera.fov=36;camera.updateProjectionMatrix();camera.lookAt(introLookEnd);gallery.rotation.y=0;
     if(pendingArchitecturalPavilion){mountArchitecturalPavilion(pendingArchitecturalPavilion);pendingArchitecturalPavilion=null;}
    }
   }
