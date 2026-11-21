@@ -93,12 +93,13 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
     !html.includes("addBox(exterior,19.5,.52,24.6,facadeMat,0,4,-1.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,-6.3,1.05,9.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,6.3,1.05,9.15)") ||
-    !html.includes("new THREE.Vector3(0,9.2,31),introCameraApproach=new THREE.Vector3(0,5.8,18),introCameraThreshold=new THREE.Vector3(0,2.7,9.7),introCameraEnd=new THREE.Vector3(0,.12,4.7)") ||
-    !html.includes("if(introRaw<.18)") ||
-    !html.includes("introCameraApproach,introCameraThreshold") ||
-    !html.includes("introCameraThreshold,introCameraEnd") ||
+    !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(-5.2,8,25),new THREE.Vector3(-7,6.2,18),new THREE.Vector3(-4.2,3.8,12.8),new THREE.Vector3(-1,2.05,8.2),introCameraEnd],false,\"centripetal\")") ||
+    !html.includes("new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,2.05,3.2),new THREE.Vector3(0,1.8,7.8),new THREE.Vector3(0,1.15,2.1),introLookEnd],false,\"centripetal\")") ||
+    !html.includes("introCameraPath.getPointAt(pathT)") ||
+    !html.includes("introLookPath.getPointAt(pathT)") ||
+    !html.includes("introCameraPath.points[0].copy(introCameraStart)") ||
     !html.includes("introCameraStart.z=Math.max(31,9.8/(Math.tan(THREE.MathUtils.degToRad(18))*Math.max(.35,aspect)))")) {
-  fail("Full exterior building, glazed entrance, and staged outside-to-inside camera path are missing.");
+  fail("Curved exterior sweep, portal alignment, and continuous curved-gallery camera transition are missing.");
 }
 if (!html.includes("new THREE.PlaneGeometry(17,19),floorMaterial") ||
     !html.includes("leftWall.position.set(-8.5,.15,-1.15)") ||
