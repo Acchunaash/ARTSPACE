@@ -94,3 +94,11 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Added source-validator checks for the joint material and both joint directions.
 - Previous version's validation and both GitHub Pages deployment workflows were confirmed successful before this change. The new commit still requires its own validation and deployment.
 - Visual acceptance remains pending: no rendered browser capture is available, so the joint appearance and overall realism are not claimed as visually verified.
+
+### Wall-mounted artwork frame and label refinement — 2026-11-22
+- Inspected the six local SVG artwork assets and the live 3D frame-construction code before editing. The artworks are original stylized vector illustrations, not photographic paintings; this pass improves their physical presentation rather than claiming to turn them into photorealistic artwork.
+- Reduced the brown/gold appearance of frame inlays and highlight rails, shifting them to quiet neutral satin-metal finishes. Lightened the visible inner mount to a neutral gallery mat.
+- Refined the small artwork plaques with a restrained ARTSPACE collection header, clearer title/subtitle hierarchy and a soft neutral background.
+- Increased artwork texture anisotropy up to the device-supported maximum of 8 and explicitly retained mipmapped linear filtering to improve oblique viewing sharpness.
+- Added validator requirements for the neutral frame finishes, label hierarchy and texture filtering. Wall positions, camera path, exterior, floor, and shopping interactions remain unchanged.
+- Visual acceptance is pending: source checks do not establish the rendered frame appearance, texture sharpness on the user's device, or whether the artwork style matches a yet-to-be-supplied reference.
