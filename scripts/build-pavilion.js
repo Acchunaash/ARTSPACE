@@ -153,6 +153,77 @@ for(let i=0;i<25;i++){
  curvedBox(3,.035,.11,2.7,x,3.34,11.15+.72*(1-Math.pow(x/10,2)),-Math.atan(-.144*x/10));
 }
 
+
+/* Detailed architectural pass: fluted stone profiles, deep window pockets and layered metalwork. */
+const flutedPanel=(m,w,h,d,x,y,z)=>groups[m].push({s:[w,h,d],p:[x,y,z],fluted:true});
+for(const side of [-1,1]){
+  // Deeply recessed glazing bays sit behind stone jambs and projecting sill/head courses.
+  for(let bay=0;bay<5;bay++){
+    const x=side*(4.15+bay*1.02);
+    box(3,.075,3.72,.34,x,.82,11.68);
+    box(5,.78,3.05,.045,x,.86,11.48);
+    box(2,.92,.085,.42,x,-.82,11.52);
+    box(1,.92,.075,.42,x,2.56,11.52);
+    for(const dx of [-.43,.43])box(3,.055,3.15,.24,x+dx,.86,11.43);
+    for(const yy of [-.68,.05,.78,1.51,2.24])box(2,.82,.025,.06,x,yy,11.40);
+  }
+  // Fluted pilaster blades add a real profile rather than another flat rectangular strip.
+  for(let i=0;i<8;i++)flutedPanel(0,.19,4.6,.28,side*(3.55+i*.78),1.02,12.38);
+  // Fine shadow reveals and bronze capillary joints separate each rainscreen course.
+  for(let row=0;row<5;row++){
+    const y=-.92+row*.92;
+    box(1,5.7,.035,.22,side*6.45,y,12.31);
+    box(2,5.7,.022,.25,side*6.45,y+.045,12.36);
+  }
+}
+// Roof soffit is layered with recessed coffers, narrow bronze separators and luminous slots.
+for(let x=-8.4;x<=8.4;x+=1.4){
+  box(3,.045,.12,2.65,x,3.31,10.95);
+  box(8,.62,.018,1.75,x,3.285,10.9);
+}
+for(let z=-10;z<=8;z+=3){
+  box(1,18.8,.045,.09,0,3.52,z);
+  box(2,18.8,.025,.12,0,3.56,z+.06);
+}
+// Entrance threshold has nested stone nosings, dark expansion joints and a bronze sill.
+for(let i=0;i<3;i++){
+  box(0,6.25,.10,.18,0,-1.04+i*.075,12.72+i*.18);
+  box(1,6.28,.025,.22,0,-1.105+i*.075,12.74+i*.18);
+}
+box(2,5.95,.035,.32,0,-.89,12.96);
+
+/* Fluted unit geometry: shallow concave channels catch highlights across each stone pilaster. */
+function flutedPanelGeometry(segments=48){
+ const p=[],n=[],idx=[];
+ for(let layer=0;layer<2;layer++){
+  for(let j=0;j<=1;j++)for(let i=0;i<=segments;i++){
+   const u=i/segments,x=u-.5,y=j-.5;
+   const wave=Math.pow(Math.sin(u*Math.PI*8),2)*.075;
+   const z=(layer===0?.5:-.5)+(layer===0?wave:0);
+   const dz=layer===0?.075*4*Math.PI*Math.sin(u*Math.PI*8)*Math.cos(u*Math.PI*8):0;
+   const l=Math.hypot(dz,1);
+   p.push(x,y,z);n.push(layer===0?-dz/l:0,0,layer===0?1/l:-1);
+  }
+ }
+ const rows=segments+1,base=rows*2;
+ for(let i=0;i<segments;i++){
+  const a=i,b=a+1,c=rows+b,d=rows+a;
+  idx.push(a,b,c,a,c,d);
+  const e=base+a,f=base+b,g=base+rows+b,h=base+rows+a;
+  idx.push(e,g,f,e,h,g);
+ }
+ for(let i=0;i<segments;i++){
+  const a=i,b=i+1,c=base+i,d=base+i+1;
+  idx.push(a,c,d,a,d,b);
+  const a2=rows+i,b2=rows+i+1,c2=base+rows+i,d2=base+rows+i+1;
+  idx.push(a2,b2,d2,a2,d2,c2);
+ }
+ idx.push(0,rows,base+rows,0,base+rows,base);
+ const end=segments;
+ idx.push(end,base+end,base+rows+end,end,base+rows+end,rows+end);
+ return {p,n,idx};
+}
+
 // Build a single shared unit cube and cylinder mesh, then place many transformed instances.
 function cubeGeometry(){
  const p=[],n=[],idx=[],bevel=.04,core=.5-bevel,segments=4;
@@ -244,7 +315,7 @@ function cylinderGeometry(seg=16){
  return {p,n,idx};
 }
 const cube=cubeGeometry(),cyl=cylinderGeometry(),curve42=curvedPanelGeometry(64,.42/.16),curve58=curvedPanelGeometry(64,.58/2.45);
-const all=[cube,cyl,curve42,curve58],bufferParts=[],views=[],accessors=[];
+const flute=flutedPanelGeometry(),all=[cube,cyl,curve42,curve58,flute],bufferParts=[],views=[],accessors=[];
 let offset=0;
 function addBuffer(data,componentType,type,count,min,max){
  while(offset%4){bufferParts.push(0);offset++;}
@@ -253,18 +324,18 @@ function addBuffer(data,componentType,type,count,min,max){
  const acc={bufferView:view,componentType,type,count};if(min)acc.min=min;if(max)acc.max=max;accessors.push(acc);return accessors.length-1;
 }
 const meshDefs=[];
-for(let shape=0;shape<4;shape++){
+for(let shape=0;shape<5;shape++){
  const g=all[shape];
- const pos=addBuffer(new Float32Array(g.p),5126,"VEC3",g.p.length/3,
+ const uv=[];\n for(let i=0;i<g.p.length;i+=3){uv.push(g.p[i]+.5,g.p[i+1]+.5);}\n const texcoord=addBuffer(new Float32Array(uv),5126,"VEC2",uv.length/2);\n const pos=addBuffer(new Float32Array(g.p),5126,"VEC3",g.p.length/3,
   [Math.min(...g.p.filter((_,i)=>i%3===0)),Math.min(...g.p.filter((_,i)=>i%3===1)),Math.min(...g.p.filter((_,i)=>i%3===2))],
   [Math.max(...g.p.filter((_,i)=>i%3===0)),Math.max(...g.p.filter((_,i)=>i%3===1)),Math.max(...g.p.filter((_,i)=>i%3===2))]);
  const norm=addBuffer(new Float32Array(g.n),5126,"VEC3",g.n.length/3);
  const ind=addBuffer(new Uint16Array(g.idx),5123,"SCALAR",g.idx.length);
- for(let m=0;m<materials.length;m++)meshDefs.push({name:materials[m][0]+"-"+(["box","cylinder","curved-panel-42cm","curved-canopy-58cm"][shape]),primitives:[{attributes:{POSITION:pos,NORMAL:norm},indices:ind,material:m}]});
+ for(let m=0;m<materials.length;m++)meshDefs.push({name:materials[m][0]+"-"+(["box","cylinder","curved-panel-42cm","curved-canopy-58cm"][shape]),primitives:[{attributes:{POSITION:pos,NORMAL:n,TEXCOORD_0:texcoord},indices:ind,material:m}]});
 }
 const nodes=[];
 for(let m=0;m<groups.length;m++)for(const item of groups[m]){
- const shape=item.curved?(item.bow===.42?2:3):item.c?1:0;
+ const shape=item.fluted?4:item.curved?(item.bow===.42?2:3):item.c?1:0;
  const scale=item.c?[item.c[0]*2,item.c[1],item.c[0]*2]:item.s;
  nodes.push({name:materials[m][0]+(item.curved?"-continuous-curve":"-element"),mesh:shape*materials.length+m,translation:item.p,scale,...(item.r?{rotation:item.r}:{})});
 }
@@ -273,7 +344,59 @@ const gltfMaterials=materials.map(([name,color,metallic,roughness],i)=>({
  alphaMode:color[3]<1?"BLEND":"OPAQUE",doubleSided:i===4||i===5,
  ...(i===8?{emissiveFactor:[.65,.42,.18]}:{})
 }));
-const json={asset:{version:"2.0",generator:"ARTSPACE architectural pavilion builder"},scene:0,scenes:[{nodes:nodes.map((_,i)=>i)}],nodes,meshes:meshDefs,materials:gltfMaterials,accessors,bufferViews:views,buffers:[{byteLength:offset}]};
+
+/* Embed deterministic, tileable procedural material maps in the GLB (no external texture requests). */
+const zlib=require("zlib");
+function crc32(buf){let crc=0xffffffff;for(const byte of buf){crc^=byte;for(let k=0;k<8;k++)crc=(crc>>>1)^((crc&1)?0xedb88320:0);}return (crc^0xffffffff)>>>0;}
+function pngChunk(type,data){const name=Buffer.from(type),len=Buffer.alloc(4);len.writeUInt32BE(data.length);const body=Buffer.concat([name,data]),crc=Buffer.alloc(4);crc.writeUInt32BE(crc32(body));return Buffer.concat([len,body,crc]);}
+function makePng(width,height,pixels){
+ const rows=Buffer.alloc((width*3+1)*height);
+ for(let y=0;y<height;y++){const start=y*(width*3+1);rows[start]=0;pixels.copy(rows,start+1,y*width*3,(y+1)*width*3);}
+ const head=Buffer.alloc(13);head.writeUInt32BE(width,0);head.writeUInt32BE(height,4);head[8]=8;head[9]=2;
+ return Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),pngChunk("IHDR",head),pngChunk("IDAT",zlib.deflateSync(rows,{level:9})),pngChunk("IEND",Buffer.alloc(0))]);
+}
+function texturePixels(kind){
+ const size=256,pix=Buffer.alloc(size*size*3),height=new Float32Array(size*size);
+ for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+  const i=y*size+x;
+  const n1=Math.sin(x*.19+Math.sin(y*.07)*2.4),n2=Math.sin(y*.31+x*.025),n3=Math.sin(x*.73+Math.cos(y*.43)*1.7);
+  const grain=(n1*.38+n2*.28+n3*.12+Math.sin((x+y)*1.71)*.08);
+  const vein=kind==="oak"?Math.sin(y*.22+Math.sin(x*.025)*4)*.22:Math.sin((x*.11+y*.08)+Math.sin(y*.04)*2)*.11;
+  height[i]=.5+grain*.12+vein*.14;
+  const base=kind==="oak"?[111,76,49]:kind==="concrete"?[151,153,148]:[202,197,183];
+  const amp=kind==="oak"?31:kind==="concrete"?22:24;
+  for(let k=0;k<3;k++)pix[i*3+k]=Math.max(0,Math.min(255,base[k]+(grain+vein)*amp+(Math.sin(x*.047)*3)));
+ }
+ return {pix,height,size};
+}
+function normalPixels(height,size,strength=5){
+ const out=Buffer.alloc(size*size*3);
+ for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+  const at=(xx,yy)=>height[((yy+size)%size)*size+((xx+size)%size)];
+  const dx=(at(x+1,y)-at(x-1,y))*strength,dy=(at(x,y+1)-at(x,y-1))*strength;
+  const nx=-dx,ny=-dy,nz=1,l=Math.hypot(nx,ny,nz),i=(y*size+x)*3;
+  out[i]=Math.round((nx/l*.5+.5)*255);out[i+1]=Math.round((ny/l*.5+.5)*255);out[i+2]=Math.round((nz/l*.5+.5)*255);
+ }
+ return out;
+}
+const imageDefs=[],textureDefs=[];
+function embedTexture(png,name){
+ while(offset%4){bufferParts.push(0);offset++;}
+ const start=offset;bufferParts.push(png);offset+=png.length;
+ const view=views.length;views.push({buffer:0,byteOffset:start,byteLength:png.length});
+ imageDefs.push({name,mimeType:"image/png",bufferView:view});
+ textureDefs.push({sampler:0,source:imageDefs.length-1});
+ return textureDefs.length-1;
+}
+const textureSets=["stone","concrete","oak"].map(kind=>texturePixels(kind));
+const albedoTextures=textureSets.map((set,i)=>embedTexture(makePng(set.size,set.size,set.pix),["limestone-albedo","concrete-albedo","oak-albedo"][i]));
+const normalTextures=textureSets.map((set,i)=>embedTexture(makePng(set.size,set.size,normalPixels(set.height,set.size,i===2?8:5)),["limestone-normal","concrete-normal","oak-normal"][i]));
+for(const [materialIndex,textureIndex] of [[0,0],[1,0],[2,0],[3,1],[6,1],[7,2]]){
+ gltfMaterials[materialIndex].pbrMetallicRoughness.baseColorTexture={index:albedoTextures[textureIndex]};
+ gltfMaterials[materialIndex].normalTexture={index:normalTextures[textureIndex],scale:.32};
+}
+const json={asset:{version:"2.0",generator:"ARTSPACE detailed architectural pavilion builder"},scene:0,scenes:[{nodes:nodes.map((_,i)=>i)}],nodes,meshes:meshDefs,materials:gltfMaterials,images:imageDefs,textures:textureDefs,samplers:[{magFilter:9729,minFilter:9987,wrapS:10497,wrapT:10497}],accessors,bufferViews:views,buffers:[{byteLength:offset}]};
+
 let jsonBytes=Buffer.from(JSON.stringify(json));while(jsonBytes.length%4)jsonBytes=Buffer.concat([jsonBytes,Buffer.from(" ")]);
 let bin=Buffer.concat(bufferParts);while(bin.length%4)bin=Buffer.concat([bin,Buffer.from([0])]);
 const total=12+8+jsonBytes.length+8+bin.length;
