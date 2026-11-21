@@ -617,10 +617,7 @@ window.__artspaceThreeReady.then(loaded=>{
  });
  /* Visible architectural details make the room read as a physical gallery. */
  const accentMat=new THREE.MeshStandardMaterial({color:0xc49a70,emissive:0x5a3218,emissiveIntensity:.32,roughness:.45,metalness:.4});
- /* Curved wall remains visually continuous; lighting washes it from the ceiling. */
- const wallWashMat=new THREE.MeshBasicMaterial({color:0xfff5e8,transparent:true,opacity:.08,side:THREE.DoubleSide});
- const wallWash=new THREE.Mesh(new THREE.PlaneGeometry(8,5.7),wallWashMat);
- wallWash.position.set(0,.2,-5.0);room.add(wallWash);
+ /* The curved exhibition surface is lit by the room's ceiling and fill lights. */
  const tileMat=new THREE.MeshStandardMaterial({color:0x647080,roughness:.72,metalness:.08});
  for(let z=-9;z<7;z+=2){
   const seam=new THREE.Mesh(new THREE.BoxGeometry(12,.012,.018),tileMat);
