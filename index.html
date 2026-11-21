@@ -779,12 +779,12 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  let introStartedAt=0,introFinished=false,introReady=false,introLoadTimeout=0,introPausedAt=0,pendingArchitecturalPavilion=null;
  const settleIntro=reason=>{if(introReady)return;introReady=true;introStartedAt=performance.now();if(!pageVisible)introPausedAt=introStartedAt;if(introLoadTimeout)clearTimeout(introLoadTimeout);console.info("ARTSPACE: exterior intro ready — "+reason+".");};
  let renderer;
- try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:"high-performance"});}
+ try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:window.innerWidth>=700,powerPreference:"high-performance"});}
  catch(error){console.error("ARTSPACE WebGL renderer creation failed:",error);show3DStatus("3D is unavailable in this browser. Showing artwork preview.");return;}
- renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,window.innerWidth<700?1.15:1.6));
+ renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,window.innerWidth<700?1.0:1.5));
  renderer.setClearColor(0x000000,0);
  renderer.outputEncoding=THREE.sRGBEncoding;
- renderer.shadowMap.enabled=true;
+ renderer.shadowMap.enabled=window.innerWidth>=700;
  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  renderer.domElement.className="artspace-webgl";
  renderer.domElement.setAttribute("aria-label","Interactive three-dimensional fashion boutique");
@@ -792,7 +792,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  scene.add(new THREE.HemisphereLight(0xffffff,0x77776d,.48));
  scene.add(new THREE.HemisphereLight(0xf3f6ff,0x77766e,.12));
  const keyLight=new THREE.DirectionalLight(0xffffff,1.3);
- keyLight.position.set(-12,17,18);keyLight.castShadow=true;keyLight.shadow.mapSize.set(window.innerWidth<700?1024:1536,window.innerWidth<700?1024:1536);keyLight.shadow.camera.left=-15;keyLight.shadow.camera.right=15;keyLight.shadow.camera.top=17;keyLight.shadow.camera.bottom=-17;keyLight.shadow.bias=-.00025;keyLight.shadow.normalBias=.025;keyLight.shadow.radius=3;scene.add(keyLight);
+ keyLight.position.set(-12,17,18);keyLight.castShadow=window.innerWidth>=700;keyLight.shadow.mapSize.set(window.innerWidth<700?512:1536,window.innerWidth<700?512:1536);keyLight.shadow.camera.left=-15;keyLight.shadow.camera.right=15;keyLight.shadow.camera.top=17;keyLight.shadow.camera.bottom=-17;keyLight.shadow.bias=-.00025;keyLight.shadow.normalBias=.025;keyLight.shadow.radius=3;scene.add(keyLight);
  const fillLight=new THREE.DirectionalLight(0xe5e9ff,.38);
  fillLight.position.set(5,1,4);scene.add(fillLight);
 
@@ -1318,23 +1318,25 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   const plinthLine=new THREE.Mesh(new THREE.TorusGeometry(.55,.012,8,64),railMetal);plinthLine.rotation.x=Math.PI/2;plinthLine.position.y=.145;group.add(plinthLine);
   const style=skirtWidths[index];
   const points=[new THREE.Vector2(0,.22),new THREE.Vector2(style,.22),new THREE.Vector2(style*.96,.34),new THREE.Vector2(style*.76,.72),new THREE.Vector2(.34,1.2),new THREE.Vector2(.255,1.55),new THREE.Vector2(.32,1.88),new THREE.Vector2(.35,2.18),new THREE.Vector2(.25,2.38),new THREE.Vector2(0,2.42)];
-  const dress=new THREE.Mesh(new THREE.LatheGeometry(points,48),dressColor);dress.position.y=.13;dress.castShadow=true;dress.receiveShadow=true;group.add(dress);
+  const dress=new THREE.Mesh(new THREE.LatheGeometry(points,64),dressColor);dress.position.y=.13;dress.scale.set(1.35,1.18,1.35);dress.castShadow=true;dress.receiveShadow=true;group.add(dress);
   const waist=new THREE.Mesh(new THREE.TorusGeometry(.275,.018,8,48),trimColor);waist.position.y=1.93;group.add(waist);
   const neckline=new THREE.Mesh(new THREE.TorusGeometry(.19,.018,8,48),trimColor);neckline.position.y=2.49;neckline.scale.set(1,.62,1);group.add(neckline);
   if(index===1){for(const side of [-1,1]){const strap=new THREE.Mesh(new THREE.CylinderGeometry(.018,.018,.42,8),trimColor);strap.position.set(side*.17,2.56,0);group.add(strap);}}
   if(index===2){addBoutiqueBox(group,.035,.72,.018,trimColor,0,2.08,.28);for(let k=0;k<4;k++){const button=new THREE.Mesh(new THREE.SphereGeometry(.025,8,8),railMetal);button.position.set(0,2.28-k*.16,.3);group.add(button);}}
   if(index===3||index===5){const seam=new THREE.Mesh(new THREE.TorusGeometry(.34,.012,6,48),trimColor);seam.position.y=1.22;group.add(seam);}
-  const neck=new THREE.Mesh(new THREE.CylinderGeometry(.085,.09,.23,18),mannequinSkin);neck.position.y=2.62;group.add(neck);
-  const head=new THREE.Mesh(new THREE.SphereGeometry(.205,24,20),mannequinFace);head.position.set(0,2.91,.015);head.scale.set(.82,1.12,.88);group.add(head);
-  const hair=new THREE.Mesh(new THREE.SphereGeometry(.218,24,16),mannequinHair);hair.position.set(0,3.005,-.035);hair.scale.set(.9,1.08,.88);group.add(hair);
-  const fringe=new THREE.Mesh(new THREE.SphereGeometry(.16,20,12),mannequinHair);fringe.position.set(0,3.08,.105);fringe.scale.set(1,.48,.55);group.add(fringe);
+  const fallbackBody=new THREE.Group();fallbackBody.name="procedural-human-fallback";group.add(fallbackBody);group.userData.proceduralBody=fallbackBody;
+  const fallbackHair=new THREE.Group();fallbackHair.name="procedural-hair-fallback";group.add(fallbackHair);
+  const neck=new THREE.Mesh(new THREE.CylinderGeometry(.085,.09,.23,18),mannequinSkin);neck.position.y=2.62;fallbackBody.add(neck);
+  const head=new THREE.Mesh(new THREE.SphereGeometry(.205,24,20),mannequinFace);head.position.set(0,2.91,.015);head.scale.set(.82,1.12,.88);fallbackBody.add(head);
+  const hair=new THREE.Mesh(new THREE.SphereGeometry(.218,24,16),mannequinHair);hair.position.set(0,3.005,-.035);hair.scale.set(.9,1.08,.88);fallbackHair.add(hair);
+  const fringe=new THREE.Mesh(new THREE.SphereGeometry(.16,20,12),mannequinHair);fringe.position.set(0,3.08,.105);fringe.scale.set(1,.48,.55);fallbackHair.add(fringe);
   for(const side of [-1,1]){
    const shoulder=new THREE.Vector3(side*.31,2.35,0),elbow=new THREE.Vector3(side*.43,1.82,.015),wrist=new THREE.Vector3(side*.39,1.34,.06);
-   cylinderBetween(group,shoulder,elbow,.075,.06,mannequinSkin);cylinderBetween(group,elbow,wrist,.06,.045,mannequinSkin);
-   const hand=new THREE.Mesh(new THREE.SphereGeometry(.055,12,10),mannequinSkin);hand.position.copy(wrist);hand.position.y-=.08;group.add(hand);
+   cylinderBetween(fallbackBody,shoulder,elbow,.075,.06,mannequinSkin);cylinderBetween(fallbackBody,elbow,wrist,.06,.045,mannequinSkin);
+   const hand=new THREE.Mesh(new THREE.SphereGeometry(.055,12,10),mannequinSkin);hand.position.copy(wrist);hand.position.y-=.08;fallbackBody.add(hand);
    const hip=new THREE.Vector3(side*.14,.88,0),ankle=new THREE.Vector3(side*.15,.24,.015);
-   cylinderBetween(group,hip,ankle,.095,.065,mannequinSkin);
-   const shoe=new THREE.Mesh(new THREE.BoxGeometry(.16,.09,.32),footMat);shoe.position.set(side*.15,.205,.09);group.add(shoe);
+   cylinderBetween(fallbackBody,hip,ankle,.095,.065,mannequinSkin);
+   const shoe=new THREE.Mesh(new THREE.BoxGeometry(.16,.09,.32),footMat);shoe.position.set(side*.15,.205,.09);fallbackBody.add(shoe);
   }
   const labelCanvas=document.createElement("canvas");labelCanvas.width=512;labelCanvas.height=96;
   const labelCtx=labelCanvas.getContext("2d");
@@ -1346,8 +1348,57 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   group.userData.artworkLight=spot;group.userData.artworkTarget=target;
   group.userData.index=index;group.scale.setScalar(.62);gallery.add(group);cards3D.push(group);
  });
+ /* REAL HUMAN FASHION ENGINE — CC0 MakeHuman-derived adult female base mesh.
+    Loaded once after the entrance, cloned per look, and paired with each catalogue dress mesh. */
+ const fashionHumanUrl="https://files.innerscene.com/library/female-base-mesh-3d-person-rigged-a-pose-dba97ed5/c5dce4aeeb1e549cec36/female-base-mesh-base_female.glb";
+ let fashionHumanLoadStarted=false;
+ const startFashionHumanLoad=()=>{
+  if(fashionHumanLoadStarted||!modelLoaderReady||!THREE.GLTFLoader)return;
+  fashionHumanLoadStarted=true;
+  const loadHuman=()=>{
+   const loader=new THREE.GLTFLoader();loader.setCrossOrigin("anonymous");
+   loader.load(fashionHumanUrl,gltf=>{
+    const source=gltf.scene;
+    source.traverse(node=>{
+     if(!node.isMesh)return;
+     const tuneSkin=material=>{
+      if(!material)return material;
+      const next=material.clone(),name=(node.name||"").toLowerCase();
+      if(!/eye|iris|pupil|lash|brow|teeth|mouth|tongue|nail/.test(name)){
+       if(next.color)next.color.set(0xc58d77);
+       if("roughness" in next)next.roughness=.56;
+       if("metalness" in next)next.metalness=0;
+      }
+      return next;
+     };
+     node.material=Array.isArray(node.material)?node.material.map(tuneSkin):tuneSkin(node.material);
+    });
+    cards3D.forEach((group,index)=>{
+     const human=THREE.SkeletonUtils&&THREE.SkeletonUtils.clone?THREE.SkeletonUtils.clone(source):source.clone(true);
+     human.name="ARTSPACE_CC0_RealisticHuman_"+index;
+     human.scale.setScalar(1.9);
+     human.position.set(0,0,0);
+     human.traverse(node=>{if(node.isMesh){node.castShadow=window.innerWidth>=700;node.receiveShadow=window.innerWidth>=700;node.frustumCulled=true;}});
+     group.add(human);
+     if(group.userData.proceduralBody)group.userData.proceduralBody.visible=false;
+     group.userData.humanModel=human;
+    });
+    console.info("ARTSPACE: CC0 human base mesh loaded; six fashion looks now use realistic human anatomy.");
+    const status=stage.querySelector(".webgl-status");if(status)status.hidden=true;
+    if(!raf&&pageVisible)animate();
+   },undefined,error=>{
+    console.warn("ARTSPACE: CC0 human model could not load; keeping the local procedural fallback.",error);
+    show3DStatus("Realistic model asset unavailable; showing the built-in fashion preview.");
+   });
+  };
+  if(THREE.SkeletonUtils&&THREE.SkeletonUtils.clone){loadHuman();return;}
+  const script=document.createElement("script");
+  script.src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/SkeletonUtils.js";
+  script.async=true;script.onload=loadHuman;script.onerror=loadHuman;document.head.appendChild(script);
+ };
  const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
  let raf=0,isDragging3D=false,pointerStartX=0,lastPointerX=0,totalDrag=0,suppressCanvasClick=false,pageVisible=!document.hidden;
+ let lastFrameTime=0;const mobileFrameInterval=window.innerWidth<700?1000/40:0;
  const reducedMotion=!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches);
  renderer.domElement.style.touchAction="pan-y";
  renderer.domElement.style.cursor="grab";
@@ -1397,6 +1448,9 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  window.updateArtspace3D=layoutCards;
  function animate(){
   if(!pageVisible)return;
+  const frameNow=performance.now();
+  if(mobileFrameInterval&&frameNow-lastFrameTime<mobileFrameInterval){raf=requestAnimationFrame(animate);return;}
+  lastFrameTime=frameNow;
   raf=requestAnimationFrame(animate);
   const introDuration=reducedMotion?0:9200;
    const introRaw=introReady?(introDuration?Math.min(1,(performance.now()-introStartedAt)/introDuration):1):0;
@@ -1415,6 +1469,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
     if(introRaw>=1){
     introFinished=true;camera.position.copy(introCameraEnd);camera.fov=44;camera.updateProjectionMatrix();camera.lookAt(introLookTarget.set(0,1.55,introCameraEnd.z-6.5));gallery.rotation.y=0;
     if(pendingArchitecturalPavilion){mountArchitecturalPavilion(pendingArchitecturalPavilion);pendingArchitecturalPavilion=null;}
+    startFashionHumanLoad();
    }
   }
   const ease=reducedMotion?1:(introFinished?.105:.075);
