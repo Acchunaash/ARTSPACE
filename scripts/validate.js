@@ -20,7 +20,7 @@ const inlineScripts = [...html.matchAll(/<script\b(?![^>]*\bsrc=)[^>]*>([\s\S]*?
 if (!inlineScripts.length) fail("No inline application scripts found.");
 inlineScripts.forEach((match, index) => {
   try { new Function(match[1]); }
-  catch (error) { fail("Inline script " + (index + 1) + " has a syntax error: " + error.message); }
+  catch (error) { fail("Inline script " + (index + 1) + " has a syntax error: " + error.stack); }
 });
 
 const style = (html.match(/<style[^>]*>([\s\S]*?)<\/style>/i) || [,""])[1];
