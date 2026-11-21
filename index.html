@@ -477,7 +477,7 @@ window.__artspaceGLTFReady=window.__artspaceThreeReady.then(loaded=>new Promise(
  const load=index=>{
   if(index>=sources.length){console.warn("ARTSPACE GLTFLoader unavailable; retaining fallback exterior.");resolve(false);return;}
   const script=document.createElement("script");script.src=sources[index];script.async=true;
-  script.onload=()=>resolve(!!(window.THREE&&window.THREE.GLTFLoader));
+  script.onload=()=>{if(window.THREE&&window.THREE.GLTFLoader)resolve(true);else load(index+1);};
   script.onerror=()=>load(index+1);document.head.appendChild(script);
  };
  load(0);
@@ -797,6 +797,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
      if(node.material){node.material.needsUpdate=true;}
     });
     scene.add(pavilion);
+    const pavilionSign=sign.clone();pavilionSign.position.set(0,3.15,12.56);scene.add(pavilionSign);
     exterior.visible=false;
     architecturalModelLoaded=true;
     stage.classList.add("architectural-model-ready");
