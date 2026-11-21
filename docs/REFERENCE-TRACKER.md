@@ -131,3 +131,11 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Retained the mobile performance budget: 1.0 device-pixel-ratio cap, antialiasing and shadow maps disabled on narrow screens, a 40 fps render ceiling, and only the currently selected full human model visible on mobile. Desktop keeps the six full model views.
 - Source validator now checks the human rig pose and fallback-hair visibility in addition to the CC0 model loader, clone path and mobile rendering constraints.
 - Important limitation: this is a realistic anatomical human base mesh with separate procedural dress shells, not six individually tailored garment scans or cloth-simulation assets. The current dresses still need custom fitted garment meshes, accurate fabric textures and drape/fit refinement before they can be described as exact real-world product replicas. Visual acceptance is still pending because no deployed-browser capture has been obtained.
+
+
+### Natural boutique lighting and visibility correction — 2026-11-22
+- Inspected the live Three.js lighting setup after the report that the models and dresses looked washed out and were difficult to see.
+- Added ACES filmic tone mapping with a restrained exposure value, reduced the broad hemisphere and directional fill, lowered the warm ceiling pools and cove emissive intensity, and softened the per-look spotlights. This is intended to restore garment colour, body shape and material contrast without making the room dark.
+- Kept the pavilion geometry, camera path, dress meshes, model asset loader, product interactions and mobile performance limits unchanged.
+- Added validator checks for the new exposure and lighting levels. Automated validation and Pages deployment are required before considering this source change complete.
+- Honest visual status: this is a source-level lighting correction. No browser screenshot is available in this workflow, so the final rendered brightness and visibility on the user's phone are not claimed as visually verified.
