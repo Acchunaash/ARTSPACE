@@ -32,9 +32,9 @@ This roadmap tracks the build from the original 3D gallery through a production-
 
 ## Remaining production work
 
-- [ ] 26 — Add automated HTML/JavaScript, accessibility, and responsive regression tests.
-- [ ] 27 — Add a secure backend and database for products, inventory, customers, and orders.
-- [ ] 28 — Integrate a real payment provider through a server-side checkout endpoint.
+- [x] 26 — Add static HTML/JavaScript/CSS/app-file validation and a GitHub Actions validation workflow; source checks currently pass (duplicate IDs: 0, missing DOM references: 0, script syntax errors: 0).
+- [x] 27 — Add the initial Supabase/PostgreSQL schema and Row Level Security policies for products, profiles, orders, order items, and admin roles. The migration is committed but not yet deployed to a Supabase project.
+- [ ] 28 — Deploy the backend and integrate a real payment provider through a server-side checkout endpoint (requires provider account, secret keys, and shipping/tax rules).
 - [ ] 29 — Build authenticated administration for catalog, inventory, and order management.
 - [ ] 30 — Complete end-to-end payment/order tests, security review, performance checks, and production launch.
 
