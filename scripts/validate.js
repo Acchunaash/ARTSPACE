@@ -144,6 +144,16 @@ if (!modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") 
     !modelBuilder.includes("Continuous, smoothly bowed architectural skins")) {
   fail("Pavilion requires continuous smooth curved panel geometry, not only individually angled box segments.");
 }
+/* Gallery atmosphere requires controlled soft shadows, warm cove lighting and directional wall washes. */
+if (!html.includes("new THREE.HemisphereLight(0xffffff,0x77776d,.48)") ||
+    !html.includes("keyLight.shadow.mapSize.set(window.innerWidth<700?1024:1536") ||
+    !html.includes("keyLight.shadow.normalBias=.025") ||
+    !html.includes("new THREE.TubeGeometry(new THREE.CatmullRomCurve3(arcPoints(3.43,wallRadius-.2))") ||
+    !html.includes("new THREE.SpotLight(0xffe6c9,2.05,13,.52,.86,1.8)") ||
+    !html.includes("new THREE.PointLight(0xffdfbd,.32,8,2)") ||
+    !html.includes("roughness:.76,metalness:.015")) {
+  fail("Gallery lighting hierarchy, recessed cove, soft shadow tuning and floor bounce are missing.");
+}
 /* Interior artwork presentation requires individual wall lights, a gallery mat, title plaque and refined collection styling. */
 if (!html.includes("new THREE.SpotLight(0xffedda,1.65,9.5") ||
     !html.includes("group.userData.artworkTarget.position.set") ||
