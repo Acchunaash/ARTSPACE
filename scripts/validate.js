@@ -118,7 +118,7 @@ if (!html.includes("glassFrameMat=new THREE.MeshStandardMaterial") ||
     !html.includes("for(let x=-8;x<=8;x+=4)") ||
     !html.includes("new THREE.IcosahedronGeometry(.43,1)") ||
     !html.includes("const exteriorFill=new THREE.DirectionalLight(0xfff4e4,.48)") ||
-    !html.includes("keyLight.shadow.mapSize.set(1024,1024)")) {
+    !html.includes("keyLight.shadow.mapSize.set(window.innerWidth<700?1024:1536,window.innerWidth<700?1024:1536)")) {
   fail("Museum exterior must retain its facade fins, side glazing, canopy lights, planting and tuned daylight/shadows.");
 }
 
