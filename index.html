@@ -530,9 +530,9 @@ window.__artspaceThreeReady.then(loaded=>{
  const THREE=window.THREE;
  const scene=new THREE.Scene();
  const camera=new THREE.PerspectiveCamera(36,1,.1,100);
- const introCameraStart=new THREE.Vector3(-4.1,.42,16.2),introCameraEnd=new THREE.Vector3(0,.12,11.8);
+ const introCameraStart=new THREE.Vector3(-5.6,.72,19.2),introCameraMid=new THREE.Vector3(4.8,.38,15.1),introCameraEnd=new THREE.Vector3(0,.12,11.8);
  camera.position.copy(introCameraStart);
- const introLookStart=new THREE.Vector3(-1.55,.05,-1.8),introLookEnd=new THREE.Vector3(0,.05,-2.6),introLookTarget=new THREE.Vector3();
+ const introLookStart=new THREE.Vector3(-3.4,.04,-2.0),introLookMid=new THREE.Vector3(2.8,.05,-2.5),introLookEnd=new THREE.Vector3(0,.05,-2.6),introLookTarget=new THREE.Vector3();
  let introStartedAt=0,introFinished=false;
  let renderer;
  try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:"high-performance"});}
@@ -660,13 +660,15 @@ window.__artspaceThreeReady.then(loaded=>{
   if(!pageVisible)return;
   raf=requestAnimationFrame(animate);
   if(!introStartedAt)introStartedAt=performance.now();
-  const introDuration=reducedMotion?0:4200;
+  const introDuration=reducedMotion?0:11200;
   const introRaw=introDuration?Math.min(1,(performance.now()-introStartedAt)/introDuration):1;
-  const introEase=1-Math.pow(1-introRaw,3);
+  const introSegment=introRaw<.62?0:1;
+  const segmentRaw=introSegment===0?introRaw/.62:(introRaw-.62)/.38;
+  const introEase=1-Math.pow(1-segmentRaw,3);
   if(!introFinished){
-   camera.position.lerpVectors(introCameraStart,introCameraEnd,introEase);
-   camera.lookAt(introLookTarget.lerpVectors(introLookStart,introLookEnd,introEase));
-   gallery.rotation.y=(1-introEase)*-.16;
+   if(introSegment===0){camera.position.lerpVectors(introCameraStart,introCameraMid,introEase);camera.lookAt(introLookTarget.lerpVectors(introLookStart,introLookMid,introEase));}
+   else{camera.position.lerpVectors(introCameraMid,introCameraEnd,introEase);camera.lookAt(introLookTarget.lerpVectors(introLookMid,introLookEnd,introEase));}
+   gallery.rotation.y=(1-introRaw)*-.22;
    if(introRaw>=1){introFinished=true;camera.position.copy(introCameraEnd);camera.lookAt(introLookEnd);gallery.rotation.y=0;}
   }
   if(introFinished&&!isDragging3D&&!reducedMotion){const idleAngle=Math.sin(performance.now()*.00022)*.045;gallery.rotation.y+=(idleAngle-gallery.rotation.y)*.012;}
