@@ -1054,6 +1054,17 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
 
  const floor=new THREE.Mesh(new THREE.PlaneGeometry(17,19),floorMaterial);
  floor.rotation.x=-Math.PI/2;floor.position.set(0,-1.72,-1.15);floor.receiveShadow=true;room.add(floor);
+ /* Large-format honed limestone floor: quiet grout joints establish human scale without a tiled/checkerboard look. */
+ const floorJointMaterial=new THREE.MeshStandardMaterial({color:0xbab7ae,roughness:.96,metalness:0});
+ const floorJointY=-1.7175;
+ for(let x=-6.375;x<=6.375;x+=2.125){
+  const joint=new THREE.Mesh(new THREE.BoxGeometry(.012,.003,19),floorJointMaterial);
+  joint.position.set(x,floorJointY,-1.15);joint.receiveShadow=true;room.add(joint);
+ }
+ for(let z=-8.275;z<=5.975;z+=2.375){
+  const joint=new THREE.Mesh(new THREE.BoxGeometry(17,.003,.012),floorJointMaterial);
+  joint.position.set(0,floorJointY,z);joint.receiveShadow=true;room.add(joint);
+ }
  /* Continuous concave exhibition wall: the visitor stands inside the arc. */
  const wallRadius=8.6,wallCenterZ=3.5,wallStart=Math.PI*.57,wallSweep=Math.PI*.86;
  const curvedWallGeometry=new THREE.CylinderGeometry(wallRadius,wallRadius,7.1,96,1,true,wallStart,wallSweep);
