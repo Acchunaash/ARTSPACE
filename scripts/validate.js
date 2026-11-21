@@ -118,6 +118,22 @@ if (!html.includes("new THREE.PlaneGeometry(17,19),floorMaterial") ||
     !html.includes("Curved plaster panel joints and end piers give the exhibition wall architectural scale.")) {
   fail("Gallery interior must have a vaulted ceiling, curved ceiling ribs, linear light channels and detailed curved-wall panel joints.");
 }
+/* Photoreal material pipeline: real Poly Haven CC0 PBR maps must augment the embedded fallback. */
+if (!html.includes("white_stucco_02_diff_2k.jpg") ||
+    !html.includes("white_stucco_02_nor_gl_2k.jpg") ||
+    !html.includes("white_stucco_02_rough_2k.jpg") ||
+    !html.includes("registerArchitecturalPbr(wallMaterial,2.2)") ||
+    !html.includes("material.roughnessMap=architecturalPbr.roughness") ||
+    !html.includes("CC0 scanned architectural")) {
+  fail("The real CC0 scanned PBR material pipeline is missing.");
+}
+if (!html.includes("const visitorBench=new THREE.Group()") ||
+    !html.includes("const furnitureStone=new THREE.MeshStandardMaterial") ||
+    !html.includes("const plinth=new THREE.Group()") ||
+    !html.includes("Shadow-gap reveal below the bench seat")) {
+  fail("Dimensional gallery plinths and visitor seating are missing.");
+}
+
 if (!html.includes("if(!stage.classList.contains(\"webgl-ready\"))") ||
     !html.includes("new THREE.CanvasTexture(fallbackCanvas)")) {
   fail("WebGL reveal must not wait for every texture, and failed artwork textures need a fallback.");
