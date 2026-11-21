@@ -661,13 +661,13 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  const THREE=window.THREE;
  const scene=new THREE.Scene();
  const camera=new THREE.PerspectiveCamera(36,1,.1,100);
- const introCameraStart=new THREE.Vector3(0,1.65,31),introCameraEnd=new THREE.Vector3(0,1.65,4.7);
-  /* First-person entrance: eye-level, centered on the doorway, and moving straight forward. */
-  const introCameraPath=new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(0,1.65,22),new THREE.Vector3(0,1.65,14),new THREE.Vector3(0,1.65,9.5),new THREE.Vector3(0,1.65,4.7)],false,"centripetal");
+ const introCameraStart=new THREE.Vector3(0,9.2,31),introCameraEnd=new THREE.Vector3(0,1.65,4.7);
+  /* Cinematic two-stage move: reveal the complete pavilion, arc toward the portal, then settle to human eye height before crossing the threshold. */
+  const introCameraPath=new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(-5.2,8.2,25),new THREE.Vector3(-6.2,6.25,19.2),new THREE.Vector3(-4.2,4.35,14.6),new THREE.Vector3(-1.8,2.35,10.8),new THREE.Vector3(-.35,1.72,8.9),introCameraEnd],false,"centripetal");
  camera.position.copy(introCameraStart);
- const introLookStart=new THREE.Vector3(0,1.65,21),introLookEnd=new THREE.Vector3(0,1.65,-5.3),introLookTarget=new THREE.Vector3();
-  /* Keep the view level and aimed through the entrance, like a person walking into the room. */
-  const introLookPath=new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,1.65,8),new THREE.Vector3(0,1.65,0),introLookEnd],false,"centripetal");
+ const introLookStart=new THREE.Vector3(0,1.7,8),introLookEnd=new THREE.Vector3(0,1.5,-5.3),introLookTarget=new THREE.Vector3();
+  /* The gaze turns toward the real doorway, then continues into the curved exhibition room. */
+  const introLookPath=new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,1.8,8),new THREE.Vector3(0,1.8,5),new THREE.Vector3(0,1.65,1),introLookEnd],false,"centripetal");
  let introStartedAt=0,introFinished=false,introReady=false,introLoadTimeout=0,introPausedAt=0,pendingArchitecturalPavilion=null;
  const settleIntro=reason=>{if(introReady)return;introReady=true;introStartedAt=performance.now();if(!pageVisible)introPausedAt=introStartedAt;if(introLoadTimeout)clearTimeout(introLoadTimeout);console.info("ARTSPACE: exterior intro ready — "+reason+".");};
  let renderer;
@@ -960,6 +960,20 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   const skirtingReveal=new THREE.Mesh(new THREE.BoxGeometry(.13,.025,18.45),champagneMetal);
   skirtingReveal.position.set(side*8.30,-1.405,-1.15);room.add(skirtingReveal);
  }
+ /* Curved plaster panel joints and end piers give the exhibition wall architectural scale. */
+ for(let i=0;i<=14;i++){
+  const angle=wallStart+.075+(wallSweep-.15)*i/14;
+  const x=Math.sin(angle)*(wallRadius-.045),z=wallCenterZ+Math.cos(angle)*(wallRadius-.045);
+  const joint=new THREE.Mesh(new THREE.BoxGeometry(.018,5.35,.024),shadowRevealMaterial);
+  joint.position.set(x,.1,z);joint.rotation.y=angle;room.add(joint);
+ }
+ [wallStart+.12,wallStart+wallSweep-.12].forEach(angle=>{
+  const x=Math.sin(angle)*(wallRadius-.13),z=wallCenterZ+Math.cos(angle)*(wallRadius-.13);
+  const pier=new THREE.Mesh(new THREE.BoxGeometry(.22,5.9,.2),warmLimestone);
+  pier.position.set(x,.1,z);pier.rotation.y=angle;pier.castShadow=true;room.add(pier);
+  const reveal=new THREE.Mesh(new THREE.BoxGeometry(.035,5.65,.22),champagneMetal);
+  reveal.position.set(x-Math.sin(angle)*.12,.1,z-Math.cos(angle)*.12);reveal.rotation.y=angle;room.add(reveal);
+ }
  /* A deep, layered inner portal makes the transition from the glazed entrance feel architectural. */
  for(const side of [-1,1]){
   const jamb=new THREE.Mesh(new THREE.BoxGeometry(.22,4.65,.42),warmLimestone);
@@ -995,8 +1009,40 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  leftWall.rotation.y=Math.PI/2;leftWall.position.set(-8.5,.15,-1.15);room.add(leftWall);
  const rightWall=new THREE.Mesh(new THREE.PlaneGeometry(19,7),sideMaterial);
  rightWall.rotation.y=-Math.PI/2;rightWall.position.set(8.5,.15,-1.15);room.add(rightWall);
- const ceiling=new THREE.Mesh(new THREE.PlaneGeometry(17,19),ceilingMaterial);
- ceiling.rotation.x=Math.PI/2;ceiling.position.set(0,3.65,-1.15);room.add(ceiling);
+ /* A shallow vaulted ceiling replaces the flat lid; its profile follows the gallery width. */
+ const vaultGeometry=new THREE.BufferGeometry(),vaultPositions=[],vaultIndices=[],vaultUvs=[];
+ const vaultY=x=>3.65+.52*(1-Math.pow(x/8.5,2));
+ const vaultSegmentsX=64,vaultSegmentsZ=32;
+ for(let j=0;j<=vaultSegmentsZ;j++){
+  const z=-10.65+19*j/vaultSegmentsZ;
+  for(let i=0;i<=vaultSegmentsX;i++){
+   const x=-8.5+17*i/vaultSegmentsX;
+   const y=vaultY(x)+.025*Math.cos((z+1.15)*Math.PI/9);
+   vaultPositions.push(x,y,z);vaultUvs.push(i/vaultSegmentsX,j/vaultSegmentsZ);
+  }
+ }
+ for(let j=0;j<vaultSegmentsZ;j++)for(let i=0;i<vaultSegmentsX;i++){
+  const a=j*(vaultSegmentsX+1)+i,b=a+1,c=b+vaultSegmentsX+1,d=a+vaultSegmentsX+1;
+  vaultIndices.push(a,b,c,a,c,d);
+ }
+ vaultGeometry.setAttribute("position",new THREE.Float32BufferAttribute(vaultPositions,3));
+ vaultGeometry.setAttribute("uv",new THREE.Float32BufferAttribute(vaultUvs,2));
+ vaultGeometry.setIndex(vaultIndices);vaultGeometry.computeVertexNormals();
+ ceilingMaterial.side=THREE.DoubleSide;
+ const vaultedCeiling=new THREE.Mesh(vaultGeometry,ceilingMaterial);vaultedCeiling.receiveShadow=true;room.add(vaultedCeiling);
+ /* Fine structural ribs and recessed linear light channels follow the vaulted profile. */
+ for(let z=-8.5;z<=7;z+=3.1){
+  const points=[];
+  for(let i=0;i<=48;i++){const x=-8.15+16.3*i/48;points.push(new THREE.Vector3(x,vaultY(x)-.018,z));}
+  const rib=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),96,.022,8,false),champagneMetal);
+  rib.castShadow=false;room.add(rib);
+ }
+ for(const x of [-2.55,2.55]){
+  const points=[];
+  for(let i=0;i<=24;i++){const z=-9.4+17.3*i/24;points.push(new THREE.Vector3(x,vaultY(x)-.045,z));}
+  const channel=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),48,.032,8,false),coveGlowMaterial);
+  room.add(channel);
+ }
  const trimMaterial=new THREE.MeshStandardMaterial({color:0xb78b61,roughness:.55,metalness:.35});
  [-8.42,8.42].forEach(x=>{
   const trim=new THREE.Mesh(new THREE.BoxGeometry(.055,.045,19),trimMaterial);
@@ -1133,7 +1179,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   camera.aspect=aspect;camera.updateProjectionMatrix();renderer.setSize(w,h,false);
   /* Keep the complete exterior within the opening frame on narrow phone screens. */
   introCameraStart.z=Math.max(31,9.8/(Math.tan(THREE.MathUtils.degToRad(18))*Math.max(.35,aspect)));
-   introCameraStart.y=1.65;
+   introCameraStart.y=9.2;
    introCameraPath.points[0].copy(introCameraStart);
    introCameraPath.points[1].z=Math.max(25,introCameraStart.z*.8);
    if(!introStartedAt&&!introFinished)camera.position.copy(introCameraStart);
@@ -1163,20 +1209,17 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  function animate(){
   if(!pageVisible)return;
   raf=requestAnimationFrame(animate);
-  const introDuration=reducedMotion?0:4200;
+  const introDuration=reducedMotion?0:5200;
    const introRaw=introReady?(introDuration?Math.min(1,(performance.now()-introStartedAt)/introDuration):1):0;
-   const easeCamera=t=>1-Math.pow(1-t,2);
+   const easeCamera=t=>t*t*(3-2*t);
    if(!introReady){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}
    else if(!introFinished){
-    if(introRaw<.04){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}
+    if(introRaw<.02){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}
     else{
-     const pathT=easeCamera((introRaw-.04)/.96);
+     const pathT=easeCamera((introRaw-.02)/.98);
      camera.position.copy(introCameraPath.getPointAt(pathT));
-     camera.position.y+=Math.sin(pathT*Math.PI*8)*.025;
-
-     /* Centered doorway route; eye height stays below the canopy and gallery ceiling. */
-     camera.position.x=0;
-     camera.position.y=Math.min(camera.position.y,1.72);
+     camera.position.y+=Math.sin(pathT*Math.PI*6)*.012;
+     /* Preserve the exterior arc; descend only on the final aligned approach through the portal. */
      camera.lookAt(introLookTarget.copy(introLookPath.getPointAt(pathT)));
     }
     if(introRaw>=1){
