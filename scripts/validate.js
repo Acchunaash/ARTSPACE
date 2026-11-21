@@ -141,8 +141,14 @@ if (!html.includes("introReady=false") ||
     !html.includes("GLTFLoader unavailable; procedural exterior retained") ||
     !html.includes("const introRaw=introReady?") ||
     !html.includes("if(!introReady){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}") ||
+    !html.includes("pendingArchitecturalPavilion=null") ||
+    !html.includes("late pavilion queued until the entrance camera finishes") ||
+    !html.includes("if(pendingArchitecturalPavilion){mountArchitecturalPavilion(pendingArchitecturalPavilion);pendingArchitecturalPavilion=null;}") ||
+    !html.includes("introStartedAt+=performance.now()-introPausedAt") ||
+    !html.includes("if(introReady&&!introFinished&&!introPausedAt)introPausedAt=performance.now()") ||
+    html.includes("if(introReady){console.warn(\"ARTSPACE: pavilion arrived after the intro fallback timeout; keeping the stable fallback.\");return;}") ||
     html.includes("if(!introStartedAt)introStartedAt=performance.now();")) {
-  fail("The opening camera must hold the full exterior until the detailed pavilion loads or a bounded fallback is selected.");
+  fail("The entrance must handle late pavilion loads without mid-animation swaps and pause its clock while the page is hidden.");
 }
 
 /* The deployed exterior is a real glTF scene asset generated during build, not runtime box construction. */
