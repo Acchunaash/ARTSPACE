@@ -785,17 +785,17 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  renderer.setClearColor(0x000000,0);
  renderer.outputEncoding=THREE.sRGBEncoding;
   renderer.toneMapping=THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure=.92;
+  renderer.toneMappingExposure=.68;
  renderer.shadowMap.enabled=window.innerWidth>=700;
  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  renderer.domElement.className="artspace-webgl";
  renderer.domElement.setAttribute("aria-label","Interactive three-dimensional fashion boutique");
  stage.prepend(renderer.domElement);
- scene.add(new THREE.HemisphereLight(0xffffff,0x77776d,.34));
- scene.add(new THREE.HemisphereLight(0xf3f6ff,0x77766e,.055));
- const keyLight=new THREE.DirectionalLight(0xffffff,.82);
+ scene.add(new THREE.HemisphereLight(0xffffff,0x77776d,.19));
+ scene.add(new THREE.HemisphereLight(0xf3f6ff,0x77766e,.025));
+ const keyLight=new THREE.DirectionalLight(0xffffff,.46);
  keyLight.position.set(-12,17,18);keyLight.castShadow=window.innerWidth>=700;keyLight.shadow.mapSize.set(window.innerWidth<700?512:1536,window.innerWidth<700?512:1536);keyLight.shadow.camera.left=-15;keyLight.shadow.camera.right=15;keyLight.shadow.camera.top=17;keyLight.shadow.camera.bottom=-17;keyLight.shadow.bias=-.00025;keyLight.shadow.normalBias=.025;keyLight.shadow.radius=3;scene.add(keyLight);
- const fillLight=new THREE.DirectionalLight(0xe5e9ff,.16);
+ const fillLight=new THREE.DirectionalLight(0xe5e9ff,.07);
  fillLight.position.set(5,1,4);scene.add(fillLight);
 
  /* Soft studio environment: broad ceiling panels create readable, restrained reflections
@@ -805,11 +805,11 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   const envCanvas=document.createElement("canvas");envCanvas.width=1024;envCanvas.height=512;
   const envCtx=envCanvas.getContext("2d");
   const envGradient=envCtx.createLinearGradient(0,0,0,512);
-  envGradient.addColorStop(0,"#dce5e6");envGradient.addColorStop(.42,"#f4f2eb");envGradient.addColorStop(1,"#737d7c");
+  envGradient.addColorStop(0,"#aeb8b8");envGradient.addColorStop(.42,"#c9c6bc");envGradient.addColorStop(1,"#555c5b");
   envCtx.fillStyle=envGradient;envCtx.fillRect(0,0,1024,512);
-  envCtx.fillStyle="#fffdf4";
+  envCtx.fillStyle="#c8c5ba";
   [[105,72,110,170],[345,38,82,205],[650,55,130,180],[850,95,72,150]].forEach(([x,y,w,h])=>envCtx.fillRect(x,y,w,h));
-  envCtx.fillStyle="rgba(255,255,255,.28)";envCtx.fillRect(0,245,1024,26);
+  envCtx.fillStyle="rgba(225,220,207,.12)";envCtx.fillRect(0,245,1024,26);
   const envTexture=new THREE.CanvasTexture(envCanvas);envTexture.mapping=THREE.EquirectangularReflectionMapping;
   envTexture.encoding=THREE.sRGBEncoding;
   const reflectionGenerator=new THREE.PMREMGenerator(renderer);
@@ -819,7 +819,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   envTexture.dispose();reflectionGenerator.dispose();
  }catch(error){console.warn("ARTSPACE reflection environment unavailable; using direct lighting.",error);}
  /* Warm, low-intensity interior pools make the lobby legible through the glass. */
- [[0,2.05,5.2,.72],[-4.1,1.35,-1.8,.42],[4.1,1.35,-1.8,.42]].forEach(([x,y,z,intensity])=>{
+ [[0,2.05,5.2,.36],[-4.1,1.35,-1.8,.2],[4.1,1.35,-1.8,.2]].forEach(([x,y,z,intensity])=>{
   const interiorLight=new THREE.PointLight(0xffe5c9,intensity,15,2);
   interiorLight.position.set(x,y,z);scene.add(interiorLight);
  });
@@ -1076,7 +1076,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  const shadowRevealMaterial=new THREE.MeshStandardMaterial({color:0xaaa69b,roughness:.88,metalness:.04});
  const champagneMetal=new THREE.MeshStandardMaterial({color:0xaaa18f,roughness:.48,metalness:.48});
  const ceilingWarm=new THREE.MeshStandardMaterial({color:0xf4f0e7,roughness:.92,metalness:0});
- const coveGlowMaterial=new THREE.MeshStandardMaterial({color:0xffe8c8,emissive:0xffd49c,emissiveIntensity:.18,roughness:.32,metalness:.12});
+ const coveGlowMaterial=new THREE.MeshStandardMaterial({color:0xffe8c8,emissive:0xffd49c,emissiveIntensity:.07,roughness:.32,metalness:.12});
  const makeArcDetail=(radius,y,material,tube=.025)=>{
   const curve=new THREE.CatmullRomCurve3(arcPoints(y,radius));
   const mesh=new THREE.Mesh(new THREE.TubeGeometry(curve,160,tube,8,false),material);
@@ -1143,7 +1143,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  portalHead.position.set(0,2.99,8.02);portalHead.castShadow=true;room.add(portalHead);
  const portalShadow=new THREE.Mesh(new THREE.BoxGeometry(5.82,.045,.52),shadowRevealMaterial);
  portalShadow.position.set(0,2.84,7.99);room.add(portalShadow);
- const portalLight=new THREE.Mesh(new THREE.BoxGeometry(5.5,.025,.16),new THREE.MeshBasicMaterial({color:0xffe8c8}));
+ const portalLight=new THREE.Mesh(new THREE.BoxGeometry(5.5,.025,.16),new THREE.MeshStandardMaterial({color:0xc9b99e,emissive:0x76634b,emissiveIntensity:.12,roughness:.7}));
  portalLight.position.set(0,2.79,7.94);room.add(portalLight);
  /* Curved floor borders echo the wall radius and frame the central viewing space. */
  makeArcDetail(7.82,-1.685,champagneMetal,.012);
@@ -1154,7 +1154,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   const angle=wallStart+.16+(wallSweep-.32)*i/6;
   const x=Math.sin(angle)*(wallRadius-1.25),z=wallCenterZ+Math.cos(angle)*(wallRadius-1.25);
   const target=new THREE.Object3D();target.position.set(Math.sin(angle)*(wallRadius-.04),.2,wallCenterZ+Math.cos(angle)*(wallRadius-.04));room.add(target);
-  const wash=new THREE.SpotLight(0xfff0dc,.72,5.8,.82,.9,1.6);
+  const wash=new THREE.SpotLight(0xfff0dc,.34,5.8,.82,.9,1.6);
   wash.position.set(x,3.0,z);wash.target=target;wash.castShadow=false;room.add(wash);
  }
  /* Restrained floor slab joints use warm stone tones rather than dark technical grid lines. */
@@ -1212,24 +1212,24 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  [-3.5,0,3.5].forEach(x=>{
   const lamp=new THREE.Mesh(new THREE.CylinderGeometry(.13,.17,.055,24),new THREE.MeshBasicMaterial({color:0xffd5a1}));
   lamp.rotation.x=Math.PI/2;lamp.position.set(x,3.29,1.1);room.add(lamp);
-  const glow=new THREE.PointLight(0xffd1a0,.72,10,2);
+  const glow=new THREE.PointLight(0xffd1a0,.28,10,2);
   glow.position.set(x,2.75,1.0);room.add(glow);
  });
  /* Recessed ceiling coves and aimed gallery wash create a calm museum lighting hierarchy. */
- const coveMaterial=new THREE.MeshStandardMaterial({color:0xffe7c9,emissive:0xffc987,emissiveIntensity:.22,roughness:.38,metalness:.08});
+ const coveMaterial=new THREE.MeshStandardMaterial({color:0xffe7c9,emissive:0xffc987,emissiveIntensity:.08,roughness:.38,metalness:.08});
  const coveStrip=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(arcPoints(3.43,wallRadius-.2)),128,.022,8,false),coveMaterial);
  room.add(coveStrip);
- const ceilingPanelMaterial=new THREE.MeshBasicMaterial({color:0xfff1dc});
+ const ceilingPanelMaterial=new THREE.MeshStandardMaterial({color:0xd8d2c7,emissive:0x8f8068,emissiveIntensity:.12,roughness:.72});
  [-3.5,0,3.5].forEach((x,i)=>{
   const panel=new THREE.Mesh(new THREE.BoxGeometry(1.65,.035,.52),ceilingPanelMaterial);
   panel.position.set(x,3.61,.9);room.add(panel);
   const target=new THREE.Object3D();target.position.set(x*.82,.05,-4.25);room.add(target);
-  const wash=new THREE.SpotLight(0xffe6c9,1.15,13,.52,.86,1.8);
+  const wash=new THREE.SpotLight(0xffe6c9,.48,13,.52,.86,1.8);
   wash.position.set(x,3.12,.9);wash.target=target;wash.castShadow=false;room.add(wash);
  });
  /* Low-level reflected warmth keeps the stone floor from reading as a flat grey plane. */
  [-1,1].forEach(side=>{
-  const bounce=new THREE.PointLight(0xffdfbd,.18,8,2);
+  const bounce=new THREE.PointLight(0xffdfbd,.08,8,2);
   bounce.position.set(side*6,-.35,-1.4);room.add(bounce);
  });
  /* Visible architectural details make the room read as a physical gallery. */
@@ -1349,7 +1349,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   if(labelCtx){labelCtx.fillStyle="#f7f3eb";labelCtx.fillRect(0,0,512,96);labelCtx.fillStyle="#777064";labelCtx.font="600 15px Arial";labelCtx.fillText("ARTSPACE  /  THE DRESS EDIT",18,27);labelCtx.fillStyle="#292722";labelCtx.font="600 25px Arial";labelCtx.fillText(product.title,18,62);}
   const labelTexture=new THREE.CanvasTexture(labelCanvas);labelTexture.encoding=THREE.sRGBEncoding;
   const label=new THREE.Mesh(new THREE.PlaneGeometry(1.05,.2),new THREE.MeshBasicMaterial({map:labelTexture}));label.position.set(0,.17,.57);group.add(label);
-  const spot=new THREE.SpotLight(0xffebd4,1.15,9,Math.PI/5,.82,1.4);spot.castShadow=false;
+  const spot=new THREE.SpotLight(0xffebd4,.42,9,Math.PI/5,.82,1.4);spot.castShadow=false;
   const target=new THREE.Object3D();gallery.add(spot,target);spot.target=target;
   group.userData.artworkLight=spot;group.userData.artworkTarget=target;
   group.userData.index=index;group.scale.setScalar(.62);gallery.add(group);cards3D.push(group);
