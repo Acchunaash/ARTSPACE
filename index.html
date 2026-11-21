@@ -709,6 +709,65 @@ window.__artspaceThreeReady.then(loaded=>{
    for(let n=0;n<5;n++){const shrub=new THREE.Mesh(new THREE.IcosahedronGeometry(.43,1),leafMat);shrub.position.set(x-1+n*.5,-.98,12.5);shrub.scale.set(1,.82,1);shrub.castShadow=true;exterior.add(shrub);}
   });
   const exteriorFill=new THREE.DirectionalLight(0xfff4e4,.48);exteriorFill.position.set(12,8,18);exterior.add(exteriorFill);
+  /* Premium architectural pass: layered limestone rainscreen, deep portal, bronze details and controlled reflections. */
+  const limestonePanel=new THREE.MeshStandardMaterial({color:0xe4e1d8,roughness:.82,metalness:.025});
+  const limestoneShadow=new THREE.MeshStandardMaterial({color:0xaaa99f,roughness:.9,metalness:.02});
+  const bronze=new THREE.MeshStandardMaterial({color:0x725b43,roughness:.34,metalness:.82});
+  const darkReveal=new THREE.MeshStandardMaterial({color:0x303b3d,roughness:.48,metalness:.58});
+  const glassReflection=new THREE.MeshStandardMaterial({color:0xdce8e5,roughness:.12,metalness:.32,transparent:true,opacity:.24,side:THREE.DoubleSide,depthWrite:false});
+  /* Fine-grain facade panels sit proud of a recessed shadow plane like a rainscreen system. */
+  addBox(exterior,19.25,.12,.22,limestoneShadow,0,3.79,9.43);
+  for(let side of [-1,1]){
+   for(let row=0;row<3;row++){
+    const y=-.72+row*1.78;
+    addBox(exterior,5.45,1.68,.075,limestonePanel,side*6.28,y,9.405);
+    addBox(exterior,.018,1.52,.012,limestoneShadow,side*6.28,y,9.45);
+   }
+   for(let k=0;k<7;k++){
+    const x=side*(3.58+k*.86);
+    addBox(exterior,.028,5.05,.035,limestoneShadow,x,1.02,9.51);
+   }
+   /* Bronze vertical blades create a refined, deep-shadow rhythm at both ends. */
+   for(let k=0;k<4;k++){
+    const x=side*(7.25+k*.48);
+    addBox(exterior,.075,5.35,.22,bronze,x,1.02,9.55);
+   }
+   addBox(exterior,.16,5.6,.2,limestonePanel,side*9.18,1.05,9.5);
+  }
+  /* Oversized recessed entry portal with a dark inner reveal and a floating bronze head. */
+  addBox(exterior,6.35,.18,.52,limestonePanel,0,3.12,9.58);
+  addBox(exterior,.18,4.55,.5,limestonePanel,-3.08,.72,9.58);
+  addBox(exterior,.18,4.55,.5,limestonePanel,3.08,.72,9.58);
+  addBox(exterior,5.95,.07,.18,darkReveal,0,3.0,9.69);
+  addBox(exterior,5.95,.08,.2,bronze,0,3.23,9.72);
+  addBox(exterior,.055,4.05,.1,bronze,-2.76,.72,9.69);
+  addBox(exterior,.055,4.05,.1,bronze,2.76,.72,9.69);
+  /* Glazing receives slim vertical reflection fins rather than an opaque blue tint. */
+  [-2.35,-1.05,1.05,2.35].forEach(x=>{
+   const reflection=new THREE.Mesh(new THREE.PlaneGeometry(.16,3.55),glassReflection);
+   reflection.position.set(x,.83,9.075);exterior.add(reflection);
+  });
+  /* Roof edge, soffit shadow line and slender support columns articulate the cantilever. */
+  addBox(exterior,20.15,.16,.42,limestonePanel,0,4.34,9.35);
+  addBox(exterior,20.35,.09,.16,darkReveal,0,4.23,9.58);
+  [-8.45,8.45].forEach(x=>{
+   addBox(exterior,.16,5.15,.18,bronze,x,.98,9.64);
+   addBox(exterior,.42,.12,.42,limestonePanel,x,-1.18,9.64);
+  });
+  /* Larger-format forecourt stone slabs with narrow joints and low recessed path lights. */
+  const jointMat=new THREE.MeshStandardMaterial({color:0xaaa99f,roughness:1});
+  for(let x=-8;x<=8;x+=2.4){
+   addBox(exterior,.025,.012,12.5,jointMat,x,-1.728,16.1);
+  }
+  for(let z=11.5;z<=21.5;z+=2.5){
+   addBox(exterior,17,.012,.025,jointMat,0,-1.727,z);
+  }
+  for(let x=-6;x<=6;x+=4){
+   const pathLight=new THREE.Mesh(new THREE.BoxGeometry(.42,.035,.12),new THREE.MeshBasicMaterial({color:0xffe4bf}));
+   pathLight.position.set(x,-1.69,14.2);exterior.add(pathLight);
+  }
+  const facadeWash=new THREE.SpotLight(0xffe6c8,1.15,24,Math.PI/4,.55,1.4);
+  facadeWash.position.set(-8,7,17);facadeWash.target.position.set(0,1,9);exterior.add(facadeWash,facadeWash.target);
  /* Architectural gallery shell: floor, rear wall, side walls and ceiling. */
  const room=new THREE.Group();scene.add(room);
  const wallMaterial=new THREE.MeshStandardMaterial({color:0xf4f4f1,roughness:.96,metalness:0});
