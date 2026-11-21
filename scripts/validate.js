@@ -93,14 +93,16 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
     !html.includes("addBox(exterior,19.5,.52,24.6,facadeMat,0,4,-1.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,-6.3,1.05,9.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,6.3,1.05,9.15)") ||
-    !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(-5.2,8.2,25),new THREE.Vector3(-6.2,6.25,19.2),new THREE.Vector3(-3.2,3.8,14.6),new THREE.Vector3(-1.0,2.15,10.8),new THREE.Vector3(-.2,1.68,8.9),introCameraEnd],false,\"centripetal\")") ||
-    !html.includes("new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,1.8,8),new THREE.Vector3(0,1.8,5),new THREE.Vector3(0,1.65,1),introLookEnd],false,\"centripetal\")") ||
+    !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(15.2,8.3,25.8),new THREE.Vector3(13.4,6.8,21.2),new THREE.Vector3(9.2,5.0,17.2),new THREE.Vector3(4.8,3.25,14.6),new THREE.Vector3(1.25,1.9,12.55),new THREE.Vector3(0,1.65,10.95),introCameraEnd],false,\"centripetal\")") ||
+    !html.includes("new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,2.0,6),new THREE.Vector3(0,1.9,10),new THREE.Vector3(0,1.75,10.8),new THREE.Vector3(0,1.65,4),introLookEnd],false,\"centripetal\")") ||
     !html.includes("introCameraPath.getPointAt(pathT)") ||
-    !html.includes("const introDuration=reducedMotion?0:5200;") ||
+    !html.includes("const introDuration=reducedMotion?0:7800;") ||
     !html.includes("if(introRaw<.02){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}") ||
     !html.includes("const pathT=easeCamera((introRaw-.02)/.98);") ||
     !html.includes("introLookPath.getPointAt(pathT)") ||
     !html.includes("introCameraPath.points[0].copy(introCameraStart)") ||
+    !html.includes("introCameraStart.x=13.5;") ||
+    !html.includes("camera.fov=THREE.MathUtils.lerp(40,36,pathT)") ||
     !html.includes("introCameraStart.y=9.2;") ||
     html.includes("camera.position.x=0;") ||
     html.includes("camera.position.y=Math.min(camera.position.y,1.72);") ||
