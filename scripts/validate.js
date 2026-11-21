@@ -255,7 +255,7 @@ if (!html.includes("const makeMineralTexture=(base,contrast,seed)=>") ||
     !html.includes("const jamb=new THREE.Mesh(new THREE.BoxGeometry(.22,4.65,.42),warmLimestone)") ||
     !html.includes("const portalHead=new THREE.Mesh(new THREE.BoxGeometry(6.05,.24,.5),warmLimestone)") ||
     !html.includes("makeArcDetail(7.82,-1.685,champagneMetal,.012)") ||
-    !html.includes("const wash=new THREE.SpotLight(0xfff0dc,.72,5.8,.82,.9,1.6)") ||
+    !html.includes("const wash=new THREE.SpotLight(0xfff0dc,.34,5.8,.82,.9,1.6)") ||
     !html.includes("const tileMat=new THREE.MeshStandardMaterial({color:0xaaa69c,roughness:.88,metalness:.015})")) {
   fail("The gallery interior must retain its curved architectural cornice, layered ceiling, textured finishes, portal, wall details and warm wall-wash lighting.");
 }
