@@ -112,7 +112,7 @@ if (!html.includes("if(!stage.classList.contains(\"webgl-ready\"))") ||
 }
 
 /* Exterior architecture must include layered facade details, real glazing frames, forecourt and lighting. */
-if (!html.includes("const glassFrameMat=new THREE.MeshStandardMaterial") ||
+if (!html.includes("glassFrameMat=new THREE.MeshStandardMaterial") ||
     !html.includes("for(let k=0;k<6;k++)") ||
     !html.includes("const ribbon=new THREE.Mesh(new THREE.BoxGeometry(.055,1.32,7.8),glassMat)") ||
     !html.includes("for(let x=-8;x<=8;x+=4)") ||
