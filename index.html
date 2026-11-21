@@ -155,6 +155,19 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
 .collection-card strong{display:block;font-size:12px;letter-spacing:.2px;margin-top:15px}
 .collection-card span{display:block;font:9px 'DM Mono',monospace;color:var(--muted);margin-top:6px}
 .collection-card em{display:block;font:11px 'DM Mono',monospace;font-style:normal;margin-top:10px}
+ /* Curated artwork presentation: quieter labels, warm print mounts and responsive editorial spacing. */
+.collection-card{position:relative;display:flex;flex-direction:column;align-items:stretch}
+.collection-card img{background:#f8f6ef;padding:11px;box-shadow:0 2px 0 #d8d2c7,0 18px 36px #17181616}
+.collection-card strong{font-size:13px;letter-spacing:.35px}
+.collection-card span{letter-spacing:.45px;line-height:1.6}
+.collection-card em{display:flex;justify-content:space-between;align-items:center;padding-top:11px;border-top:1px solid var(--line);font-size:10px;letter-spacing:.3px}
+.art-caption{letter-spacing:1.3px;text-transform:uppercase}
+.product-info h2{line-height:1.04;letter-spacing:-1.6px}
+.product-subtitle{line-height:1.8}
+.selected-image-bg{padding:16px;background:#f8f6ef;box-shadow:0 0 0 1px #d8d2c7,0 32px 58px #17181622}
+.selected-image-bg img{box-shadow:0 0 0 1px #0000000a}
+@media(max-width:700px){.collection-card img{padding:7px}.collection-card em{font-size:9px}.selected-image-bg{padding:11px}}
+
 @media(max-width:700px){
  .collection-section{padding:5px 22px 75px}.collection-tools{align-items:stretch;flex-direction:column}.collection-search{width:100%}.collection-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 14px}.collection-heading{align-items:start;gap:15px}.collection-heading>span{font-size:8px;white-space:nowrap;margin-top:5px}.collection-card img{padding:6px}.collection-card strong{font-size:10px}
  .topbar{height:62px;padding:0 20px}.desktop-nav{display:none}
@@ -906,9 +919,12 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  let textureLoadsComplete=0,textureLoadFailures=0;
  products.forEach((product,index)=>{
   const group=new THREE.Group();
-  const frame=new THREE.Mesh(new THREE.BoxGeometry(2.38,3.18,.14),new THREE.MeshStandardMaterial({color:0xf5f4ef,roughness:.78,metalness:.02}));
+  const backingMaterial=new THREE.MeshStandardMaterial({color:0x76583d,roughness:.48,metalness:.12});
+  const frame=new THREE.Mesh(new THREE.BoxGeometry(2.42,3.24,.16),backingMaterial);
   frame.castShadow=true;frame.receiveShadow=true;group.add(frame);
-  const printMaterial=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.86,metalness:0});
+  const matBoard=new THREE.Mesh(new THREE.BoxGeometry(2.29,3.09,.035),new THREE.MeshStandardMaterial({color:0xf8f6ef,roughness:.94}));
+  matBoard.position.z=.092;group.add(matBoard);
+  const printMaterial=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.88,metalness:0});
   const texture=textureLoader.load(product.image,()=>{
    textureLoadsComplete++;
   },undefined,error=>{
@@ -928,10 +944,26 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   });
   texture.encoding=THREE.sRGBEncoding;
   printMaterial.map=texture;
-  const print=new THREE.Mesh(new THREE.PlaneGeometry(2.17,2.89),printMaterial);
-  print.position.z=.078;print.castShadow=true;group.add(print);
-  const edge=new THREE.Mesh(new THREE.BoxGeometry(2.23,2.95,.018),new THREE.MeshStandardMaterial({color:0xd7d5ce,roughness:.9}));
-  edge.position.z=.066;group.add(edge);
+  const print=new THREE.Mesh(new THREE.PlaneGeometry(2.08,2.78),printMaterial);
+  print.position.z=.119;print.castShadow=true;group.add(print);
+  const reveal=new THREE.Mesh(new THREE.PlaneGeometry(2.12,2.82),new THREE.MeshStandardMaterial({color:0xd8d0bf,roughness:.82}));
+  reveal.position.z=.113;group.add(reveal);
+  const plaqueCanvas=document.createElement("canvas");plaqueCanvas.width=768;plaqueCanvas.height=144;
+  const plaqueContext=plaqueCanvas.getContext("2d");
+  if(plaqueContext){
+   plaqueContext.fillStyle="#f2eee5";plaqueContext.fillRect(0,0,768,144);
+   plaqueContext.fillStyle="#9a7958";plaqueContext.fillRect(0,0,768,4);
+   plaqueContext.fillStyle="#292a26";plaqueContext.font="600 35px Arial";plaqueContext.fillText(product.title,24,61);
+   plaqueContext.fillStyle="#77766f";plaqueContext.font="22px Arial";plaqueContext.fillText(product.subtitle,24,103);
+  }
+  const plaqueTexture=new THREE.CanvasTexture(plaqueCanvas);plaqueTexture.encoding=THREE.sRGBEncoding;
+  const plaque=new THREE.Mesh(new THREE.PlaneGeometry(2.12,.4),new THREE.MeshBasicMaterial({map:plaqueTexture,transparent:false}));
+  plaque.position.set(0,-1.84,.12);group.add(plaque);
+  const artworkLight=new THREE.SpotLight(0xffedda,1.65,9.5,Math.PI/5.2,.72,1.35);
+  artworkLight.castShadow=false;
+  const artworkTarget=new THREE.Object3D();
+  gallery.add(artworkLight,artworkTarget);artworkLight.target=artworkTarget;
+  group.userData.artworkLight=artworkLight;group.userData.artworkTarget=artworkTarget;
   group.userData.index=index;group.scale.setScalar(.62);gallery.add(group);cards3D.push(group);
  });
  const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
@@ -975,6 +1007,10 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
    group.userData.targetScale=d===0?1.08:Math.max(.78,1-Math.abs(d)*.075);
    group.position.set(group.userData.targetX,group.userData.targetY,group.userData.targetZ);
    group.rotation.set(0,group.userData.targetRY,0);
+   if(group.userData.artworkLight&&group.userData.artworkTarget){
+    group.userData.artworkTarget.position.set(group.userData.targetX,group.userData.targetY,group.userData.targetZ);
+    group.userData.artworkLight.position.set(group.userData.targetX,group.userData.targetY+2.55,group.userData.targetZ+1.65);
+   }
   });
  }
  window.updateArtspace3D=layoutCards;
