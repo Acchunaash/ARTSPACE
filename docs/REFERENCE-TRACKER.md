@@ -109,3 +109,5 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Preserved the existing asset filenames and viewBox, so product records, gallery wall mounting, artwork selection, and shopping/cart wiring remain unchanged.
 - Extended the source validator to check the individual compositions' expected SVG structures and finish details.
 - These are original vector illustrations, not photographic or hand-painted scans. The design source is upgraded; rendered visual acceptance and comparison against the missing exact Pinterest reference remain pending until a real browser capture/reference image is available.
+
+- CI caught a syntax error in the newly added SVG-root counting expression (the artwork files themselves were not the cause). Replaced the fragile regular-expression count with literal root-tag counts; the corrected validator commit now triggers a fresh validation run. The earlier failed run is retained in the audit trail and is not represented as a pass.
