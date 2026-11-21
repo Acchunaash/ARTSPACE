@@ -188,6 +188,19 @@ if (!html.includes("new THREE.HemisphereLight(0xffffff,0x77776d,.48)") ||
     !html.includes("roughness:.76,metalness:.015")) {
   fail("Gallery lighting hierarchy, recessed cove, soft shadow tuning and floor bounce are missing.");
 }
+/* First screen must open directly into the immersive gallery, with navigation overlaid rather than a separate hero section. */
+if (!html.includes('<section class="intro" id="gallery-intro">') ||
+    !html.includes('<section class="gallery-shell" id="gallery" aria-label="Immersive three-dimensional art gallery">') ||
+    !html.includes(".intro{display:none!important}") ||
+    !html.includes("height:100dvh;min-height:560px") ||
+    !html.includes("position:absolute;z-index:15;top:0;left:0;right:0;height:66px") ||
+    !html.includes("position:absolute;inset:0;width:100%;height:100%;min-height:0") ||
+    !html.includes("top:88px;left:0;right:0") ||
+    !html.includes("bottom:22px") ||
+    !html.includes('<a href="#gallery">COLLECTION</a>')) {
+  fail("The ARTSPACE opening screen must be the full-viewport immersive gallery with overlay navigation and controls.");
+}
+
 /* Rebuilt gallery architecture: layered curved cornice, ceiling raft, tactile finishes, portal and wall-wash lighting. */
 if (!html.includes("const makeMineralTexture=(base,contrast,seed)=>") ||
     !html.includes("wallMaterial.map=plasterTexture") ||
