@@ -136,7 +136,7 @@ if (!html.includes("https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.j
 const modelBuilder = fs.readFileSync("scripts/build-pavilion.js", "utf8");
 if (!modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") ||
     !modelBuilder.includes("const curvedPanel=(m,w,h,d,x,y,z,bow)") ||
-    !modelBuilder.includes("const cube=cubeGeometry(),cyl=cylinderGeometry(),curve42=curvedPanelGeometry(64,.42/.16),curve58=curvedPanelGeometry(64,.58/2.45)") ||
+    !modelBuilder.includes("const flute=flutedPanelGeometry(),all=[cube,cyl,curve42,curve58,flute]") ||
     !modelBuilder.includes("mesh:shape*materials.length+m") ||
     !modelBuilder.includes("for(let shape=0;shape<5;shape++)") ||
     !modelBuilder.includes("item.bow===.42?2:3") ||
@@ -197,7 +197,7 @@ if (!modelBuilder.includes('["low-iron-glass",[.78,.88,.89,.22],.06,.045]') ||
   fail("The GLB low-iron and deep-glass PBR materials are not tuned for clear architectural glazing.");
 }
 
-if (!modelBuilder.includes("ARTSPACE architectural pavilion builder") ||
+if (!modelBuilder.includes("ARTSPACE detailed architectural pavilion builder") ||
     !modelBuilder.includes("low-iron-glass") ||
     !modelBuilder.includes("champagne-bronze") ||
     !modelBuilder.includes("idx.push(a,b,c,a,c,d)") ||
