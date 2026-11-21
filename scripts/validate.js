@@ -141,7 +141,7 @@ if (!modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") 
     !modelBuilder.includes("for(let shape=0;shape<5;shape++)") ||
     !modelBuilder.includes("item.bow===.42?2:3") ||
     !modelBuilder.includes("function flutedPanelGeometry(segments=48)") ||
-    !modelBuilder.includes("flutedPanel(0,.19,4.6,.28") ||
+    !modelBuilder.includes("flutedPanel(0,.22,4.48,.34") ||
     !modelBuilder.includes("Embed deterministic, tileable procedural material maps") ||
     !modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") ||
     !modelBuilder.includes("Continuous, smoothly bowed architectural skins")) {
