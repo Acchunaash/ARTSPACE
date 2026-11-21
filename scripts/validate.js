@@ -158,7 +158,7 @@ if (!html.includes("const visitorBench=new THREE.Group()") ||
 }
 
 if (!html.includes("if(!stage.classList.contains(\"webgl-ready\"))") ||
-    !html.includes("new THREE.LatheGeometry(points,48)")) {
+    !html.includes("new THREE.LatheGeometry(points,64)")) {
   fail("WebGL reveal must not wait for external fashion images; procedural 3D dress mannequins must remain available.");
 }
 
@@ -409,5 +409,22 @@ if (!html.includes("Model wearing The Solstice Dress") || !html.includes("Model 
 }
 if (html.includes("THE PRINT COLLECTION") || html.includes("art prints, wall art")) {
  fail("The storefront still contains visible art-gallery product positioning.");
+}
+/* Real-human fashion pipeline and mobile render budget. */
+if (!html.includes("female-base-mesh-base_female.glb") ||
+    !html.includes("THREE.SkeletonUtils.clone") ||
+    !html.includes("ARTSPACE_CC0_RealisticHuman_") ||
+    !html.includes("group.userData.proceduralBody=fallbackBody") ||
+    !html.includes("group.userData.proceduralBody.visible=false") ||
+    !html.includes("startFashionHumanLoad()") ||
+    !html.includes("loader.setCrossOrigin(\"anonymous\")")) {
+ fail("The CC0 human-model loader, safe procedural fallback, or per-look model cloning is missing.");
+}
+if (!html.includes("antialias:window.innerWidth>=700") ||
+    !html.includes("window.innerWidth<700?1.0:1.5") ||
+    !html.includes("renderer.shadowMap.enabled=window.innerWidth>=700") ||
+    !html.includes("keyLight.castShadow=window.innerWidth>=700") ||
+    !html.includes("const mobileFrameInterval=window.innerWidth<700?1000/40:0")) {
+ fail("Mobile WebGL must use a lower pixel ratio, disable expensive shadows/antialiasing, and pace frames.");
 }
 console.log("ARTSPACE boutique checks passed: six fashion styles, dressed 3D mannequins, fitting rooms, rails, product sizes/colours, DOM and build structure.");
