@@ -663,7 +663,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  const camera=new THREE.PerspectiveCamera(36,1,.1,100);
  const introCameraStart=new THREE.Vector3(0,9.2,31),introCameraEnd=new THREE.Vector3(0,.12,4.7);
   /* A smooth S-curve sweeps across the forecourt, arcs toward the portal, then passes through it. */
-  const introCameraPath=new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(-5.2,8,25),new THREE.Vector3(-7,5.4,18),new THREE.Vector3(-4.8,2.2,13.5),new THREE.Vector3(-2,1.75,10.8),new THREE.Vector3(-.6,1.65,7.7),introCameraEnd],false,"centripetal");
+  const introCameraPath=new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(-5.2,8,25),new THREE.Vector3(-7,5.4,18),new THREE.Vector3(-1.2,2.15,13.5),new THREE.Vector3(-.4,1.75,10.8),new THREE.Vector3(0,1.65,7.7),introCameraEnd],false,"centripetal");
  camera.position.copy(introCameraStart);
  const introLookStart=new THREE.Vector3(0,1.8,-1.2),introLookEnd=new THREE.Vector3(0,-.42,-2.6),introLookTarget=new THREE.Vector3();
   /* The gaze eases from the pavilion silhouette to the portal, then down the gallery axis. */
@@ -1077,6 +1077,10 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
     else{
      const pathT=easeCamera((introRaw-.14)/.86);
      camera.position.copy(introCameraPath.getPointAt(pathT));
+
+     /* Hard clearance envelope: stay inside the portal opening and below both the canopy soffit and gallery ceiling. */
+
+     if(camera.position.z<13.2){camera.position.x=THREE.MathUtils.clamp(camera.position.x,-2.4,2.4);camera.position.y=Math.min(camera.position.y,2.25);}
      camera.lookAt(introLookTarget.copy(introLookPath.getPointAt(pathT)));
     }
     if(introRaw>=1){
