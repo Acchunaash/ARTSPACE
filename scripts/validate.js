@@ -142,7 +142,7 @@ if (!modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") 
     !modelBuilder.includes("item.bow===.42?2:3") ||
     !modelBuilder.includes("function flutedPanelGeometry(segments=48)") ||
     !modelBuilder.includes("flutedPanel(0,.19,4.6,.28") ||
-    !modelBuilder.includes("Embedded, deterministic, tileable procedural material maps") ||
+    !modelBuilder.includes("Embed deterministic, tileable procedural material maps") ||
     !modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") ||
     !modelBuilder.includes("Continuous, smoothly bowed architectural skins")) {
   fail("Pavilion requires continuous smooth curved panel geometry, not only individually angled box segments.");
