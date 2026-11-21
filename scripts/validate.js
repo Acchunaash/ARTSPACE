@@ -185,6 +185,17 @@ if (!html.includes("new THREE.SpotLight(0xffedda,1.65,9.5") ||
     !html.includes(".collection-card em{display:flex;justify-content:space-between")) {
   fail("Interior artwork mounting, per-piece lighting, title plaques and refined collection presentation are missing.");
 }
+
+/* Artwork frames require layered mounts, a fine perimeter inlay, safe low-opacity glazing and tuned per-print lighting. */
+if (!html.includes("const inlayMaterial=new THREE.MeshStandardMaterial") ||
+    !html.includes("const glazingMaterial=new THREE.MeshPhysicalMaterial") ||
+    !html.includes("opacity:.055,clearcoat:.28") ||
+    !html.includes("const frameHighlightMaterial=new THREE.MeshStandardMaterial") ||
+    !html.includes("new THREE.SpotLight(0xffedda,2.05,10.5") ||
+    !html.includes("targetZ+1.48") ||
+    html.includes("new THREE.BoxGeometry(2.34,3.16,.018)")) {
+  fail("3D artwork presentation requires open frame detailing, subtle protective glazing and correctly aimed individual picture lights.");
+}
 /* Sculptural entrance and roof require layered continuous curves, deep soffit and portal ribs. */
 if (!modelBuilder.includes("Sculptural roof and entrance refinement") ||
     !modelBuilder.includes("curvedPanel(0,19.9,.24,3.35,0,3.56,11.05,.88)") ||
