@@ -664,8 +664,8 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  const introCameraStart=new THREE.Vector3(0,9.2,31),introCameraApproach=new THREE.Vector3(0,5.8,18),introCameraThreshold=new THREE.Vector3(0,2.7,9.7),introCameraEnd=new THREE.Vector3(0,.12,4.7);
  camera.position.copy(introCameraStart);
  const introLookStart=new THREE.Vector3(0,1.8,-1.2),introLookApproach=new THREE.Vector3(0,2.2,8.2),introLookThreshold=new THREE.Vector3(0,1.5,1.8),introLookEnd=new THREE.Vector3(0,-.42,-2.6),introLookTarget=new THREE.Vector3();
- let introStartedAt=0,introFinished=false,introReady=false,introLoadTimeout=0;
- const settleIntro=reason=>{if(introReady)return;introReady=true;introStartedAt=performance.now();if(introLoadTimeout)clearTimeout(introLoadTimeout);console.info("ARTSPACE: exterior intro ready — "+reason+".");};
+ let introStartedAt=0,introFinished=false,introReady=false,introLoadTimeout=0,introPausedAt=0,pendingArchitecturalPavilion=null;
+ const settleIntro=reason=>{if(introReady)return;introReady=true;introStartedAt=performance.now();if(!pageVisible)introPausedAt=introStartedAt;if(introLoadTimeout)clearTimeout(introLoadTimeout);console.info("ARTSPACE: exterior intro ready — "+reason+".");};
  let renderer;
  try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:"high-performance"});}
  catch(error){console.error("ARTSPACE WebGL renderer creation failed:",error);show3DStatus("3D is unavailable in this browser. Showing artwork preview.");return;}
@@ -827,37 +827,44 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   const facadeWash=new THREE.SpotLight(0xffe6c8,1.15,24,Math.PI/4,.55,1.4);
   facadeWash.position.set(-8,7,17);facadeWash.target.position.set(0,1,9);exterior.add(facadeWash,facadeWash.target);
   /* Hold the opening camera on the full-building view until the detailed model loads.
-     If the request fails or stalls, start with the procedural exterior after a bounded wait. */
+     If the request stalls, start on the fallback; a late model is queued until the camera finishes. */
+  const mountArchitecturalPavilion=gltf=>{
+   const pavilion=gltf.scene;
+   pavilion.name="ARTSPACE_PremiumArchitecturalPavilion";
+   pavilion.traverse(node=>{
+    if(node.isMesh){node.castShadow=true;node.receiveShadow=true;}
+    const tuneArchitecturalMaterial=material=>{
+     if(!material)return;
+     const materialName=(material.name||"").toLowerCase();
+     if(materialName.includes("low-iron-glass")){
+      material.transparent=true;material.opacity=.22;material.roughness=.055;material.metalness=.06;
+      material.side=THREE.DoubleSide;material.depthWrite=false;material.envMapIntensity=1.35;
+     }else if(materialName.includes("deep-glass")){
+      material.transparent=true;material.opacity=.4;material.roughness=.095;material.metalness=.12;
+      material.side=THREE.DoubleSide;material.depthWrite=false;material.envMapIntensity=1.05;
+     }else if(material.isMeshStandardMaterial){material.envMapIntensity=.72;}
+     material.needsUpdate=true;
+    };
+    if(Array.isArray(node.material))node.material.forEach(tuneArchitecturalMaterial);
+    else tuneArchitecturalMaterial(node.material);
+   });
+   scene.add(pavilion);
+   const pavilionSign=sign.clone();pavilionSign.position.set(0,3.15,12.56);scene.add(pavilionSign);
+   exterior.visible=false;
+   stage.classList.add("architectural-model-ready");
+   console.info("ARTSPACE: detailed architectural pavilion GLB mounted successfully.");
+  };
   introLoadTimeout=window.setTimeout(()=>settleIntro("12-second model timeout; procedural exterior retained"),12000);
   if(modelLoaderReady&&THREE.GLTFLoader){
    const pavilionLoader=new THREE.GLTFLoader();
    pavilionLoader.load("./assets/artspace-pavilion.glb",gltf=>{
-    if(introReady){console.warn("ARTSPACE: pavilion arrived after the intro fallback timeout; keeping the stable fallback.");return;}
-    const pavilion=gltf.scene;
-    pavilion.name="ARTSPACE_PremiumArchitecturalPavilion";
-    pavilion.traverse(node=>{
-     if(node.isMesh){node.castShadow=true;node.receiveShadow=true;}
-     const tuneArchitecturalMaterial=material=>{
-      if(!material)return;
-      const materialName=(material.name||"").toLowerCase();
-      if(materialName.includes("low-iron-glass")){
-       material.transparent=true;material.opacity=.22;material.roughness=.055;material.metalness=.06;
-       material.side=THREE.DoubleSide;material.depthWrite=false;material.envMapIntensity=1.35;
-      }else if(materialName.includes("deep-glass")){
-       material.transparent=true;material.opacity=.4;material.roughness=.095;material.metalness=.12;
-       material.side=THREE.DoubleSide;material.depthWrite=false;material.envMapIntensity=1.05;
-      }else if(material.isMeshStandardMaterial){material.envMapIntensity=.72;}
-      material.needsUpdate=true;
-     };
-     if(Array.isArray(node.material))node.material.forEach(tuneArchitecturalMaterial);
-     else tuneArchitecturalMaterial(node.material);
-    });
-    scene.add(pavilion);
-    const pavilionSign=sign.clone();pavilionSign.position.set(0,3.15,12.56);scene.add(pavilionSign);
-    exterior.visible=false;
-    stage.classList.add("architectural-model-ready");
-    console.info("ARTSPACE: detailed architectural pavilion GLB loaded successfully.");
-    settleIntro("detailed pavilion loaded");
+    if(introReady&&!introFinished){
+     pendingArchitecturalPavilion=gltf;
+     console.info("ARTSPACE: late pavilion queued until the entrance camera finishes.");
+     return;
+    }
+    mountArchitecturalPavilion(gltf);
+    if(!introReady)settleIntro("detailed pavilion loaded");
    },undefined,error=>{
     console.warn("ARTSPACE pavilion GLB failed to load; using procedural exterior fallback.",error);
     settleIntro("GLB request failed; procedural exterior retained");
@@ -1049,7 +1056,10 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
    else if(introRaw<.48){const t=easeCamera((introRaw-.18)/.30);camera.position.lerpVectors(introCameraStart,introCameraApproach,t);camera.lookAt(introLookTarget.lerpVectors(introLookStart,introLookApproach,t));}
    else if(introRaw<.72){const t=easeCamera((introRaw-.48)/.24);camera.position.lerpVectors(introCameraApproach,introCameraThreshold,t);camera.lookAt(introLookTarget.lerpVectors(introLookApproach,introLookThreshold,t));}
    else{const t=easeCamera((introRaw-.72)/.28);camera.position.lerpVectors(introCameraThreshold,introCameraEnd,t);camera.lookAt(introLookTarget.lerpVectors(introLookThreshold,introLookEnd,t));}
-   if(introRaw>=1){introFinished=true;camera.position.copy(introCameraEnd);camera.lookAt(introLookEnd);gallery.rotation.y=0;}
+   if(introRaw>=1){
+    introFinished=true;camera.position.copy(introCameraEnd);camera.lookAt(introLookEnd);gallery.rotation.y=0;
+    if(pendingArchitecturalPavilion){mountArchitecturalPavilion(pendingArchitecturalPavilion);pendingArchitecturalPavilion=null;}
+   }
   }
   const ease=reducedMotion?1:(introFinished?.105:.075);
   cards3D.forEach(group=>{
@@ -1121,7 +1131,16 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  if(window.ResizeObserver){const observer=new ResizeObserver(resize);observer.observe(stage);}
  window.addEventListener("resize",resize,{passive:true});
  resize();layoutCards();animate();
- document.addEventListener("visibilitychange",()=>{pageVisible=!document.hidden;if(pageVisible&&!raf)animate();else if(!pageVisible){cancelAnimationFrame(raf);raf=0;}});
+ document.addEventListener("visibilitychange",()=>{
+  pageVisible=!document.hidden;
+  if(!pageVisible){
+   if(introReady&&!introFinished&&!introPausedAt)introPausedAt=performance.now();
+   cancelAnimationFrame(raf);raf=0;
+  }else{
+   if(introPausedAt){introStartedAt+=performance.now()-introPausedAt;introPausedAt=0;}
+   if(!raf)animate();
+  }
+ });
  window.addEventListener("pagehide",()=>{cancelAnimationFrame(raf);raf=0;renderer.dispose();});
 })();
 }).catch(error=>{
