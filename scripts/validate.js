@@ -428,3 +428,14 @@ if (!html.includes("antialias:window.innerWidth>=700") ||
  fail("Mobile WebGL must use a lower pixel ratio, disable expensive shadows/antialiasing, and pace frames.");
 }
 console.log("ARTSPACE boutique checks passed: six fashion styles, dressed 3D mannequins, fitting rooms, rails, product sizes/colours, DOM and build structure.");
+
+/* Imported human figures must use relaxed MakeHuman arm poses and must not retain the fallback hair mesh. */
+if (!html.includes('group.userData.proceduralHair=fallbackHair') ||
+    !html.includes('group.userData.proceduralHair.visible=false') ||
+    !html.includes('poseBone("upperarm01.L",0,0,.5236)') ||
+    !html.includes('poseBone("upperarm01.R",0,0,-.5236)') ||
+    !html.includes('poseBone("lowerarm01.L",-.6458,0,0)') ||
+    !html.includes('poseBone("lowerarm01.R",-.6458,0,0)') ||
+    !html.includes('human.updateMatrixWorld(true)')) {
+ fail("The rigged human models must use relaxed showroom arm poses and suppress the duplicate procedural hair fallback.");
+}
