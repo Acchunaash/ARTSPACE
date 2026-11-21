@@ -12,11 +12,12 @@ The migration in `migrations/0001_artspace_schema.sql` defines the initial Postg
 
 1. Create a Supabase project.
 2. Open its SQL Editor and apply `migrations/0001_artspace_schema.sql`.
-3. Enable the authentication providers you intend to support.
-4. Create the first trusted admin account through Supabase Auth.
-5. Add that account to `public.admins` from the SQL Editor using its Auth user UUID. Never let a public signup request grant itself an admin role.
-6. Seed the catalog with real products, prices, inventory, and hosted image URLs.
-7. Build a server-side API for checkout and order creation.
+3. Apply `seed.sql` to create the six initial product records.
+4. Enable the authentication providers you intend to support.
+5. Create the first trusted admin account through Supabase Auth.
+6. Add that account to `public.admins` from the SQL Editor using its Auth user UUID. Never let a public signup request grant itself an admin role.
+7. Upload final artwork files to Supabase Storage and fill each product `image_url` with its hosted URL.
+8. Build a server-side API for checkout and order creation.
 
 ## Payment security requirements
 
