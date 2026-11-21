@@ -177,7 +177,7 @@ if (!html.includes("new THREE.HemisphereLight(0xffffff,0x77776d,.48)") ||
   fail("Gallery lighting hierarchy, recessed cove, soft shadow tuning and floor bounce are missing.");
 }
 /* Interior artwork presentation requires individual wall lights, a gallery mat, title plaque and refined collection styling. */
-if (!html.includes("new THREE.SpotLight(0xffedda,1.65,9.5") ||
+if (!html.includes("new THREE.SpotLight(0xffedda,2.05,10.5") ||
     !html.includes("group.userData.artworkTarget.position.set") ||
     !html.includes("new THREE.BoxGeometry(2.29,3.09,.035)") ||
     !html.includes("new THREE.PlaneGeometry(2.12,.4)") ||
