@@ -62,6 +62,21 @@ details{border-top:1px solid var(--line);padding:15px 0}details summary{font-siz
 .about-strip{background:#e8e9e4;padding:34px 9vw;display:flex;justify-content:space-between;font:10px 'DM Mono',monospace;letter-spacing:1px}
 footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items:center}footer>span{font-size:8px;color:#777}footer>a:last-child{font-size:9px}
 .toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);background:#171816;color:#fff;padding:14px 20px;font-size:12px;opacity:0;pointer-events:none;transition:.3s;z-index:20}.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* STEP 1 — immersive 3D environment foundation */
+.gallery-shell{isolation:isolate;background:radial-gradient(ellipse at 50% 38%,#fff 0%,#f0f1ec 34%,#e8e9e3 100%);border:1px solid #e3e4de;box-shadow:inset 0 1px #ffffffb8,0 28px 70px #2528200a}
+.gallery-shell:before{content:"";position:absolute;z-index:-1;inset:0;background:radial-gradient(ellipse at 50% 0%,#ffffffc9 0%,transparent 54%),linear-gradient(180deg,#ffffff22,transparent 45%,#d9dbd333);pointer-events:none}
+.gallery-stage{isolation:isolate;perspective:1500px;perspective-origin:50% 42%;transform-style:preserve-3d}
+.gallery-stage:before{content:"";position:absolute;z-index:0;left:13%;right:13%;bottom:12px;height:52px;border-radius:50%;background:radial-gradient(ellipse,#34382d24 0%,#34382d0d 48%,transparent 75%);filter:blur(10px);pointer-events:none}
+.gallery-stage:after{content:"";position:absolute;z-index:0;top:4%;left:50%;width:min(62vw,720px);height:80%;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 36%,#ffffffa8 0%,#ffffff35 35%,transparent 72%);pointer-events:none}
+.gallery-track{z-index:1;perspective:1500px;perspective-origin:50% 44%;transform-style:preserve-3d}
+.art-card{backface-visibility:hidden;will-change:transform,opacity;transform-origin:50% 55%}
+.art-frame{position:relative;transform:translateZ(0);box-shadow:0 24px 42px #1b211b1c,0 4px 10px #1b211b0d,inset 0 0 0 1px #00000008}
+.art-frame:after{content:"";position:absolute;inset:0;background:linear-gradient(125deg,#ffffff55 0%,transparent 25%,transparent 72%,#00000008 100%);pointer-events:none}
+.art-card.active .art-frame{box-shadow:0 34px 58px #1b211b28,0 8px 18px #1b211b12,inset 0 0 0 1px #0000000a}
+.gallery-arrow{backdrop-filter:blur(12px);box-shadow:0 4px 16px #2528200c}
+@media(prefers-reduced-motion:reduce){.art-card{will-change:auto}}
+
 @media(max-width:700px){
  .topbar{height:62px;padding:0 20px}.desktop-nav{display:none}
  .intro{padding:55px 22px 35px;display:block}h1{letter-spacing:-2.5px}.intro-note{margin-top:22px}
