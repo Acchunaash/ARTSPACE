@@ -70,6 +70,19 @@ if (!html.includes("gallery.position.set(0,0,wallCenterZ)") ||
 }
 
 
+/* Room continuity and entrance path: keep the camera outside-to-inside and the shell aligned to the curved wall. */
+if (!html.includes("new THREE.PlaneGeometry(17,19),floorMaterial") ||
+    !html.includes("leftWall.position.set(-8.5,.15,-1.15)") ||
+    !html.includes("rightWall.position.set(8.5,.15,-1.15)") ||
+    !html.includes("new THREE.PlaneGeometry(17,19),ceilingMaterial") ||
+    !html.includes("new THREE.Vector3(-5.6,.72,14.2),introCameraMid=new THREE.Vector3(2.8,.28,8.4),introCameraEnd=new THREE.Vector3(0,.12,4.7)")) {
+  fail("Gallery floor, side walls, ceiling, and inside-ending entrance camera path must stay aligned.");
+}
+if (!html.includes("if(!stage.classList.contains(\"webgl-ready\"))") ||
+    !html.includes("new THREE.CanvasTexture(fallbackCanvas)")) {
+  fail("WebGL reveal must not wait for every texture, and failed artwork textures need a fallback.");
+}
+
 // Guard the Three.js loader against a race with the application initializer.
 if (!html.includes("window.__artspaceThreeReady=new Promise") ||
     !html.includes("window.__artspaceThreeReady.then(loaded=>")) {
