@@ -96,7 +96,8 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
     !html.includes("new THREE.Vector3(0,9.2,31),introCameraApproach=new THREE.Vector3(0,5.8,18),introCameraThreshold=new THREE.Vector3(0,2.7,9.7),introCameraEnd=new THREE.Vector3(0,.12,4.7)") ||
     !html.includes("if(introRaw<.18)") ||
     !html.includes("introCameraApproach,introCameraThreshold") ||
-    !html.includes("introCameraThreshold,introCameraEnd")) {
+    !html.includes("introCameraThreshold,introCameraEnd") ||
+    !html.includes("introCameraStart.z=Math.max(31,9.8/(Math.tan(THREE.MathUtils.degToRad(18))*Math.max(.35,aspect)))")) {
   fail("Full exterior building, glazed entrance, and staged outside-to-inside camera path are missing.");
 }
 if (!html.includes("new THREE.PlaneGeometry(17,19),floorMaterial") ||
