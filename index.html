@@ -172,6 +172,41 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
 .cart-backdrop{position:fixed;inset:0;background:#1119;z-index:29;opacity:0;visibility:hidden;transition:.25s}.cart-backdrop.open{opacity:1;visibility:visible}.cart-drawer{position:fixed;z-index:30;top:0;right:0;width:min(440px,100%);height:100dvh;background:var(--paper);padding:26px;transform:translateX(105%);transition:transform .3s ease;display:flex;flex-direction:column;box-shadow:-20px 0 60px #00000012}.cart-drawer.open{transform:translateX(0)}.cart-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:20px}.cart-head h2{font-size:24px;letter-spacing:-1px;margin:0}.cart-close{border:1px solid var(--line);background:none;width:38px;height:38px;border-radius:50%;font-size:20px}.cart-items{overflow:auto;flex:1;padding:8px 0}.cart-empty{padding:55px 10px;text-align:center;color:var(--muted);font-size:13px;line-height:1.8}.cart-item{display:grid;grid-template-columns:76px 1fr auto;gap:14px;padding:18px 0;border-bottom:1px solid var(--line)}.cart-thumb{width:76px;background:#ecece7;padding:5px}.cart-thumb img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}.cart-item h3{font-size:12px;margin:2px 0 7px}.cart-meta{font:9px 'DM Mono',monospace;color:var(--muted);line-height:1.8}.cart-price{font-size:12px;white-space:nowrap}.cart-actions{display:flex;align-items:center;gap:10px;margin-top:10px}.cart-actions button{border:1px solid var(--line);background:none;min-width:27px;height:27px}.cart-actions .remove-item{border:0;text-decoration:underline;font:9px 'DM Mono',monospace;width:auto}.cart-summary{border-top:1px solid var(--line);padding-top:18px}.shipping-progress{margin:14px 0 10px}.shipping-progress-track{height:4px;background:#e2e3dc;overflow:hidden}.shipping-progress-track span{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}.shipping-progress .cart-note{margin:8px 0 0}.cart-total{display:flex;justify-content:space-between;font-size:15px;font-weight:600;margin-bottom:8px}.cart-note{font-size:10px;color:var(--muted);line-height:1.6}.cart-checkout{width:100%;padding:17px;background:var(--ink);color:white;border:0;margin-top:15px;font:10px 'DM Mono',monospace;letter-spacing:1px}.cart-checkout:disabled{opacity:.4;cursor:not-allowed}body.cart-open,body.wishlist-open{overflow:hidden}
 #savedDrawer .cart-item{grid-template-columns:76px 1fr auto}
 .saved-view{border:1px solid var(--line);background:transparent;padding:7px 10px;font:9px 'DM Mono',monospace;letter-spacing:1px}@media(max-width:480px){.cart-drawer{padding:20px}.cart-item{grid-template-columns:66px 1fr auto}.cart-thumb{width:66px}}
+
+/* CINEMATIC HOMEPAGE REDESIGN — visible first-screen change */
+:root{--paper:#090d14;--ink:#f3f0e9;--muted:#9aa3af;--line:#26303d;--accent:#e7a56a}
+body{background:#090d14;color:#f3f0e9}
+.topbar{height:72px;border-bottom:1px solid #ffffff18;background:#090d14}
+.wordmark,.bag-button,.desktop-nav a{color:#f3f0e9}.desktop-nav a{opacity:.72}.bag-button span{border-color:#f3f0e9}
+.intro{min-height:250px;padding:55px 8vw 38px;align-items:end}.intro .eyebrow{color:#e7a56a;letter-spacing:2px}
+h1{color:#f5f1e9;font-size:clamp(48px,8.2vw,112px);letter-spacing:-.065em;line-height:.9;text-shadow:0 12px 50px #0008}h1 em{color:#e7a56a}
+.intro-note{color:#aab2bd;max-width:260px}
+.gallery-shell{margin:0 3.5vw 90px;min-height:590px;padding:22px 0 18px;border:1px solid #ffffff1b;border-radius:3px;background:radial-gradient(ellipse at 50% 38%,#263b52 0%,#111d2c 42%,#090f18 100%);box-shadow:0 30px 100px #0009,inset 0 1px #ffffff16}
+.gallery-shell:before{background:radial-gradient(ellipse at 50% 5%,#9db8d52b 0%,transparent 58%),linear-gradient(180deg,#ffffff08,transparent 45%,#0005)}
+.gallery-topline,.gallery-bottomline{color:#b7c3d1}.gallery-stage{height:490px;perspective:1700px}
+.gallery-stage:before{left:9%;right:9%;bottom:5px;height:95px;background:radial-gradient(ellipse,#000c 0%,#0006 42%,transparent 76%);filter:blur(18px)}
+.gallery-stage:after{width:min(72vw,900px);height:88%;top:2%;background:radial-gradient(ellipse at 50% 40%,#a8c9e32b 0%,#7196b018 35%,transparent 72%)}
+.artspace-webgl{filter:drop-shadow(0 24px 25px #0008)}
+.gallery-arrow{border-color:#ffffff38;background:#101c2bcc;color:#f5f1e9;box-shadow:0 8px 24px #0007}.gallery-arrow:hover{background:#e7a56a;color:#111}
+.gallery-bottomline button{color:#e7a56a}
+.selected-section{background:#0d131d;color:#f3f0e9;padding-top:70px;padding-bottom:110px}
+.selected-image-wrap{background:radial-gradient(ellipse at 50% 38%,#26384b 0%,#151f2c 58%,#0d131d 100%);box-shadow:inset 0 1px #ffffff16}
+.product-info h2{color:#f5f1e9}.product-subtitle,.product-description,.price-row span,.shipping-note,details p{color:#aab2bd}
+.price-row{border-color:#34404d}.price-row strong{color:#f5f1e9}
+.option-heading{color:#d6dce4}.option{border-color:#465363;color:#e9edf2}.option.active{background:#e7a56a;color:#10151c;border-color:#e7a56a}
+.add-button{background:#e7a56a;color:#10151c}.add-button:hover{background:#f1bd8e}
+.save-button{border-color:#465363;color:#e9edf2}.share-button{color:#aab2bd}
+details{border-color:#34404d}details summary{color:#d6dce4}
+.collection-section{background:#090d14;color:#f3f0e9}.collection-heading h2{color:#f5f1e9}.collection-heading>span{color:#aab2bd}
+.filter-chip{border-color:#465363;color:#d6dce4}.filter-chip.active{background:#e7a56a;color:#10151c;border-color:#e7a56a}
+.collection-search{border-color:#465363;color:#f3f0e9;background:#111a26}
+.collection-card{color:#f3f0e9}.collection-card img{background:#fff;box-shadow:0 16px 40px #0008}.collection-card span{color:#aab2bd}.collection-card em{color:#e7a56a}
+.about-strip{background:#121c29;color:#dce3eb}
+footer{background:#070a10;color:#f3f0e9}footer .wordmark{color:#f3f0e9}footer>span{color:#8995a3}footer>a:last-child{color:#e7a56a}
+.cart-drawer{background:#101722;color:#f3f0e9}.cart-head{border-color:#34404d}.cart-close{color:#f3f0e9;border-color:#465363}
+.cart-item{border-color:#34404d}.cart-meta,.cart-note{color:#aab2bd}.cart-checkout{background:#e7a56a;color:#10151c}
+@media(max-width:700px){.intro{min-height:0;padding:48px 22px 30px}.gallery-shell{min-height:465px;margin:0 9px 65px}.gallery-stage{height:365px}.selected-section{padding-top:35px}}
+
 </style>
 </head>
 <body>
@@ -482,7 +517,7 @@ render();
  function animate(){
   if(!pageVisible)return;
   raf=requestAnimationFrame(animate);
-  if(!isDragging3D){gallery.rotation.y*=reducedMotion?0:.86;if(Math.abs(gallery.rotation.y)<.0008)gallery.rotation.y=0;}
+  if(!isDragging3D&&!reducedMotion){const idleAngle=Math.sin(performance.now()*.00022)*.045;gallery.rotation.y+=(idleAngle-gallery.rotation.y)*.012;}
   const ease=reducedMotion?1:.105;
   cards3D.forEach(group=>{
    const u=group.userData;
