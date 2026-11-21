@@ -82,7 +82,7 @@ if (!html.includes("gallery.position.set(0,0,wallCenterZ)") ||
     !html.includes("const wallAngle=Math.PI+d*.235") ||
     !html.includes("group.userData.targetScale=1") ||
     !html.includes("group.userData.targetRY=wallAngle+Math.PI") ||
-    !html.includes("const mountRadius=wallRadius-.62") ||
+    !html.includes("mountRadius=wallRadius-.62") ||
     !html.includes("group.userData.targetY=-1.72")) {
   fail("Dressed mannequins must remain evenly mounted around the curved boutique perimeter and face into the room.");
 }
@@ -91,7 +91,7 @@ if (!html.includes("gallery.position.set(0,0,wallCenterZ)") ||
 if (!html.includes('alt="Model wearing The Solstice Dress"') ||
     !html.includes('alt="Model wearing The Garden Wrap"') ||
     !html.includes('card.style.opacity="1"') ||
-    !html.includes("Drag to explore the boutique")) {
+    !html.includes("DRAG TO EXPLORE THE BOUTIQUE")) {
   fail("Fashion model previews and accessible boutique browsing controls are missing.");
 }
 /* Cinematic opening must show the whole exterior, then approach and pass through the entrance. */
@@ -232,7 +232,7 @@ if (!html.includes("new THREE.HemisphereLight(0xffffff,0x77776d,.48)") ||
 }
 /* First screen must open directly into the immersive gallery, with navigation overlaid rather than a separate hero section. */
 if (!html.includes('<section class="intro" id="gallery-intro">') ||
-    !html.includes('<section class="gallery-shell" id="gallery" aria-label="Immersive three-dimensional art gallery">') ||
+    !html.includes('<section class="gallery-shell" id="gallery" aria-label="Immersive three-dimensional fashion boutique">') ||
     !html.includes(".intro{display:none!important}") ||
     !html.includes("height:100dvh;min-height:560px") ||
     !html.includes("position:absolute;z-index:15;top:0;left:0;right:0;height:66px") ||
@@ -264,8 +264,8 @@ if (!html.includes("const makeMineralTexture=(base,contrast,seed)=>") ||
 if (!html.includes("new THREE.LatheGeometry(points,48)") ||
     !html.includes("const dressPalette=[0xd8c7b1,0x654358,0x8c9b7d,0xb85f49,0x26344a,0x687c60]") ||
     !html.includes("const fittingFabric=new THREE.MeshStandardMaterial") ||
-    !html.includes("Two private fitting suites") ||
-    !html.includes("Sculpted brass clothing rails") ||
+    !html.includes("addBoutiqueBox(room,2.35,3.5,.16,boutiqueWood") ||
+    !html.includes("const rail=new THREE.Group();rail.position.set(side*6.15,-1.72,-1.1)") ||
     !html.includes("new THREE.MeshPhysicalMaterial({color:0xe5e9e8,metalness:.92,roughness:.12") ||
     !html.includes("group.userData.index=index") ||
     !html.includes("group.userData.targetY=-1.72") ||
