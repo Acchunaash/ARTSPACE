@@ -144,6 +144,15 @@ if (!modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") 
     !modelBuilder.includes("Continuous, smoothly bowed architectural skins")) {
   fail("Pavilion requires continuous smooth curved panel geometry, not only individually angled box segments.");
 }
+/* Sculptural entrance and roof require layered continuous curves, deep soffit and portal ribs. */
+if (!modelBuilder.includes("Sculptural roof and entrance refinement") ||
+    !modelBuilder.includes("curvedPanel(0,19.9,.24,3.35,0,3.56,11.05,.88)") ||
+    !modelBuilder.includes("curvedPanel(3,19.45,.12,3.12,0,3.385,11.08,.82)") ||
+    !modelBuilder.includes("Deep portal cheeks with layered reveals") ||
+    !modelBuilder.includes("Fine roof ribs are set back beneath the canopy")) {
+  fail("The pavilion sculptural roof canopy, recessed soffit and layered entrance portal are missing.");
+}
+
 if (!modelBuilder.includes("const curvedBox=") ||
     !modelBuilder.includes("const facadeCurve=(x)=>") ||
     !modelBuilder.includes("Curved architectural pass") ||
