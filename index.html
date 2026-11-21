@@ -460,7 +460,7 @@ function renderCart(){
  const list=document.getElementById("cartItems");
  if(!cart.length)list.innerHTML='<div class="cart-empty">Your bag is feeling a little empty.<br>Find a print that feels like you.</div>';
  else list.innerHTML=cart.map((item,index)=>{const p=products[item.productIndex];return `<article class="cart-item"><div class="cart-thumb"><img src="${p.image}" alt=""></div><div><h3>${p.title}</h3><div class="cart-meta">${item.size} · ${item.finish.toUpperCase()}<br>${money(cartPrice(item))} EACH</div><div class="cart-actions"><button data-cart-action="minus" data-index="${index}" aria-label="Decrease quantity">−</button><span>${item.quantity}</span><button data-cart-action="plus" data-index="${index}" aria-label="Increase quantity" ${item.quantity>=10?"disabled":""}>+</button><button class="remove-item" data-cart-action="remove" data-index="${index}">REMOVE</button></div></div><strong class="cart-price">${money(cartPrice(item)*item.quantity)}</strong></article>`;}).join("");
- const total=cart.reduce((sum,item)=>sum+cartPrice(item)*item.quantity,0);document.getElementById("cartTotal").textContent=money(total);document.getElementById("cartCheckout").disabled=!cart.length;const progress=Math.min(100,total/8000*100);document.getElementById("shippingProgressFill").style.width=progress+"%";document.getElementById("shippingProgressText").textContent=total>=8000?"You unlocked complimentary shipping.":"Add "+money(8000-total)+" more for complimentary shipping.";
+ const total=cart.reduce((sum,item)=>sum+cartPrice(item)*item.quantity,0);document.getElementById("cartTotal").textContent=money(total);document.getElementById("cartCheckout").disabled=true;const progress=Math.min(100,total/8000*100);document.getElementById("shippingProgressFill").style.width=progress+"%";document.getElementById("shippingProgressText").textContent=total>=8000?"You unlocked complimentary shipping.":"Add "+money(8000-total)+" more for complimentary shipping.";
 }
 function openCart(){closeWishlist();renderCart();drawer.classList.add("open");backdrop.classList.add("open");document.body.classList.add("cart-open");drawer.setAttribute("aria-hidden","false");document.getElementById("cartClose").focus();}
 function closeCart(){drawer.classList.remove("open");backdrop.classList.remove("open");document.body.classList.remove("cart-open");drawer.setAttribute("aria-hidden","true");}
@@ -591,8 +591,16 @@ window.__artspaceThreeReady.then(loaded=>{
  renderer.domElement.tabIndex=0;
  renderer.domElement.setAttribute("role","application");
  renderer.domElement.setAttribute("aria-label","Interactive 3D art gallery. Drag to rotate, use arrow keys to browse, and press Enter to open the selected artwork.");
- renderer.domElement.addEventListener("webglcontextlost",event=>{event.preventDefault();stage.classList.remove("webgl-ready");cancelAnimationFrame(raf);raf=0;});
- renderer.domElement.addEventListener("webglcontextrestored",()=>{stage.classList.add("webgl-ready");if(pageVisible&&!raf)animate();});
+ renderer.domElement.addEventListener("webglcontextlost",event=>{
+  event.preventDefault();
+  stage.classList.remove("webgl-ready");
+  cancelAnimationFrame(raf);raf=0;
+  show3DStatus("3D graphics paused by the browser. Restoring the gallery…");
+ });
+ renderer.domElement.addEventListener("webglcontextrestored",()=>{
+  stage.classList.remove("webgl-ready");
+  if(pageVisible&&!raf)animate();
+ });
  function resize(){
   const w=Math.max(1,stage.clientWidth),h=Math.max(1,stage.clientHeight);
   camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false);
