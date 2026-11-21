@@ -5,14 +5,14 @@ const path=require("path");
 const out=path.join(process.cwd(),"assets","artspace-pavilion.glb");
 fs.mkdirSync(path.dirname(out),{recursive:true});
 const materials=[
- ["limestone",[.89,.87,.82,1],.02,.82],
- ["shadow-stone",[.57,.57,.54,1],.02,.92],
- ["champagne-bronze",[.45,.35,.24,1],.78,.32],
- ["dark-anodized-metal",[.145,.188,.192,1],.82,.28],
- ["low-iron-glass",[.63,.745,.745,.42],.25,.1],
- ["deep-glass",[.25,.33,.34,.82],.48,.18],
- ["architectural-concrete",[.745,.745,.71,1],.02,.9],
- ["smoked-oak",[.356,.27,.188,1],.02,.62],
+ ["limestone",[.91,.885,.82,1],.015,.76],
+ ["shadow-stone",[.49,.485,.45,1],.015,.94],
+ ["champagne-bronze",[.52,.39,.255,1],.84,.24],
+ ["dark-anodized-metal",[.105,.145,.15,1],.88,.22],
+ ["low-iron-glass",[.69,.81,.82,.32],.18,.075],
+ ["deep-glass",[.19,.29,.32,.72],.62,.12],
+ ["architectural-concrete",[.69,.70,.68,1],.015,.94],
+ ["smoked-oak",[.31,.205,.125,1],.015,.55],
  ["warm-emissive-light",[1,.88,.7,1],0,.25],
  ["landscape-green",[.356,.435,.356,1],0,.95]
 ];
@@ -73,6 +73,48 @@ for(const side of [-1,1]){
 }
 // Sculpted entrance portal reveals and a secondary bronze lintel.
 box(1,6.45,.09,.18,0,2.96,12.48);box(2,6.45,.07,.2,0,3.1,12.52);
+// Curved architectural pass: segmented stone rainscreen, bowed portal brow and a sweeping canopy edge.
+// Every segment follows a shallow continuous curve, with tangent rotation to avoid a box-like facade.
+const curvedBox=(m,w,h,d,x,y,z,angle)=>{
+ const item={s:[w,h,d],p:[x,y,z],r:[0,Math.sin(angle/2),0,Math.cos(angle/2)]};groups[m].push(item);
+};
+const facadeCurve=(x)=>.82*(1-Math.pow(x/9.7,2));
+const facadeSlope=(x)=>-.164*x/9.7;
+for(const side of [-1,1]){
+ for(let row=0;row<6;row++){
+  const y=-.72+row*.69;
+  for(let i=0;i<12;i++){
+   const x=side*(3.48+i*.49),z=12.04+facadeCurve(x),angle=-Math.atan(facadeSlope(x));
+   curvedBox((row+i)%5===0?1:0,.455,.61,.16,x,y,z,angle);
+  }
+ }
+ // Deep horizontal joints read as continuous shadow lines across the bowed stone skin.
+ for(let row=0;row<5;row++){
+  const y=-.39+row*.69;
+  for(let i=0;i<12;i++){
+   const x=side*(3.48+i*.49),z=12.135+facadeCurve(x),angle=-Math.atan(facadeSlope(x));
+   curvedBox(1,.47,.035,.035,x,y,z,angle);
+  }
+ }
+}
+// A segmented, softly bowed canopy fascia gives the entrance a sculptural roof line.
+for(let i=0;i<22;i++){
+ const x=-10+i*(20/21),z=12.28+.98*(1-Math.pow(x/10,2)),angle=-Math.atan(-.196*x/10);
+ curvedBox(0,.98,.32,2.5,x,3.46,z,angle);
+ curvedBox(2,.98,.055,.12,x,3.275,z+1.18,angle);
+}
+// Curved bronze portal brow and layered stone reveal around the glazed lobby.
+for(let i=0;i<16;i++){
+ const x=-3.9+i*.52,z=12.62+.22*(1-Math.pow(x/4.2,2)),angle=-Math.atan(-.105*x/4.2);
+ curvedBox(1,.49,.12,.22,x,3.18,z,angle);
+ curvedBox(2,.49,.075,.24,x,3.31,z+.015,angle);
+}
+// Fine vertical joints and bronze blades follow the same curved facade datum.
+for(const side of [-1,1])for(let i=0;i<13;i++){
+ const x=side*(3.38+i*.49),z=12.17+facadeCurve(x),angle=-Math.atan(facadeSlope(x));
+ curvedBox(2,.035,4.12,.075,x,1.02,z+.035,angle);
+}
+
 // Build a single shared unit cube and cylinder mesh, then place many transformed instances.
 function cubeGeometry(){
  const p=[],n=[],idx=[],bevel=.04,core=.5-bevel,segments=4;
@@ -146,7 +188,7 @@ const nodes=[];
 for(let m=0;m<groups.length;m++)for(const item of groups[m]){
  const shape=item.c?1:0;
  const scale=item.c?[item.c[0]*2,item.c[1],item.c[0]*2]:item.s;
- nodes.push({name:materials[m][0]+"-element",mesh:m*2+shape,translation:item.p,scale});
+ nodes.push({name:materials[m][0]+"-element",mesh:m*2+shape,translation:item.p,scale,...(item.r?{rotation:item.r}:{})});
 }
 const gltfMaterials=materials.map(([name,color,metallic,roughness],i)=>({
  name,pbrMetallicRoughness:{baseColorFactor:color,metallicFactor:metallic,roughnessFactor:roughness},
