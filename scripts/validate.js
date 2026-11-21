@@ -93,7 +93,7 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
     !html.includes("addBox(exterior,19.5,.52,24.6,facadeMat,0,4,-1.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,-6.3,1.05,9.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,6.3,1.05,9.15)") ||
-    !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(15.2,8.3,25.8),new THREE.Vector3(13.4,6.8,21.2),new THREE.Vector3(9.2,5.0,17.2),new THREE.Vector3(5.2,2.65,16.8),new THREE.Vector3(1.8,1.75,15.1),new THREE.Vector3(0,1.65,13.65),new THREE.Vector3(0,1.65,12.45),new THREE.Vector3(0,1.65,10.2),new THREE.Vector3(0,1.65,7.2),introCameraEnd],false,\"centripetal\")") ||
+    !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(15.2,8.5,26.5),new THREE.Vector3(13.5,6.5,22.5),new THREE.Vector3(9.5,4.4,19),new THREE.Vector3(5.2,2.65,16.8),new THREE.Vector3(1.8,1.75,15.1),new THREE.Vector3(0,1.65,13.65),new THREE.Vector3(0,1.65,12.45),new THREE.Vector3(0,1.65,10.2),new THREE.Vector3(0,1.65,7.2),introCameraEnd],false,\"centripetal\")") ||
     !html.includes("new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,2.1,7.5),new THREE.Vector3(0,2.0,11.7),new THREE.Vector3(0,1.85,12.5),new THREE.Vector3(0,1.65,9.2),new THREE.Vector3(0,1.55,3.2),introLookEnd],false,\"centripetal\")") ||
     !html.includes("introCameraPath.getPointAt(pathT)") ||
     !html.includes("const introDuration=reducedMotion?0:9200;") ||
