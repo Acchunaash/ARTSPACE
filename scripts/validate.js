@@ -175,7 +175,16 @@ if (!modelBuilder.includes("Sculptural roof and entrance refinement") ||
   fail("The pavilion sculptural roof canopy, recessed soffit and layered entrance portal are missing.");
 }
 
-if (!modelBuilder.includes("const curvedBox=") ||
+if (!modelBuilder.includes("const curvedBox=") ||if (!modelBuilder.includes("Open, recessed facade bays: structural piers carry the cladding while glazing remains visibly exposed.") ||
+    !modelBuilder.includes("curvedBox(5,.79,3.12,.035") ||
+    !modelBuilder.includes("curvedBox(3,.91,3.42,.10") ||
+    !modelBuilder.includes("Fluted limestone pilasters align with the structural piers") ||
+    !modelBuilder.includes("metalRoughPixels") ||
+    !modelBuilder.includes("metallicRoughnessTexture={index:mrTextures[textureIndex]}") ||
+    modelBuilder.includes("[[0,0],[1,0],[2,0],[3,1],[6,1],[7,2]]")) {
+  fail("The pavilion must have visible recessed glazing bays, aligned fluted piers, and correctly assigned roughness/normal material maps.");
+}
+
     !modelBuilder.includes("const facadeCurve=(x)=>") ||
     !modelBuilder.includes("Curved architectural pass") ||
     !modelBuilder.includes("rotation:item.r") ||
@@ -219,9 +228,15 @@ if (!fs.existsSync("assets/artspace-pavilion.glb")) {
     const jsonLength = glb.readUInt32LE(12);
     try {
       const model = JSON.parse(glb.toString("utf8", 20, 20 + jsonLength).trim());
-      if (model.asset?.version !== "2.0" || !model.nodes?.length || model.meshes?.length < 10 || model.materials?.length < 8) {
-        fail("The pavilion GLB is missing expected architectural geometry or PBR materials.");
+      if (model.asset?.version !== "2.0" || !model.nodes?.length || model.meshes?.length < 50 || model.materials?.length < 8 || model.textures?.length < 9 || model.images?.length < 9) {
+        fail("The pavilion GLB is missing expected architectural geometry, embedded texture maps, or PBR materials.");
       }
+      const invalidMeshNodes=(model.nodes||[]).filter(node=>!Number.isInteger(node.mesh)||node.mesh<0||node.mesh>=model.meshes.length);
+      if(invalidMeshNodes.length)fail("Pavilion contains "+invalidMeshNodes.length+" nodes with invalid mesh references.");
+      const texturedMaterials=(model.materials||[]).filter(material=>material.pbrMetallicRoughness?.baseColorTexture&&material.normalTexture&&material.pbrMetallicRoughness?.metallicRoughnessTexture);
+      if(texturedMaterials.length<4)fail("Limestone, shadow stone, concrete and oak must each carry embedded albedo, normal and roughness maps.");
+      if(!model.materials[2]||model.materials[2].pbrMetallicRoughness?.baseColorTexture)fail("Bronze must not inherit a limestone albedo texture.");
+      if(!(model.nodes||[]).some(node=>node.name==="deep-glass-element")||!(model.nodes||[]).some(node=>node.name==="limestone-element"))fail("The model is missing separate glass and stone facade elements.");
     } catch (error) {
       fail("The pavilion GLB JSON chunk is invalid: " + error.message);
     }
