@@ -684,14 +684,14 @@ window.__artspaceThreeReady.then(loaded=>{
     addBox(exterior,.025,4.82,.025,revealMat,x-side*.22,1.02,9.385);
    }
    const ribbon=new THREE.Mesh(new THREE.BoxGeometry(.055,1.32,7.8),glassMat);
-   ribbon.position.set(side*9.015,1.95,-2.8);exterior.add(ribbon);
-   addBox(exterior,.09,.09,8.0,glassFrameMat,side*8.98,2.68,-2.8);
-   addBox(exterior,.09,.09,8.0,glassFrameMat,side*8.98,1.22,-2.8);
-   for(let k=0;k<5;k++)addBox(exterior,.07,1.5,.07,glassFrameMat,side*8.98,1.95,-6+k*1.6);
+   ribbon.position.set(side*9.49,1.95,-2.8);exterior.add(ribbon);
+   addBox(exterior,.09,.09,8.0,glassFrameMat,side*9.47,2.68,-2.8);
+   addBox(exterior,.09,.09,8.0,glassFrameMat,side*9.47,1.22,-2.8);
+   for(let k=0;k<5;k++)addBox(exterior,.07,1.5,.07,glassFrameMat,side*9.47,1.95,-6+k*1.6);
   }
   /* Fine steel grid and discreet pull handles make the entrance read as real glass doors. */
   [-1.38,0,1.38].forEach(x=>addBox(exterior,.045,4.0,.075,glassFrameMat,x,.72,8.91));
-  [0,.9,1.8].forEach(y=>addBox(exterior,5.45,.035,.075,glassFrameMat,0,y-1.28,8.91));
+  [0,1.95,3.9].forEach(y=>addBox(exterior,5.45,.035,.075,glassFrameMat,0,y-1.28,8.91));
   addBox(exterior,.045,1.0,.07,darkMetal,-.22,.62,8.82);addBox(exterior,.045,1.0,.07,darkMetal,.22,.62,8.82);
   /* Canopy soffit and warm recessed downlights. */
   const soffitMat=new THREE.MeshStandardMaterial({color:0xe7e5df,roughness:.72});
