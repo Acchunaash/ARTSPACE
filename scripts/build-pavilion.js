@@ -121,6 +121,38 @@ for(const side of [-1,1])for(let i=0;i<13;i++){
  curvedBox(2,.035,4.12,.075,x,1.02,z+.035,angle);
 }
 
+
+/* Sculptural roof and entrance refinement: layered curved canopy, deep soffit and a shaped portal. */
+// Broad continuous roof lip floats beyond the glazed lobby; the underside is darker for real depth.
+curvedPanel(0,19.9,.24,3.35,0,3.56,11.05,.88);
+curvedPanel(3,19.45,.12,3.12,0,3.385,11.08,.82);
+curvedPanel(2,19.82,.075,.18,0,3.28,12.76,.42);
+// Secondary curved roof eyebrow and bronze drip edge create a finer silhouette.
+curvedPanel(1,18.8,.16,.22,0,3.79,12.62,.38);
+curvedPanel(2,19.25,.055,.16,0,3.68,12.79,.38);
+// Deep portal cheeks with layered reveals and bronze vertical blades.
+for(const side of [-1,1]){
+ box(1,.42,4.85,.72,side*3.38,.98,12.13);
+ box(0,.24,4.72,.58,side*3.12,1.02,12.28);
+ box(2,.075,4.55,.16,side*2.96,1.02,12.58);
+ for(let rib=0;rib<5;rib++){
+  const x=side*(3.5+rib*.105);
+  curvedBox(2,.045,4.25,.10,x,1.03,12.73,.025*side);
+ }
+}
+// Sculpted lintel is built from closely spaced rotated stones, with a recessed shadow reveal below.
+for(let i=0;i<28;i++){
+ const x=-3.75+i*(7.5/27),z=12.78+.34*(1-Math.pow(x/3.9,2)),angle=-Math.atan(-.174*x/3.9);
+ curvedBox(0,.29,.34,.78,x,3.47,z,angle);
+ curvedBox(1,.29,.075,.82,x,3.265,z-.02,angle);
+ curvedBox(2,.29,.055,.86,x,3.19,z-.035,angle);
+}
+// Fine roof ribs are set back beneath the canopy to reveal its thickness and rhythm.
+for(let i=0;i<25;i++){
+ const x=-9.3+i*.775;
+ curvedBox(3,.035,.11,2.7,x,3.34,11.15+.72*(1-Math.pow(x/10,2)),-Math.atan(-.144*x/10));
+}
+
 // Build a single shared unit cube and cylinder mesh, then place many transformed instances.
 function cubeGeometry(){
  const p=[],n=[],idx=[],bevel=.04,core=.5-bevel,segments=4;
