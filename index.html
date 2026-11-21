@@ -4,7 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f7f4">
-  <meta name="description" content="ARTSPACE — an immersive art print gallery.">
+  <meta name="description" content="Discover expressive art prints in an immersive 3D gallery. Explore the ARTSPACE collection and find art for everyday spaces.">
+  <meta name="keywords" content="art prints, wall art, contemporary prints, ARTSPACE, gallery">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ARTSPACE — Art for everyday spaces">
+  <meta property="og:description" content="Explore an immersive gallery of expressive art prints.">
+  <meta property="og:url" content="https://acchunaash.github.io/ARTSPACE/">
+  <meta name="twitter:card" content="summary">
+  <link rel="canonical" href="https://acchunaash.github.io/ARTSPACE/">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="theme-color" content="#f7f7f4">
   <title>ARTSPACE — Art for everyday spaces</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500&display=swap');
@@ -282,6 +291,7 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
     <div class="cart-summary"><div class="cart-total"><span>SUBTOTAL</span><span id="cartTotal">₹0</span></div><div class="shipping-progress"><div class="shipping-progress-track"><span id="shippingProgressFill"></span></div><p class="cart-note" id="shippingProgressText">Add ₹8,000 more for complimentary shipping.</p></div><p class="cart-note">Shipping and taxes are finalized at checkout. Online payment is not enabled yet.</p><button class="cart-checkout" id="cartCheckout" disabled>CONTINUE TO CHECKOUT ↗</button></div>
   </aside>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.128.0/three.min.js"></script>
+  <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script>
 <script>
 const products = [
  {title:"THE BEAUTIFUL GAME",subtitle:"BURKINA FASO — 2026",price:5800,image:"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSI0MjAiIGhlaWdodD0iNTYwIiBmaWxsPSIjZThkN2JkIi8+PHBhdGggZD0iTTAgMzkwIFExMjAgMjYwIDIzMCAzNDAgVDQyMCAyNTAgVjU2MCBIMFoiIGZpbGw9IiNiZDNkMmMiLz48Y2lyY2xlIGN4PSIyODUiIGN5PSIxNTAiIHI9IjgyIiBmaWxsPSIjZTVhMzNlIi8+PHBhdGggZD0iTTkwIDQzMCBMMTUwIDE4MCBMMjI1IDQzMFoiIGZpbGw9IiMxODNlMzYiLz48cGF0aCBkPSJNMTcwIDQzMCBMMjYwIDIzMCBMMzUwIDQzMFoiIGZpbGw9IiNmMWU3ZDciLz48Y2lyY2xlIGN4PSIyMTAiIGN5PSIyNzUiIHI9IjM0IiBmaWxsPSIjMjUyMzIzIi8+PHBhdGggZD0iTTE5MCAzMDggTDE3MCAzOTAgTDI0NSAzOTAgTDIzMCAzMTBaIiBmaWxsPSIjMjUyMzIzIi8+PHBhdGggZD0iTTIwOCAzNDAgTDEyNSAzOTUgTTIyNSAzNDAgTDI5NSAzOTAiIHN0cm9rZT0iIzI1MjMyMyIgc3Ryb2tlLXdpZHRoPSIxOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8dGV4dCB4PSIyNCIgeT0iNTA1IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNyIgZm9udC13ZWlnaHQ9IjcwMCIgbGV0dGVyLXNwYWNpbmc9IjMiIGZpbGw9IiMyMjIiPlRIRSBCRUFVVElGVUwgR0FNRTwvdGV4dD4KICAgIDx0ZXh0IHg9IjI0IiB5PSI1MzAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBsZXR0ZXItc3BhY2luZz0iMiIgZmlsbD0iIzMzMyI+QlVSS0lOQSBGQVNPPC90ZXh0PgogICAgPC9zdmc+"},
