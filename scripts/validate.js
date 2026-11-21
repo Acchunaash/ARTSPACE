@@ -79,22 +79,20 @@ if (!html.includes("new THREE.CylinderGeometry(wallRadius,wallRadius,7.1,96,1,tr
 }
 
 if (!html.includes("gallery.position.set(0,0,wallCenterZ)") ||
-    !html.includes("const d=index-(products.length-1)/2;") ||
     !html.includes("const wallAngle=Math.PI+d*.235") ||
     !html.includes("group.userData.targetScale=1") ||
-    html.includes("let d=index-current") ||
-    !html.includes("const mountRadius=wallRadius-.072") ||
     !html.includes("group.userData.targetRY=wallAngle+Math.PI") ||
-    html.includes("gallery.rotation.y+=(idleAngle-gallery.rotation.y)*.012")) {
-  fail("3D artwork frames must be mounted to and face inward from the curved exhibition wall.");
+    !html.includes("const mountRadius=wallRadius-.62") ||
+    !html.includes("group.userData.targetY=-1.72")) {
+  fail("Dressed mannequins must remain evenly mounted around the curved boutique perimeter and face into the room.");
 }
 
-
-/* All six artworks stay fixed on the curved wall; selection must not turn the wall into a carousel. */
-if (!html.includes("Fixed wall positions: selecting an artwork must never rearrange the other frames.") ||
-    !html.includes("const d=i-(cards.length-1)/2;") ||
-    !html.includes("card.style.opacity=\"1\"")) {
-  fail("Every artwork must remain visible in a fixed wall-mounted arrangement, not a slideshow.");
+/* The six model cards remain available as the non-WebGL fallback, while 3D mannequins are the primary display. */
+if (!html.includes('alt="Model wearing The Solstice Dress"') ||
+    !html.includes('alt="Model wearing The Garden Wrap"') ||
+    !html.includes('card.style.opacity="1"') ||
+    !html.includes("Drag to explore the boutique")) {
+  fail("Fashion model previews and accessible boutique browsing controls are missing.");
 }
 /* Cinematic opening must show the whole exterior, then approach and pass through the entrance. */
 if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
@@ -160,8 +158,8 @@ if (!html.includes("const visitorBench=new THREE.Group()") ||
 }
 
 if (!html.includes("if(!stage.classList.contains(\"webgl-ready\"))") ||
-    !html.includes("new THREE.CanvasTexture(fallbackCanvas)")) {
-  fail("WebGL reveal must not wait for every texture, and failed artwork textures need a fallback.");
+    !html.includes("new THREE.LatheGeometry(points,48)")) {
+  fail("WebGL reveal must not wait for external fashion images; procedural 3D dress mannequins must remain available.");
 }
 
 /* Exterior architecture must include layered facade details, real glazing frames, forecourt and lighting. */
