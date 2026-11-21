@@ -94,13 +94,13 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,-6.3,1.05,9.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,6.3,1.05,9.15)") ||
     !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(15.2,8.5,26.5),new THREE.Vector3(13.5,6.5,22.5),new THREE.Vector3(9.5,4.4,19),new THREE.Vector3(5.2,2.65,16.8),new THREE.Vector3(1.8,1.75,15.1),new THREE.Vector3(0,1.65,13.65),new THREE.Vector3(0,1.65,12.45),new THREE.Vector3(0,1.65,10.2),new THREE.Vector3(0,1.65,7.2),introCameraEnd],false,\"centripetal\")") ||
-    !html.includes("new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,2.1,7.5),new THREE.Vector3(0,2.0,11.7),new THREE.Vector3(0,1.85,12.5),new THREE.Vector3(0,1.65,9.2),new THREE.Vector3(0,1.55,3.2),introLookEnd],false,\"centripetal\")") ||
     !html.includes("introCameraPath.getPointAt(pathT)") ||
     !html.includes("const introDuration=reducedMotion?0:9200;") ||
     !html.includes("if(introRaw<.02){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}") ||
     !html.includes("const introCameraProgress=t=>t<.70?.74*easeCamera(t/.70):t<.86?.74+.12*easeCamera((t-.70)/.16):.86+.14*easeCamera((t-.86)/.14);") ||
     !html.includes("const pathT=introCameraProgress((introRaw-.02)/.98);") ||
-    !html.includes("introLookPath.getPointAt(pathT)") ||
+    !html.includes("introLookTarget.set(0,THREE.MathUtils.lerp(2.15,1.55,pathT),camera.position.z-6.5)") ||
+    !html.includes("camera.lookAt(introLookTarget.set(0,THREE.MathUtils.lerp(2.15,1.55,pathT),camera.position.z-6.5));") ||
     !html.includes("introCameraPath.points[0].copy(introCameraStart)") ||
     !html.includes("introCameraStart.x=13.5;") ||
     !html.includes("camera.fov=THREE.MathUtils.lerp(40,36,pathT)") ||
