@@ -130,7 +130,19 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
 .selected-image-wrap:hover .selected-image-bg{transform:perspective(1000px) rotateY(0) rotateX(0) translateY(-5px);box-shadow:0 38px 65px #17181625,8px 10px 0 -4px #d6d7d0}
 @media(prefers-reduced-motion:reduce){.art-card{will-change:auto}}
 
+.collection-section{padding:20px 9vw 110px}
+.collection-heading{display:flex;justify-content:space-between;align-items:end;margin-bottom:28px}
+.collection-heading h2{font-size:clamp(30px,4vw,48px);letter-spacing:-2px;font-weight:500;margin:12px 0 0}
+.collection-heading>span{font:9px 'DM Mono',monospace;letter-spacing:1px;color:var(--muted)}
+.collection-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px 22px}
+.collection-card{min-width:0;border:0;background:none;padding:0;text-align:left;color:var(--ink)}
+.collection-card img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;padding:9px;background:white;box-shadow:0 16px 35px #17181612;transition:transform .35s,box-shadow .35s}
+.collection-card:hover img{transform:translateY(-5px);box-shadow:0 24px 42px #17181620}
+.collection-card strong{display:block;font-size:12px;letter-spacing:.2px;margin-top:15px}
+.collection-card span{display:block;font:9px 'DM Mono',monospace;color:var(--muted);margin-top:6px}
+.collection-card em{display:block;font:11px 'DM Mono',monospace;font-style:normal;margin-top:10px}
 @media(max-width:700px){
+ .collection-section{padding:5px 22px 75px}.collection-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 14px}.collection-heading{align-items:start;gap:15px}.collection-heading>span{font-size:8px;white-space:nowrap;margin-top:5px}.collection-card img{padding:6px}.collection-card strong{font-size:10px}
  .topbar{height:62px;padding:0 20px}.desktop-nav{display:none}
  .intro{padding:55px 22px 35px;display:block}h1{letter-spacing:-2.5px}.intro-note{margin-top:22px}
  .gallery-shell{margin:0 10px 65px;min-height:420px;padding-top:20px}
@@ -235,6 +247,11 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
       </div>
     </section>
 
+    <section class="collection-section" id="allArtworks">
+      <div class="collection-heading"><div><p class="eyebrow">THE COMPLETE EDIT</p><h2>Find your favourite.</h2></div><span>06 ORIGINAL PRINTS</span></div>
+      <div class="collection-grid" id="collectionGrid"></div>
+    </section>
+
     <section class="about-strip" id="about"><span>MADE TO BE SEEN.</span><span>MADE TO BE KEPT.</span><span>MADE TO INSPIRE.</span></section>
   </main>
 
@@ -329,6 +346,9 @@ function closeWishlist(){document.getElementById("savedDrawer").classList.remove
 document.getElementById("wishlistButton").addEventListener("click",openWishlist);document.getElementById("savedClose").addEventListener("click",closeWishlist);document.getElementById("savedBackdrop").addEventListener("click",closeWishlist);document.getElementById("savedItems").addEventListener("click",e=>{const view=e.target.closest("[data-saved-view]"),remove=e.target.closest("[data-saved-remove]");if(view){current=Number(view.dataset.savedView);render();closeWishlist();document.getElementById("selectedProduct").scrollIntoView({behavior:"smooth"});}if(remove){wishlist=wishlist.filter(i=>i!==Number(remove.dataset.savedRemove));try{localStorage.setItem("artspace-wishlist",JSON.stringify(wishlist));}catch(e){}renderWishlist();syncWishlistButton();}});
 function syncWishlistButton(){const b=document.getElementById("saveButton");if(!b)return;const saved=wishlist.includes(current);b.setAttribute("aria-pressed",String(saved));b.textContent=saved?"♥ SAVED TO WISHLIST":"♡ SAVE TO WISHLIST";document.getElementById("savedCount").textContent=wishlist.length;}
 document.getElementById("saveButton").addEventListener("click",()=>{if(wishlist.includes(current))wishlist=wishlist.filter(i=>i!==current);else wishlist.push(current);try{localStorage.setItem("artspace-wishlist",JSON.stringify(wishlist));}catch(e){}syncWishlistButton();toast(wishlist.includes(current)?"Saved to your wishlist":"Removed from your wishlist");});
+function renderCollection(){const grid=document.getElementById("collectionGrid");grid.innerHTML=products.map((p,index)=>'<button class="collection-card" type="button" data-collection-index="'+index+'" aria-label="View '+p.title+'"><img src="'+p.image+'" alt="'+p.title+' art print" loading="lazy"><strong>'+p.title+'</strong><span>'+p.subtitle+'</span><em>'+money(p.price)+' · VIEW PRINT ↗</em></button>').join("");}
+document.getElementById("collectionGrid").addEventListener("click",e=>{const card=e.target.closest("[data-collection-index]");if(!card)return;current=Number(card.dataset.collectionIndex);render();document.getElementById("selectedProduct").scrollIntoView({behavior:"smooth"});});
+renderCollection();
 function updatePrice(){
  const base=products[current].price;
  const sizeAdd={A3:0,A2:1200,A1:2600}[selectedSize];
