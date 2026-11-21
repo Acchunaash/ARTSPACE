@@ -133,4 +133,14 @@ if (!html.includes("https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.j
 }
 
 if (process.exitCode) process.exit(process.exitCode);
+/* Premium exterior pass: layered rainscreen, recessed portal, bronze blades, roof edge and forecourt joints. */
+if (!html.includes("const limestonePanel=new THREE.MeshStandardMaterial") ||
+    !html.includes("for(let row=0;row<3;row++)") ||
+    !html.includes("const bronze=new THREE.MeshStandardMaterial") ||
+    !html.includes("Oversized recessed entry portal") ||
+    !html.includes("new THREE.SpotLight(0xffe6c8,1.15,24") ||
+    !html.includes("Larger-format forecourt stone slabs")) {
+  fail("Premium exterior cladding, deep entry portal, bronze detailing, facade wash and stone forecourt are missing.");
+}
+
 console.log("ARTSPACE checks passed: HTML ids, DOM references, inline JavaScript, CSS braces, manifest, and service worker.");
