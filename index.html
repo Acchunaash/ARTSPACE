@@ -268,13 +268,13 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="cart-backdrop" id="savedBackdrop"></div>
-  <aside class="cart-drawer" id="savedDrawer" aria-label="Saved artworks" aria-hidden="true">
+  <aside class="cart-drawer" id="savedDrawer" role="dialog" aria-modal="true" aria-label="Saved artworks" aria-hidden="true">
     <div class="cart-head"><h2>Saved artworks</h2><button class="cart-close" id="savedClose" aria-label="Close saved artworks">×</button></div>
     <div class="cart-items" id="savedItems"></div>
     <div class="cart-summary"><p class="cart-note">Your saved collection stays on this device.</p></div>
   </aside>
   <div class="cart-backdrop" id="cartBackdrop"></div>
-  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping bag" aria-hidden="true">
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Shopping bag" aria-hidden="true">
     <div class="cart-head"><h2>Your bag <span id="cartItemCount" class="product-subtitle"></span></h2><button class="cart-close" id="cartClose" aria-label="Close bag">×</button></div>
     <div class="cart-items" id="cartItems"></div>
     <div class="cart-summary"><div class="cart-total"><span>SUBTOTAL</span><span id="cartTotal">₹0</span></div><div class="shipping-progress"><div class="shipping-progress-track"><span id="shippingProgressFill"></span></div><p class="cart-note" id="shippingProgressText">Add ₹8,000 more for complimentary shipping.</p></div><p class="cart-note">Shipping and taxes are finalized at checkout. Online payment is not enabled yet.</p><button class="cart-checkout" id="cartCheckout" disabled>CONTINUE TO CHECKOUT ↗</button></div>
@@ -388,6 +388,7 @@ function openCart(){closeWishlist();renderCart();drawer.classList.add("open");ba
 function closeCart(){drawer.classList.remove("open");backdrop.classList.remove("open");document.body.classList.remove("cart-open");drawer.setAttribute("aria-hidden","true");}
 document.getElementById("addButton").addEventListener("click",()=>{const found=cart.find(item=>item.productIndex===current&&item.size===selectedSize&&item.finish===selectedFinish);if(found){if(found.quantity>=10){toast("Maximum quantity is 10 per artwork option");return;}found.quantity++;}else cart.push({productIndex:current,size:selectedSize,finish:selectedFinish,quantity:1});try{localStorage.setItem("artspace-cart",JSON.stringify(cart));}catch(e){}renderCart();toast(products[current].title+" added to your bag");});
 document.getElementById("bagButton").addEventListener("click",openCart);document.getElementById("cartClose").addEventListener("click",closeCart);backdrop.addEventListener("click",closeCart);document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeCart();closeWishlist();}});
+document.addEventListener("keydown",e=>{if(e.key!=="Tab")return;const active=document.getElementById("cartDrawer").classList.contains("open")?document.getElementById("cartDrawer"):document.getElementById("savedDrawer").classList.contains("open")?document.getElementById("savedDrawer"):null;if(!active)return;const focusables=[...active.querySelectorAll('button:not([disabled]),a[href],input:not([disabled])')];if(!focusables.length)return;const first=focusables[0],last=focusables[focusables.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}});
 document.getElementById("cartItems").addEventListener("click",e=>{const b=e.target.closest("[data-cart-action]");if(!b)return;const i=Number(b.dataset.index),a=b.dataset.cartAction,item=cart[i];if(!item)return;if(a==="plus"){if(item.quantity>=10){toast("Maximum quantity is 10 per artwork option");return;}item.quantity++;}if(a==="minus")item.quantity--;if(a==="remove"||item.quantity<=0)cart.splice(i,1);try{localStorage.setItem("artspace-cart",JSON.stringify(cart));}catch(e){}renderCart();});
 document.getElementById("cartCheckout").addEventListener("click",()=>toast("Online checkout will be added in a future update."));
 renderCart();
