@@ -111,6 +111,17 @@ if (!html.includes("if(!stage.classList.contains(\"webgl-ready\"))") ||
   fail("WebGL reveal must not wait for every texture, and failed artwork textures need a fallback.");
 }
 
+/* Exterior architecture must include layered facade details, real glazing frames, forecourt and lighting. */
+if (!html.includes("const glassFrameMat=new THREE.MeshStandardMaterial") ||
+    !html.includes("for(let k=0;k<6;k++)") ||
+    !html.includes("const ribbon=new THREE.Mesh(new THREE.BoxGeometry(.055,1.32,7.8),glassMat)") ||
+    !html.includes("for(let x=-8;x<=8;x+=4)") ||
+    !html.includes("new THREE.IcosahedronGeometry(.43,1)") ||
+    !html.includes("const exteriorFill=new THREE.DirectionalLight(0xfff4e4,.48)") ||
+    !html.includes("keyLight.shadow.mapSize.set(1024,1024)")) {
+  fail("Museum exterior must retain its facade fins, side glazing, canopy lights, planting and tuned daylight/shadows.");
+}
+
 // Guard the Three.js loader against a race with the application initializer.
 if (!html.includes("window.__artspaceThreeReady=new Promise") ||
     !html.includes("window.__artspaceThreeReady.then(loaded=>")) {
