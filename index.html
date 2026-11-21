@@ -75,6 +75,14 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
 .art-frame:after{content:"";position:absolute;inset:0;background:linear-gradient(125deg,#ffffff55 0%,transparent 25%,transparent 72%,#00000008 100%);pointer-events:none}
 .art-card.active .art-frame{box-shadow:0 34px 58px #1b211b28,0 8px 18px #1b211b12,inset 0 0 0 1px #0000000a}
 .gallery-arrow{backdrop-filter:blur(12px);box-shadow:0 4px 16px #2528200c}
+
+/* STEP 4 — gallery lighting and contact shadows */
+.art-card.active .art-frame:after{background:linear-gradient(118deg,#ffffff80 0%,#ffffff18 24%,transparent 48%,#0000000b 100%)}
+.art-card.active .art-frame{filter:drop-shadow(0 12px 18px #25282012)}
+.gallery-stage:before{height:66px;bottom:5px;background:radial-gradient(ellipse,#25282030 0%,#25282010 44%,transparent 74%);filter:blur(13px)}
+.selected-image-wrap{overflow:hidden;background:radial-gradient(ellipse at 50% 38%,#fff 0%,#f0f0eb 54%,#e8e9e4 100%);box-shadow:inset 0 1px #ffffffb8}
+.selected-image-bg{transform:perspective(1000px) rotateY(-3deg) rotateX(1deg);box-shadow:0 30px 55px #17181620,8px 10px 0 -4px #d6d7d0;transition:transform .6s cubic-bezier(.2,.75,.2,1),box-shadow .6s}
+.selected-image-wrap:hover .selected-image-bg{transform:perspective(1000px) rotateY(0) rotateX(0) translateY(-5px);box-shadow:0 38px 65px #17181625,8px 10px 0 -4px #d6d7d0}
 @media(prefers-reduced-motion:reduce){.art-card{will-change:auto}}
 
 @media(max-width:700px){
