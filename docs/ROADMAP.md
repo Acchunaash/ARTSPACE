@@ -2,7 +2,12 @@
 
 This roadmap tracks the build from the original 3D gallery through a production-ready art marketplace.
 
-## Completed
+## Implemented in the repository
+
+**Honest status rule:** a checked item means its code or project artifact exists in GitHub. It does not mean that every interaction has been tested on real Android devices, desktop browsers, or in production. Source validation is automated; visual and end-to-end testing are tracked separately below.
+
+**Latest verified repository state (2026-11-21):** commit `0d6d01ef16f569c4089e47c4483d70c168c26dc9` adds a Three.js room shell (floor, rear/side walls, ceiling trim and track lights). The source validation workflow and GitHub Pages deployment both completed successfully for that commit. The live page has not been independently inspected in a real browser in this work session.
+
 
 - [x] 01 — Establish the gallery visual foundation and responsive page structure.
 - [x] 02 — Build framed artwork cards with depth and perspective.
