@@ -93,18 +93,17 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
     !html.includes("addBox(exterior,19.5,.52,24.6,facadeMat,0,4,-1.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,-6.3,1.05,9.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,6.3,1.05,9.15)") ||
-    !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(-3.8,7.5,25),new THREE.Vector3(-3.2,4.6,17.5),new THREE.Vector3(-1.2,2.2,13.5),new THREE.Vector3(0,1.75,10.8),new THREE.Vector3(0,1.65,7.7),introCameraEnd],false,\"centripetal\")") ||
-    !html.includes("new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,2.05,8.5),new THREE.Vector3(0,1.8,4.5),new THREE.Vector3(0,1.15,1.5),introLookEnd],false,\"centripetal\")") ||
+    !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(0,1.65,22),new THREE.Vector3(0,1.65,14),new THREE.Vector3(0,1.65,9.5),new THREE.Vector3(0,1.65,4.7)],false,\"centripetal\")") ||
+    !html.includes("new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,1.65,8),new THREE.Vector3(0,1.65,0),introLookEnd],false,\"centripetal\")") ||
     !html.includes("introCameraPath.getPointAt(pathT)") ||
-    !html.includes("const introDuration=reducedMotion?0:6500;") ||
-    !html.includes("if(introRaw<.06){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}") ||
-    !html.includes("const pathT=easeCamera((introRaw-.06)/.94);") ||
+    !html.includes("const introDuration=reducedMotion?0:4200;") ||
+    !html.includes("if(introRaw<.04){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}") ||
+    !html.includes("const pathT=easeCamera((introRaw-.04)/.96);") ||
     !html.includes("introLookPath.getPointAt(pathT)") ||
     !html.includes("introCameraPath.points[0].copy(introCameraStart)") ||
-    !html.includes("new THREE.Vector3(0,1.75,10.8)") ||
-    !html.includes("new THREE.Vector3(0,1.65,7.7)") ||
-    !html.includes("new THREE.Vector3(-1.2,2.2,13.5)") ||
-    !html.includes("if(camera.position.z<13.2){camera.position.x=THREE.MathUtils.clamp(camera.position.x,-2.4,2.4);camera.position.y=Math.min(camera.position.y,2.25);}") ||
+    !html.includes("camera.position.x=0;") ||
+    !html.includes("camera.position.y=Math.min(camera.position.y,1.72);") ||
+    !html.includes("introCameraStart.y=1.65;") ||
     !html.includes("introCameraStart.z=Math.max(31,9.8/(Math.tan(THREE.MathUtils.degToRad(18))*Math.max(.35,aspect)))")) {
   fail("Curved exterior sweep, portal alignment, and continuous curved-gallery camera transition are missing.");
 }
