@@ -134,7 +134,7 @@ if (!html.includes("https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.j
 
 /* The deployed exterior is a real glTF scene asset generated during build, not runtime box construction. */
 const modelBuilder = fs.readFileSync("scripts/build-pavilion.js", "utf8");
-if (!modelBuilder.includes("function curvedPanelGeometry(segments=64)") ||
+if (!modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") ||
     !modelBuilder.includes("const curvedPanel=(m,w,h,d,x,y,z,bow)") ||
     !modelBuilder.includes("const cube=cubeGeometry(),cyl=cylinderGeometry(),curve42=curvedPanelGeometry(64,.42/.16),curve58=curvedPanelGeometry(64,.58/2.45)") ||
     !modelBuilder.includes("mesh:m*4+shape") ||
