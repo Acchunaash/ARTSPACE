@@ -103,3 +103,13 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - CI caught a syntax error in the newly added SVG-root counting expression (the artwork files themselves were not the cause). Replaced the fragile regular-expression count with literal root-tag counts; the corrected validator commit now triggers a fresh validation run. The earlier failed run is retained in the audit trail and is not represented as a pass.
 
 - The next CI attempt exposed a pre-existing stale plaque assertion (it expected the old title baseline at y=61, while the already-refined plaque correctly places the title at y=78). Updated that assertion to match the actual live plaque layout; this was a validator mismatch, not an application regression. A fresh CI run is required.
+
+### Gallery-to-fashion-boutique conversion — 2026-11-22
+- Inspected the current storefront, Three.js interior, product-detail flow, cart/wishlist logic, validator and catalogue seed before changing the concept.
+- Repositioned the storefront as a contemporary designer dress boutique. Replaced the six art-print products and visible gallery copy with six dress styles, garment descriptions, INR prices, apparel sizes XS–XL and Ivory/Black/Sage colour selections.
+- Added six local model-wearing-dress illustration previews for the HTML fallback/product cards.
+- Replaced the 3D artwork frames with six custom Three.js dressed mannequin models. Each figure uses a lathed garment silhouette, skin-tone head/arms/legs, hair, shoes, garment trim, a display plinth and an individual spotlight. Added brass garment rails with hanging pieces, two fitting-suite portals/curtains and full-height mirrors.
+- Preserved the existing curved pavilion shell, exterior GLB, entrance camera path, product-detail overlay, cart mechanics and disabled checkout boundary. Moved local cart/wishlist storage to dress-specific keys so old art-print selections do not appear as dresses.
+- Updated the Supabase seed catalogue, app manifest, service-worker cache version and automated validator for the new fashion direction.
+- Automated source/build validation passed on commit `94756bbdb7348100d4b4ffda7628bf928e1ccf8e` (run 44951587023). GitHub Pages build/deployment passed for the same commit (run 44951586520).
+- Visual acceptance remains pending: no actual browser screenshot of the deployed boutique has been captured. The six 3D figures are procedural stylised mannequins, not photoreal human models; the local SVG product previews are fashion illustrations, not product photography. Garment fabric realism, model proportions and final camera framing still need a real rendered inspection.
