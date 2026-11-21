@@ -781,8 +781,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   const introCameraPath=new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(15.2,8.5,26.5),new THREE.Vector3(13.5,6.5,22.5),new THREE.Vector3(9.5,4.4,19),new THREE.Vector3(5.2,2.65,16.8),new THREE.Vector3(1.8,1.75,15.1),new THREE.Vector3(0,1.65,13.65),new THREE.Vector3(0,1.65,12.45),new THREE.Vector3(0,1.65,10.2),new THREE.Vector3(0,1.65,7.2),introCameraEnd],false,"centripetal");
  camera.position.copy(introCameraStart);
  const introLookStart=new THREE.Vector3(0,1.9,2),introLookEnd=new THREE.Vector3(0,1.5,-5.3),introLookTarget=new THREE.Vector3();
-  /* Keep the gaze on the pavilion mass, then the portal, before carrying it into the exhibition room. */
-  const introLookPath=new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,2.1,7.5),new THREE.Vector3(0,2.0,11.7),new THREE.Vector3(0,1.85,12.5),new THREE.Vector3(0,1.65,9.2),new THREE.Vector3(0,1.55,3.2),introLookEnd],false,"centripetal");
+  /* Aim through the real doorway and keep a stable forward gaze; the target never rises toward the roof or reverses behind the camera. */
  let introStartedAt=0,introFinished=false,introReady=false,introLoadTimeout=0,introPausedAt=0,pendingArchitecturalPavilion=null;
  const settleIntro=reason=>{if(introReady)return;introReady=true;introStartedAt=performance.now();if(!pageVisible)introPausedAt=introStartedAt;if(introLoadTimeout)clearTimeout(introLoadTimeout);console.info("ARTSPACE: exterior intro ready — "+reason+".");};
  let renderer;
@@ -1395,7 +1394,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
      camera.position.copy(introCameraPath.getPointAt(pathT));
      camera.fov=THREE.MathUtils.lerp(40,36,pathT);camera.updateProjectionMatrix();
      /* The path remains in front of the facade until centred at eye height; only then does it cross the open portal below the roof and continue into the room. */
-     camera.lookAt(introLookTarget.copy(introLookPath.getPointAt(pathT)));
+     camera.lookAt(introLookTarget.set(0,THREE.MathUtils.lerp(2.15,1.55,pathT),camera.position.z-6.5));
     }
     if(introRaw>=1){
     introFinished=true;camera.position.copy(introCameraEnd);camera.fov=36;camera.updateProjectionMatrix();camera.lookAt(introLookEnd);gallery.rotation.y=0;
