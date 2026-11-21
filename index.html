@@ -30,7 +30,7 @@ h1 em{font-family:'Playfair Display',Georgia,serif;font-weight:500}
 .gallery-shell{margin:0 5vw 100px;background:#eeefeb;min-height:540px;overflow:hidden;position:relative;padding:25px 0 18px}
 .gallery-topline,.gallery-bottomline{display:flex;justify-content:space-between;padding:0 30px;color:#686b64;font-size:9px}
 .gallery-stage{height:435px;position:relative;display:flex;align-items:center;justify-content:center;perspective:1100px;overflow:hidden;touch-action:pan-y}
-.gallery-track{height:100%;width:100%;position:relative;display:flex;align-items:center;justify-content:center;transform-style:preserve-3d}
+.gallery-track{height:100%;width:100%;position:relative;display:flex;align-items:center;justify-content:center;transform-style:preserve-3d;perspective:1250px;perspective-origin:50% 46%}
 .art-card{position:absolute;width:clamp(145px,19vw,235px);border:0;background:none;padding:0;transition:transform .65s cubic-bezier(.2,.75,.2,1),opacity .5s,filter .5s;transform-style:preserve-3d}
 .art-frame{display:block;background:#fff;padding:10px;box-shadow:0 18px 35px #1b211b14}
 .art-frame img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
@@ -182,16 +182,20 @@ const track=document.getElementById("galleryTrack");
 const stage=document.getElementById("galleryStage");
 const money=n=>"₹"+n.toLocaleString("en-IN");
 function render(){
+ const radius=clamp(window.innerWidth*.68,235,490);
  cards.forEach((card,i)=>{
    let d=i-current;
    if(d>3)d-=6;if(d< -3)d+=6;
-   const x=d*clamp(window.innerWidth*.58,205,260);
-   const scale=d===0?1.08:Math.max(.67,1-Math.abs(d)*.105);
-   const rotate=d===0?0:d* -8;
-   card.style.transform=`translateX(${x}px) translateZ(${d===0?35:-Math.abs(d)*35}px) rotateY(${rotate}deg) scale(${scale})`;
-   card.style.opacity=Math.abs(d)>2?.12:Math.max(.48,1-Math.abs(d)*.18);
-   card.style.zIndex=10-Math.abs(d);
-   card.style.filter=d===0?"none":"saturate(.8)";
+   const angle=d*24;
+   const radians=angle*Math.PI/180;
+   const x=Math.sin(radians)*radius;
+   const z=(Math.cos(radians)-1)*radius*.58;
+   const scale=d===0?1.08:Math.max(.68,1-Math.abs(d)*.12);
+   const rotate=d===0?0:-angle*.82;
+   card.style.transform=`translate3d(${x}px,0,${z}px) rotateY(${rotate}deg) scale(${scale})`;
+   card.style.opacity=Math.abs(d)>2?.08:Math.max(.42,1-Math.abs(d)*.2);
+   card.style.zIndex=20-Math.abs(d);
+   card.style.filter=d===0?"none":"saturate(.78) brightness(.94)";
    card.classList.toggle("active",d===0);
    const caption=card.querySelector(".art-caption"); if(caption) caption.style.opacity=d===0?"1":"0";
    card.setAttribute("aria-pressed",String(d===0));
