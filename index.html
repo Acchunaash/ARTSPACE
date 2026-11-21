@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090d14">
+  <meta name="theme-color" content="#172333">
   <meta name="description" content="Discover expressive art prints in an immersive 3D gallery. Explore the ARTSPACE collection and find art for everyday spaces.">
   <meta name="keywords" content="art prints, wall art, contemporary prints, ARTSPACE, gallery">
   <meta property="og:type" content="website">
@@ -476,10 +476,10 @@ render();
 
  /* Architectural gallery shell: floor, rear wall, side walls and ceiling. */
  const room=new THREE.Group();scene.add(room);
- const wallMaterial=new THREE.MeshStandardMaterial({color:0x172333,roughness:.94,metalness:0});
- const sideMaterial=new THREE.MeshStandardMaterial({color:0x111b28,roughness:.96,metalness:0});
- const floorMaterial=new THREE.MeshStandardMaterial({color:0x202b38,roughness:.72,metalness:.08});
- const ceilingMaterial=new THREE.MeshStandardMaterial({color:0x0c1420,roughness:1,metalness:0});
+ const wallMaterial=new THREE.MeshStandardMaterial({color:0x29394d,roughness:.92,metalness:0});
+ const sideMaterial=new THREE.MeshStandardMaterial({color:0x1b2a3c,roughness:.94,metalness:0});
+ const floorMaterial=new THREE.MeshStandardMaterial({color:0x354252,roughness:.68,metalness:.05});
+ const ceilingMaterial=new THREE.MeshStandardMaterial({color:0x121d2b,roughness:1,metalness:0});
  const floor=new THREE.Mesh(new THREE.PlaneGeometry(12,19),floorMaterial);
  floor.rotation.x=-Math.PI/2;floor.position.set(0,-1.72,-1.15);floor.receiveShadow=true;room.add(floor);
  const rearWall=new THREE.Mesh(new THREE.PlaneGeometry(12,7),wallMaterial);
@@ -508,6 +508,26 @@ render();
   const glow=new THREE.PointLight(0xffd1a0,8.5,13,2);
   glow.position.set(x,2.75,1.0);room.add(glow);
  });
+ /* Visible architectural details make the room read as a physical gallery. */
+ const accentMat=new THREE.MeshStandardMaterial({color:0xc49a70,emissive:0x5a3218,emissiveIntensity:.32,roughness:.45,metalness:.4});
+ [-5.72,-2.9,0,2.9,5.72].forEach(x=>{
+  const pilaster=new THREE.Mesh(new THREE.BoxGeometry(.055,6.7,.11),accentMat);
+  pilaster.position.set(x,.15,-5.61);room.add(pilaster);
+ });
+ const wallWashMat=new THREE.MeshBasicMaterial({color:0x6d87a3,transparent:true,opacity:.18,side:THREE.DoubleSide});
+ [-4.25,4.25].forEach(x=>{
+  const wash=new THREE.Mesh(new THREE.PlaneGeometry(1.05,5.7),wallWashMat);
+  wash.position.set(x,.2,-5.59);room.add(wash);
+ });
+ const tileMat=new THREE.MeshStandardMaterial({color:0x647080,roughness:.72,metalness:.08});
+ for(let z=-9;z<7;z+=2){
+  const seam=new THREE.Mesh(new THREE.BoxGeometry(12,.012,.018),tileMat);
+  seam.position.set(0,-1.705,z);room.add(seam);
+ }
+ for(let x=-5;x<=5;x+=2.5){
+  const seam=new THREE.Mesh(new THREE.BoxGeometry(.018,.012,16),tileMat);
+  seam.position.set(x,-1.704,-1.2);room.add(seam);
+ }
  const gallery=new THREE.Group();scene.add(gallery);
  const cards3D=[];
  const textureLoader=new THREE.TextureLoader();
