@@ -401,3 +401,22 @@ for (const file of artworkFiles) {
   if (!html.includes("./assets/artworks/" + file)) fail("Artwork asset is not wired into the gallery: " + file);
 }
 if (html.includes("data:image/svg+xml;base64")) fail("Inline placeholder artwork remains embedded in index.html.");
+
+/* Curated artwork pass: each print must retain its own layered composition and finish details. */
+const artworkQuality = {
+  "beautiful-game.svg": ["THE BEAUTIFUL GAME","linearGradient","pattern","clipPath"],
+  "after-rain.svg": ["AFTER THE RAIN","linearGradient","pattern","filter"],
+  "sunset-club.svg": ["SUNSET CLUB","linearGradient","pattern","clipPath"],
+  "blue-hour.svg": ["BLUE HOUR","linearGradient","pattern"],
+  "form-and-feel.svg": ["FORM &amp; FEEL","linearGradient","pattern"],
+  "sunday-in-color.svg": ["SUNDAY IN COLOR","linearGradient","pattern","clipPath"]
+};
+for (const [file, markers] of Object.entries(artworkQuality)) {
+  const asset = fs.readFileSync("assets/artworks/" + file, "utf8");
+  for (const marker of markers) {
+    if (!asset.includes(marker)) fail("Curated artwork " + file + " is missing its expected composition/finish marker: " + marker);
+  }
+  if ((asset.match(/<svg\\b/g) || []).length !== 1 || (asset.match(/<\\/svg>/g) || []).length !== 1) {
+    fail("Curated artwork " + file + " must contain exactly one complete SVG root.");
+  }
+}
