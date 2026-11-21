@@ -882,18 +882,113 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  const sideMaterial=new THREE.MeshStandardMaterial({color:0xe8e8e4,roughness:.96,metalness:0});
  const floorMaterial=new THREE.MeshStandardMaterial({color:0xe9e7e0,roughness:.76,metalness:.015});
  const ceilingMaterial=new THREE.MeshStandardMaterial({color:0xfafaf8,roughness:1,metalness:0});
+ /* MATERIAL PASS — subtle, procedural mineral finishes rather than flat uniform room colors. */
+ const makeMineralTexture=(base,contrast,seed)=>{
+  const canvas=document.createElement("canvas");canvas.width=512;canvas.height=512;
+  const ctx=canvas.getContext("2d");ctx.fillStyle=base;ctx.fillRect(0,0,512,512);
+  for(let i=0;i<7200;i++){
+   const x=(i*137.507+seed*31)%512,y=(i*263.117+seed*17)%512;
+   const alpha=.018+((Math.sin(i*12.9898+seed)*.5+.5)*.055);
+   ctx.fillStyle=i%3?"rgba(92,88,78,"+alpha+")":"rgba(255,255,255,"+alpha+")";
+   ctx.fillRect(x,y,1+(i%4),1+(i%3));
+  }
+  const texture=new THREE.CanvasTexture(canvas);texture.encoding=THREE.sRGBEncoding;
+  texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+  return texture;
+ };
+ const plasterTexture=makeMineralTexture("#e9e7e0",.08,3);
+ const stoneFloorTexture=makeMineralTexture("#d8d5cc",.1,7);
+ plasterTexture.repeat.set(2.4,1.15);stoneFloorTexture.repeat.set(4.5,5.5);
+ wallMaterial.map=plasterTexture;wallMaterial.color.set(0xffffff);wallMaterial.roughness=.94;wallMaterial.needsUpdate=true;
+ sideMaterial.map=plasterTexture;sideMaterial.color.set(0xfaf9f5);sideMaterial.roughness=.92;sideMaterial.needsUpdate=true;
+ floorMaterial.map=stoneFloorTexture;floorMaterial.color.set(0xffffff);floorMaterial.roughness=.82;floorMaterial.needsUpdate=true;
+
  const floor=new THREE.Mesh(new THREE.PlaneGeometry(17,19),floorMaterial);
  floor.rotation.x=-Math.PI/2;floor.position.set(0,-1.72,-1.15);floor.receiveShadow=true;room.add(floor);
  /* Continuous concave exhibition wall: the visitor stands inside the arc. */
  const wallRadius=8.6,wallCenterZ=3.5,wallStart=Math.PI*.57,wallSweep=Math.PI*.86;
  const curvedWallGeometry=new THREE.CylinderGeometry(wallRadius,wallRadius,7.1,96,1,true,wallStart,wallSweep);
- const curvedWall=new THREE.Mesh(curvedWallGeometry,new THREE.MeshStandardMaterial({color:0xf5f5f2,roughness:.94,metalness:0,side:THREE.DoubleSide}));
+ const curvedWall=new THREE.Mesh(curvedWallGeometry,wallMaterial);
  curvedWall.position.set(0,.1,wallCenterZ);curvedWall.receiveShadow=true;room.add(curvedWall);
  const curvedTrimMaterial=new THREE.MeshStandardMaterial({color:0xb78b61,roughness:.55,metalness:.35});
  const arcPoints=(y,r=wallRadius)=>{const pts=[];for(let i=0;i<=96;i++){const a=wallStart+wallSweep*i/96;pts.push(new THREE.Vector3(Math.sin(a)*r,y,wallCenterZ+Math.cos(a)*r));}return pts;};
  const trimCurve=(y,material,r)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(arcPoints(y,r)),128,.035,8,false),material);
  room.add(trimCurve(-1.47,curvedTrimMaterial,wallRadius+.025));
  room.add(trimCurve(3.63,curvedTrimMaterial,wallRadius+.025));
+ /* ARCHITECTURAL REBUILD — the curved exhibition wall is now composed as a layered gallery interior. */
+ const warmLimestone=new THREE.MeshStandardMaterial({color:0xe4e0d6,roughness:.84,metalness:.015});
+ const shadowRevealMaterial=new THREE.MeshStandardMaterial({color:0xaaa69b,roughness:.88,metalness:.04});
+ const champagneMetal=new THREE.MeshStandardMaterial({color:0x9a7956,roughness:.38,metalness:.68});
+ const ceilingWarm=new THREE.MeshStandardMaterial({color:0xf4f0e7,roughness:.92,metalness:0});
+ const coveGlowMaterial=new THREE.MeshStandardMaterial({color:0xffe8c8,emissive:0xffd49c,emissiveIntensity:.42,roughness:.32,metalness:.12});
+ const makeArcDetail=(radius,y,material,tube=.025)=>{
+  const curve=new THREE.CatmullRomCurve3(arcPoints(y,radius));
+  const mesh=new THREE.Mesh(new THREE.TubeGeometry(curve,160,tube,8,false),material);
+  mesh.castShadow=false;mesh.receiveShadow=true;room.add(mesh);return mesh;
+ };
+ /* A continuous upper gallery cornice and a recessed light slot follow the full curved wall. */
+ makeArcDetail(wallRadius-.12,2.55,shadowRevealMaterial,.035);
+ makeArcDetail(wallRadius-.16,2.62,champagneMetal,.012);
+ makeArcDetail(wallRadius-.18,3.34,warmLimestone,.105);
+ makeArcDetail(wallRadius-.24,3.22,shadowRevealMaterial,.022);
+ makeArcDetail(wallRadius-.42,3.48,coveGlowMaterial,.035);
+ makeArcDetail(wallRadius-.58,3.48,champagneMetal,.012);
+ /* The ceiling receives a curved light raft and fine linear ribs, not a featureless white lid. */
+ const ceilingRaft=new THREE.Mesh(new THREE.RingGeometry(7.15,7.72,128,1,wallStart,wallSweep),ceilingWarm);
+ ceilingRaft.rotation.x=-Math.PI/2;ceilingRaft.position.set(0,3.585,wallCenterZ);room.add(ceilingRaft);
+ [6.95,7.35,7.78].forEach((radius,i)=>makeArcDetail(radius,3.555,i===1?coveGlowMaterial:champagneMetal,i===1?.026:.009));
+ for(let x=-6;x<=6;x+=2){
+  const rib=new THREE.Mesh(new THREE.BoxGeometry(.035,.045,12.6),champagneMetal);
+  rib.position.set(x,3.565,-1.25);room.add(rib);
+ }
+ [-2.2,2.2].forEach(x=>{
+  const slot=new THREE.Mesh(new THREE.BoxGeometry(.075,.025,12.2),new THREE.MeshBasicMaterial({color:0xfff3df}));
+  slot.position.set(x,3.535,-1.25);room.add(slot);
+ });
+ /* Side-wall pilasters, recessed shadow joints and continuous skirting give the room human scale. */
+ for(const side of [-1,1]){
+  for(const z of [-7.2,-3.4,.4,4.2]){
+   const pier=new THREE.Mesh(new THREE.BoxGeometry(.16,5.9,.34),warmLimestone);
+   pier.position.set(side*8.34,.12,z);pier.castShadow=true;room.add(pier);
+   const reveal=new THREE.Mesh(new THREE.BoxGeometry(.035,5.72,.39),shadowRevealMaterial);
+   reveal.position.set(side*8.245,.12,z);room.add(reveal);
+   const metalEdge=new THREE.Mesh(new THREE.BoxGeometry(.018,5.72,.405),champagneMetal);
+   metalEdge.position.set(side*8.223,.12,z);room.add(metalEdge);
+  }
+  const skirting=new THREE.Mesh(new THREE.BoxGeometry(.12,.22,18.4),warmLimestone);
+  skirting.position.set(side*8.37,-1.54,-1.15);room.add(skirting);
+  const skirtingReveal=new THREE.Mesh(new THREE.BoxGeometry(.13,.025,18.45),champagneMetal);
+  skirtingReveal.position.set(side*8.30,-1.405,-1.15);room.add(skirtingReveal);
+ }
+ /* A deep, layered inner portal makes the transition from the glazed entrance feel architectural. */
+ for(const side of [-1,1]){
+  const jamb=new THREE.Mesh(new THREE.BoxGeometry(.22,4.65,.42),warmLimestone);
+  jamb.position.set(side*2.96,.66,8.02);jamb.castShadow=true;room.add(jamb);
+  const jambReveal=new THREE.Mesh(new THREE.BoxGeometry(.045,4.42,.46),shadowRevealMaterial);
+  jambReveal.position.set(side*2.82,.66,7.98);room.add(jambReveal);
+  const jambMetal=new THREE.Mesh(new THREE.BoxGeometry(.025,4.35,.48),champagneMetal);
+  jambMetal.position.set(side*2.785,.66,7.96);room.add(jambMetal);
+ }
+ const portalHead=new THREE.Mesh(new THREE.BoxGeometry(6.05,.24,.5),warmLimestone);
+ portalHead.position.set(0,2.99,8.02);portalHead.castShadow=true;room.add(portalHead);
+ const portalShadow=new THREE.Mesh(new THREE.BoxGeometry(5.82,.045,.52),shadowRevealMaterial);
+ portalShadow.position.set(0,2.84,7.99);room.add(portalShadow);
+ const portalLight=new THREE.Mesh(new THREE.BoxGeometry(5.5,.025,.16),new THREE.MeshBasicMaterial({color:0xffe8c8}));
+ portalLight.position.set(0,2.79,7.94);room.add(portalLight);
+ /* Curved floor borders echo the wall radius and frame the central viewing space. */
+ makeArcDetail(7.82,-1.685,champagneMetal,.012);
+ makeArcDetail(7.68,-1.685,shadowRevealMaterial,.018);
+ makeArcDetail(6.9,-1.685,shadowRevealMaterial,.009);
+ /* Warm wall-wash sources feather light down the curved plaster between the artworks. */
+ for(let i=0;i<7;i++){
+  const angle=wallStart+.16+(wallSweep-.32)*i/6;
+  const x=Math.sin(angle)*(wallRadius-1.25),z=wallCenterZ+Math.cos(angle)*(wallRadius-1.25);
+  const target=new THREE.Object3D();target.position.set(Math.sin(angle)*(wallRadius-.04),.2,wallCenterZ+Math.cos(angle)*(wallRadius-.04));room.add(target);
+  const wash=new THREE.SpotLight(0xfff0dc,.72,5.8,.82,.9,1.6);
+  wash.position.set(x,3.0,z);wash.target=target;wash.castShadow=false;room.add(wash);
+ }
+ /* Restrained floor slab joints use warm stone tones rather than dark technical grid lines. */
+
  const wallWash=new THREE.Mesh(new THREE.PlaneGeometry(1,5.6),new THREE.MeshBasicMaterial({color:0xfff5e8,transparent:true,opacity:.16,side:THREE.DoubleSide}));
  wallWash.position.set(0,.2,-5.02);wallWash.scale.set(9,1,1);room.add(wallWash);
  const leftWall=new THREE.Mesh(new THREE.PlaneGeometry(19,7),sideMaterial);
@@ -938,7 +1033,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  /* Visible architectural details make the room read as a physical gallery. */
  const accentMat=new THREE.MeshStandardMaterial({color:0xc49a70,emissive:0x5a3218,emissiveIntensity:.32,roughness:.45,metalness:.4});
  /* The curved exhibition surface is lit by the room's ceiling and fill lights. */
- const tileMat=new THREE.MeshStandardMaterial({color:0x647080,roughness:.72,metalness:.08});
+ const tileMat=new THREE.MeshStandardMaterial({color:0xaaa69c,roughness:.88,metalness:.015});
  for(let z=-9;z<7;z+=2){
   const seam=new THREE.Mesh(new THREE.BoxGeometry(17,.012,.018),tileMat);
   seam.position.set(0,-1.705,z);room.add(seam);
