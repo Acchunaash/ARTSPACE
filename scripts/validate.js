@@ -51,6 +51,23 @@ if (!html.includes('id="cartCheckout"') || !html.includes("Online payment is not
   fail("Checkout boundary messaging is missing.");
 }
 
+/* Product-detail transition must reuse the real product controls in a full-screen overlay. */
+if (!html.includes('id="selectedProduct" aria-hidden="true" inert') ||
+    !html.includes('id="productDetailClose"') ||
+    !html.includes("body.product-detail-open #selectedProduct") ||
+    !html.includes("function openProductDetail()") ||
+    !html.includes("function closeProductDetail()") ||
+    !html.includes('document.getElementById("exploreBtn").addEventListener("click",openProductDetail)') ||
+    !html.includes('current=node.userData.index;openProductDetail()')) {
+  fail("Full-screen product detail transition and gallery selection wiring are missing.");
+}
+if (!html.includes("grid-template-columns:minmax(0,1.08fr) minmax(340px,.82fr)") ||
+    !html.includes("@keyframes detail-art-arrive") ||
+    !html.includes("@keyframes detail-copy-arrive") ||
+    !html.includes("@media(max-width:760px)")) {
+  fail("Responsive full-screen product detail layout and entrance motion are missing.");
+}
+
 /* Reference recreation: first viewport must be the gallery and the WebGL room must have a concave exhibition wall. */
 if (!html.includes(".gallery-shell{position:relative;width:100%;height:100svh") ||
     !html.includes(".intro{display:none!important}")) {
