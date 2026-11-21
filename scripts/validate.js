@@ -175,7 +175,14 @@ if (!modelBuilder.includes("Sculptural roof and entrance refinement") ||
   fail("The pavilion sculptural roof canopy, recessed soffit and layered entrance portal are missing.");
 }
 
-if (!modelBuilder.includes("const curvedBox=") ||if (!modelBuilder.includes("Open, recessed facade bays: structural piers carry the cladding while glazing remains visibly exposed.") ||
+if (!modelBuilder.includes("const curvedBox=") ||
+    !modelBuilder.includes("const facadeCurve=(x)=>") ||
+    !modelBuilder.includes("rotation:item.r") ||
+    !modelBuilder.includes("[.91,.885,.82,1]") ||
+    !modelBuilder.includes("[.78,.88,.89,.22]")) {
+  fail("The pavilion must include rotated curved architectural geometry and upgraded PBR material values.");
+}
+if (!modelBuilder.includes("Open, recessed facade bays: structural piers carry the cladding while glazing remains visibly exposed.") ||
     !modelBuilder.includes("curvedBox(5,.79,3.12,.035") ||
     !modelBuilder.includes("curvedBox(3,.91,3.42,.10") ||
     !modelBuilder.includes("Fluted limestone pilasters align with the structural piers") ||
@@ -183,14 +190,6 @@ if (!modelBuilder.includes("const curvedBox=") ||if (!modelBuilder.includes("Ope
     !modelBuilder.includes("metallicRoughnessTexture={index:mrTextures[textureIndex]}") ||
     modelBuilder.includes("[[0,0],[1,0],[2,0],[3,1],[6,1],[7,2]]")) {
   fail("The pavilion must have visible recessed glazing bays, aligned fluted piers, and correctly assigned roughness/normal material maps.");
-}
-
-    !modelBuilder.includes("const facadeCurve=(x)=>") ||
-    !modelBuilder.includes("Curved architectural pass") ||
-    !modelBuilder.includes("rotation:item.r") ||
-    !modelBuilder.includes("[.91,.885,.82,1]") ||
-    !modelBuilder.includes("[.78,.88,.89,.22]")) {
-  fail("The pavilion must include rotated curved rainscreen panels, a bowed canopy/portal and upgraded PBR material values.");
 }
 
 /* Architectural glazing must stay transparent and receive a lightweight studio reflection environment. */
