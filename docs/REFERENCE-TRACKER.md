@@ -139,3 +139,11 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Kept the pavilion geometry, camera path, dress meshes, model asset loader, product interactions and mobile performance limits unchanged.
 - Added validator checks for the new exposure and lighting levels. Automated validation and Pages deployment are required before considering this source change complete.
 - Honest visual status: this is a source-level lighting correction. No browser screenshot is available in this workflow, so the final rendered brightness and visibility on the user's phone are not claimed as visually verified.
+
+
+### Second lighting correction — lower exposure and control bright reflections — 2026-11-22
+- User reported the previous lighting correction still looked too bright / unclear.
+- Reduced global filmic exposure again, cut ambient and directional fill substantially, dimmed the simulated environment's bright white reflection panels, and lowered the gallery wall washes, ceiling pools, cove emission and individual dress spotlights.
+- Replaced the pure-white basic-material ceiling panels and entrance light strip with muted, non-self-luminous standard materials so they no longer appear as blown-out white patches.
+- Updated regression checks to enforce the new lower lighting values. Geometry, camera and commerce interactions remain untouched.
+- Visual verification is still pending: source validation and deployment workflows must complete, and a real browser capture is needed to judge the result on-screen.
