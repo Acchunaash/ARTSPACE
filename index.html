@@ -586,10 +586,11 @@ window.__artspaceThreeReady.then(loaded=>{
  const curvedWallGeometry=new THREE.CylinderGeometry(wallRadius,wallRadius,7.1,96,1,true,wallStart,wallSweep);
  const curvedWall=new THREE.Mesh(curvedWallGeometry,new THREE.MeshStandardMaterial({color:0xf5f5f2,roughness:.94,metalness:0,side:THREE.DoubleSide}));
  curvedWall.position.set(0,.1,wallCenterZ);curvedWall.receiveShadow=true;room.add(curvedWall);
+ const curvedTrimMaterial=new THREE.MeshStandardMaterial({color:0xb78b61,roughness:.55,metalness:.35});
  const arcPoints=(y,r=wallRadius)=>{const pts=[];for(let i=0;i<=96;i++){const a=wallStart+wallSweep*i/96;pts.push(new THREE.Vector3(Math.sin(a)*r,y,wallCenterZ+Math.cos(a)*r));}return pts;};
  const trimCurve=(y,material,r)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(arcPoints(y,r)),128,.035,8,false),material);
- room.add(trimCurve(-1.47,trimMaterial,wallRadius+.025));
- room.add(trimCurve(3.63,trimMaterial,wallRadius+.025));
+ room.add(trimCurve(-1.47,curvedTrimMaterial,wallRadius+.025));
+ room.add(trimCurve(3.63,curvedTrimMaterial,wallRadius+.025));
  const wallWash=new THREE.Mesh(new THREE.PlaneGeometry(1,5.6),new THREE.MeshBasicMaterial({color:0xfff5e8,transparent:true,opacity:.16,side:THREE.DoubleSide}));
  wallWash.position.set(0,.2,-5.02);wallWash.scale.set(9,1,1);room.add(wallWash);
  const leftWall=new THREE.Mesh(new THREE.PlaneGeometry(19,7),sideMaterial);
@@ -599,8 +600,6 @@ window.__artspaceThreeReady.then(loaded=>{
  const ceiling=new THREE.Mesh(new THREE.PlaneGeometry(12,19),ceilingMaterial);
  ceiling.rotation.x=Math.PI/2;ceiling.position.set(0,3.65,-1.15);room.add(ceiling);
  const trimMaterial=new THREE.MeshStandardMaterial({color:0xb78b61,roughness:.55,metalness:.35});
- const rearTrim=new THREE.Mesh(new THREE.BoxGeometry(12,.045,.055),trimMaterial);
- rearTrim.position.set(0,-1.58,-5.62);room.add(rearTrim);
  [-5.94,5.94].forEach(x=>{
   const trim=new THREE.Mesh(new THREE.BoxGeometry(.055,.045,19),trimMaterial);
   trim.position.set(x,-1.58,-1.15);room.add(trim);
@@ -618,15 +617,10 @@ window.__artspaceThreeReady.then(loaded=>{
  });
  /* Visible architectural details make the room read as a physical gallery. */
  const accentMat=new THREE.MeshStandardMaterial({color:0xc49a70,emissive:0x5a3218,emissiveIntensity:.32,roughness:.45,metalness:.4});
- [-5.72,-2.9,0,2.9,5.72].forEach(x=>{
-  const pilaster=new THREE.Mesh(new THREE.BoxGeometry(.055,6.7,.11),accentMat);
-  pilaster.position.set(x,.15,-5.61);room.add(pilaster);
- });
- const wallWashMat=new THREE.MeshBasicMaterial({color:0x6d87a3,transparent:true,opacity:.18,side:THREE.DoubleSide});
- [-4.25,4.25].forEach(x=>{
-  const wash=new THREE.Mesh(new THREE.PlaneGeometry(1.05,5.7),wallWashMat);
-  wash.position.set(x,.2,-5.59);room.add(wash);
- });
+ /* Curved wall remains visually continuous; lighting washes it from the ceiling. */
+ const wallWashMat=new THREE.MeshBasicMaterial({color:0xfff5e8,transparent:true,opacity:.08,side:THREE.DoubleSide});
+ const wallWash=new THREE.Mesh(new THREE.PlaneGeometry(8,5.7),wallWashMat);
+ wallWash.position.set(0,.2,-5.0);room.add(wallWash);
  const tileMat=new THREE.MeshStandardMaterial({color:0x647080,roughness:.72,metalness:.08});
  for(let z=-9;z<7;z+=2){
   const seam=new THREE.Mesh(new THREE.BoxGeometry(12,.012,.018),tileMat);
