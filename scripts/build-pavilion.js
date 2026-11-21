@@ -22,7 +22,8 @@ const box=(m,w,h,d,x,y,z)=>add(m,[w,h,d],[x,y,z]);
 const cylinder=(m,r,h,x,y,z)=>groups[m].push({c:[r,h],p:[x,y,z]});
 // Site plane and floating plinth, long roof slab and continuous soffit.\nbox(6,70,.08,70,0,-1.83,2);
 box(6,19,.48,24.2,0,-1.48,-.25);box(0,19.45,.22,24.65,0,-1.18,-.25);
-box(0,19.7,.46,24.8,0,3.72,-.25);box(1,19.78,.075,24.84,0,3.43,-.25);
+// True curved double-skin barrel vault replaces the flat roof slab.
+add(0,[19.7,.55,24.8],[0,3.68,-.25],{roof:true});
 box(7,17.8,.10,22.6,0,3.46,-.25);
 // Deep cantilevered entrance canopy and bronze shadow line.
 box(0,19.8,.22,2.5,0,3.35,11.2);box(2,19.85,.08,.16,0,3.20,12.35);box(3,19.9,.09,.14,0,3.12,12.42);
@@ -297,6 +298,17 @@ function curvedPanelGeometry(segments=64,bow=.12){
  for(let i=0;i<smooth.length;i++){const l=Math.hypot(...smooth[i])||1;n.splice(i*3,3,...smooth[i].map(v=>v/l));}
  return {p,n,idx};
 }
+/* Double-skin barrel-vault geometry with a continuous 64-segment arch. */
+function barrelRoofGeometry(nx=64,nz=24){
+ const p=[],n=[],uv=[],idx=[],row=nx+1,perLayer=row*(nz+1),arch=u=>.42*(1-Math.pow(2*u-1,2));
+ for(let side=0;side<2;side++)for(let j=0;j<=nz;j++)for(let i=0;i<=nx;i++){const u=i/nx,v=j/nz;p.push(u-.5,arch(u)+(side?.10:0),v-.5);uv.push(u*5,v*6);}
+ for(let side=0;side<2;side++){const base=side*perLayer;for(let j=0;j<nz;j++)for(let i=0;i<nx;i++){const a=base+j*row+i,b=a+1,c=b+row,d=a+row;if(side===0)idx.push(a,b,c,a,c,d);else idx.push(a,c,b,a,d,c);}}
+ for(let j=0;j<nz;j++){const a=j*row,b=a+row,c=perLayer+a,d=perLayer+b;idx.push(a,d,c,a,b,d,a+nx,c+nx,d+nx,a+nx,d+nx,b+nx);}
+ for(let i=0;i<nx;i++){const a=i,b=a+1,c=perLayer+b,d=perLayer+a;idx.push(a,c,d,a,b,c);const e=nz*row+i,f=e+1,g=perLayer+f,h=perLayer+e;idx.push(e,g,h,e,f,g);}
+ const accum=Array.from({length:p.length/3},()=>[0,0,0]);
+ for(let k=0;k<idx.length;k+=3){const ids=[idx[k],idx[k+1],idx[k+2]],A=p.slice(ids[0]*3,ids[0]*3+3),B=p.slice(ids[1]*3,ids[1]*3+3),C=p.slice(ids[2]*3,ids[2]*3+3),ab=B.map((v,i)=>v-A[i]),ac=C.map((v,i)=>v-A[i]),cr=[ab[1]*ac[2]-ab[2]*ac[1],ab[2]*ac[0]-ab[0]*ac[2],ab[0]*ac[1]-ab[1]*ac[0]];ids.forEach(id=>cr.forEach((v,i)=>accum[id][i]+=v));}
+ for(const v of accum){const l=Math.hypot(...v)||1;n.push(v[0]/l,v[1]/l,v[2]/l);}return {p,n,uv,idx};
+}
 function cylinderGeometry(seg=16){
  const p=[],n=[],idx=[];
  for(let i=0;i<seg;i++){
@@ -316,7 +328,7 @@ function cylinderGeometry(seg=16){
  return {p,n,idx};
 }
 const cube=cubeGeometry(),cyl=cylinderGeometry(),curve42=curvedPanelGeometry(64,.42/.16),curve58=curvedPanelGeometry(64,.58/2.45);
-const flute=flutedPanelGeometry(),all=[cube,cyl,curve42,curve58,flute],bufferParts=[],views=[],accessors=[];
+const flute=flutedPanelGeometry(),roof=barrelRoofGeometry(),all=[cube,cyl,curve42,curve58,flute,roof],bufferParts=[],views=[],accessors=[];
 let offset=0;
 function addBuffer(data,componentType,type,count,min,max){
  while(offset%4){bufferParts.push(Buffer.from([0]));offset++;}
@@ -325,21 +337,21 @@ function addBuffer(data,componentType,type,count,min,max){
  const acc={bufferView:view,componentType,type,count};if(min)acc.min=min;if(max)acc.max=max;accessors.push(acc);return accessors.length-1;
 }
 const meshDefs=[];
-for(let shape=0;shape<5;shape++){
+for(let shape=0;shape<6;shape++){
  const g=all[shape];
- const uv=[];
- for(let i=0;i<g.p.length;i+=3){uv.push(g.p[i]+.5,g.p[i+1]+.5);}
+ const uv=g.uv||[];
+ if(!g.uv)for(let i=0;i<g.p.length;i+=3){uv.push(g.p[i]+.5,g.p[i+1]+.5);}
  const texcoord=addBuffer(new Float32Array(uv),5126,"VEC2",uv.length/2);
  const pos=addBuffer(new Float32Array(g.p),5126,"VEC3",g.p.length/3,
   [Math.min(...g.p.filter((_,i)=>i%3===0)),Math.min(...g.p.filter((_,i)=>i%3===1)),Math.min(...g.p.filter((_,i)=>i%3===2))],
   [Math.max(...g.p.filter((_,i)=>i%3===0)),Math.max(...g.p.filter((_,i)=>i%3===1)),Math.max(...g.p.filter((_,i)=>i%3===2))]);
  const norm=addBuffer(new Float32Array(g.n),5126,"VEC3",g.n.length/3);
  const ind=addBuffer(new Uint16Array(g.idx),5123,"SCALAR",g.idx.length);
- for(let m=0;m<materials.length;m++)meshDefs.push({name:materials[m][0]+"-"+(["box","cylinder","curved-panel-42cm","curved-canopy-58cm","fluted-panel"][shape]),primitives:[{attributes:{POSITION:pos,NORMAL:norm,TEXCOORD_0:texcoord},indices:ind,material:m}]});
+ for(let m=0;m<materials.length;m++)meshDefs.push({name:materials[m][0]+"-"+(["box","cylinder","curved-panel-42cm","curved-canopy-58cm","fluted-panel","barrel-vault-roof"][shape]),primitives:[{attributes:{POSITION:pos,NORMAL:norm,TEXCOORD_0:texcoord},indices:ind,material:m}]});
 }
 const nodes=[];
 for(let m=0;m<groups.length;m++)for(const item of groups[m]){
- const shape=item.fluted?4:item.curved?(item.bow===.42?2:3):item.c?1:0;
+ const shape=item.roof?5:item.fluted?4:item.curved?(item.bow===.42?2:3):item.c?1:0;
  const scale=item.c?[item.c[0]*2,item.c[1],item.c[0]*2]:item.s;
  nodes.push({name:materials[m][0]+(item.curved?"-continuous-curve":"-element"),mesh:shape*materials.length+m,translation:item.p,scale,...(item.r?{rotation:item.r}:{})});
 }
