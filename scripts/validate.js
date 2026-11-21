@@ -93,9 +93,12 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
     !html.includes("addBox(exterior,19.5,.52,24.6,facadeMat,0,4,-1.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,-6.3,1.05,9.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,6.3,1.05,9.15)") ||
-    !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(-5.2,8,25),new THREE.Vector3(-7,5.4,18),new THREE.Vector3(-1.2,2.15,13.5),new THREE.Vector3(-.4,1.75,10.8),new THREE.Vector3(0,1.65,7.7),introCameraEnd],false,\"centripetal\")") ||
-    !html.includes("new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,2.05,3.2),new THREE.Vector3(0,1.8,7.8),new THREE.Vector3(0,1.15,2.1),introLookEnd],false,\"centripetal\")") ||
+    !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(-3.8,7.5,25),new THREE.Vector3(-3.2,4.6,17.5),new THREE.Vector3(-1.2,2.2,13.5),new THREE.Vector3(0,1.75,10.8),new THREE.Vector3(0,1.65,7.7),introCameraEnd],false,\"centripetal\")") ||
+    !html.includes("new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,2.05,8.5),new THREE.Vector3(0,1.8,4.5),new THREE.Vector3(0,1.15,1.5),introLookEnd],false,\"centripetal\")") ||
     !html.includes("introCameraPath.getPointAt(pathT)") ||
+    !html.includes("const introDuration=reducedMotion?0:6500;") ||
+    !html.includes("if(introRaw<.06){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}") ||
+    !html.includes("const pathT=easeCamera((introRaw-.06)/.94);") ||
     !html.includes("introLookPath.getPointAt(pathT)") ||
     !html.includes("introCameraPath.points[0].copy(introCameraStart)") ||
     !html.includes("new THREE.Vector3(-.4,1.75,10.8)") ||
