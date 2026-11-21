@@ -116,7 +116,8 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
     html.includes("introLookEnd") ||
     !html.includes("introCameraPath.points[0].copy(introCameraStart)") ||
     !html.includes("introCameraStart.x=13.5;") ||
-    !html.includes("camera.fov=THREE.MathUtils.lerp(40,36,pathT)") ||
+    !html.includes("camera.fov=THREE.MathUtils.lerp(40,44,pathT)") ||
+    !html.includes("camera.fov=44;camera.updateProjectionMatrix();") ||
     !html.includes("introCameraStart.y=9.2;") ||
     html.includes("camera.position.x=0;") ||
     html.includes("camera.position.y=Math.min(camera.position.y,1.72);") ||
@@ -124,6 +125,8 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
   fail("Curved exterior sweep, portal alignment, and continuous curved-gallery camera transition are missing.");
 }
 if (!html.includes("new THREE.PlaneGeometry(17,19),floorMaterial") ||
+    !html.includes("floorMaterial.roughness=.68;floorMaterial.metalness=.025;") ||
+    !html.includes("camera.fov=44;camera.updateProjectionMatrix();") ||
     !html.includes("leftWall.position.set(-8.5,.15,-1.15)") ||
     !html.includes("rightWall.position.set(8.5,.15,-1.15)") ||
     !html.includes("const vaultY=x=>3.65+.52*(1-Math.pow(x/8.5,2))") ||
