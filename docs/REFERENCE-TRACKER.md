@@ -72,3 +72,11 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Rechecked the committed path against the builder's portal and canopy placements. The approach reaches the centreline before crossing the entrance plane, stays at eye height through the portal, and the canopy soffit is above the camera line. The path's last outside waypoint is z=12.45; the entrance frame is centred near z=12.0; the next waypoints continue inside.
 - Found a regression in the prior cleanup: the two initial/loading camera branches still referenced the removed `introLookStart` symbol. Replaced both with the same explicit forward look-ahead target and strengthened the validator to reject obsolete look-target references.
 - This is now a source-level defect fixed; rendered visual acceptance is still not available from the current GitHub workflow. No claim is made that the user-visible camera clipping has been visually disproved.
+
+
+### White gallery entrance and fixed artwork wall — 2026-11-22
+- Removed the dark smoked-oak core that occupied the view immediately beyond the pavilion entrance; the entry sightline now opens into the white gallery instead of a brown block.
+- Re-toned the interior bench timber and the 3D frame backing to pale neutral stone so brown surfaces no longer dominate the first interior view.
+- Reworked the 3D wall layout so all six artworks occupy permanent, evenly spaced positions on the curved exhibition wall. Changing the selected artwork no longer rotates/rearranges the other frames or scales one into a carousel hero.
+- Updated the non-WebGL artwork presentation to keep every card visible and fixed in its wall arrangement, and strengthened automated checks against the old selection-relative layout and oak core.
+- Source changes are prepared for validation and deployment. Visual acceptance remains pending until a real rendered browser capture can be inspected; source changes alone cannot prove the entrance now looks correct on-device.
