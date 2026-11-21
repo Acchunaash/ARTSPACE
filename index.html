@@ -780,7 +780,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   /* High establishing orbit stays outside the front facade while descending; it reaches eye level in the forecourt, then crosses the central doorway and continues inside. */
   const introCameraPath=new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(15.2,8.5,26.5),new THREE.Vector3(13.5,6.5,22.5),new THREE.Vector3(9.5,4.4,19),new THREE.Vector3(5.2,2.65,16.8),new THREE.Vector3(1.8,1.75,15.1),new THREE.Vector3(0,1.65,13.65),new THREE.Vector3(0,1.65,12.45),new THREE.Vector3(0,1.65,10.2),new THREE.Vector3(0,1.65,7.2),introCameraEnd],false,"centripetal");
  camera.position.copy(introCameraStart);
- const introLookStart=new THREE.Vector3(0,1.9,2),introLookEnd=new THREE.Vector3(0,1.5,-5.3),introLookTarget=new THREE.Vector3();
+ const introLookTarget=new THREE.Vector3();
   /* Aim through the real doorway and keep a stable forward gaze; the target never rises toward the roof or reverses behind the camera. */
  let introStartedAt=0,introFinished=false,introReady=false,introLoadTimeout=0,introPausedAt=0,pendingArchitecturalPavilion=null;
  const settleIntro=reason=>{if(introReady)return;introReady=true;introStartedAt=performance.now();if(!pageVisible)introPausedAt=introStartedAt;if(introLoadTimeout)clearTimeout(introLoadTimeout);console.info("ARTSPACE: exterior intro ready — "+reason+".");};
@@ -1397,7 +1397,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
      camera.lookAt(introLookTarget.set(0,THREE.MathUtils.lerp(2.15,1.55,pathT),camera.position.z-6.5));
     }
     if(introRaw>=1){
-    introFinished=true;camera.position.copy(introCameraEnd);camera.fov=36;camera.updateProjectionMatrix();camera.lookAt(introLookEnd);gallery.rotation.y=0;
+    introFinished=true;camera.position.copy(introCameraEnd);camera.fov=36;camera.updateProjectionMatrix();camera.lookAt(introLookTarget.set(0,1.55,introCameraEnd.z-6.5));gallery.rotation.y=0;
     if(pendingArchitecturalPavilion){mountArchitecturalPavilion(pendingArchitecturalPavilion);pendingArchitecturalPavilion=null;}
    }
   }
