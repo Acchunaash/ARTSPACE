@@ -79,7 +79,7 @@ if (!html.includes("new THREE.CylinderGeometry(wallRadius,wallRadius,7.1,96,1,tr
 }
 
 if (!html.includes("gallery.position.set(0,0,wallCenterZ)") ||
-    !html.includes("const wallAngle=Math.PI+d*.235") ||
+    !html.includes("wallAngle=Math.PI+d*.235") ||
     !html.includes("group.userData.targetScale=1") ||
     !html.includes("group.userData.targetRY=wallAngle+Math.PI") ||
     !html.includes("mountRadius=wallRadius-.62") ||
