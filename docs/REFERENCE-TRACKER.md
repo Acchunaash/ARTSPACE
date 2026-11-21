@@ -17,7 +17,7 @@ This is the living acceptance checklist for the current ARTSPACE direction. The 
 |---|---|---|
 | Full-screen opening | Immersive full-screen 3D pavilion entrance retained; navigation now positions the store as a fashion boutique. | Source updated; visual pending. |
 | Curved showroom shell | Existing curved wall, vaulted ceiling, textured plaster, cove lighting, stone floor and portal retained as the boutique shell. | Source retained; visual pending. |
-| 3D fashion models | Six custom Three.js mannequin figures with lathed dress silhouettes, skin-tone heads/limbs, hair, shoes, waist/neck details and individual spotlights. | Source implemented; proportions/material appearance need rendered inspection. |
+| 3D fashion models | Six display looks now load a CC0, MakeHuman-derived adult female base mesh (163-bone rig, approximately 109k triangles) and layer ARTSPACE dress geometry over it. The original procedural body remains as a network/CORS fallback; desktop shows all six, mobile renders the detailed human only for the active look. | Source committed; external asset loading, anatomical fit and rendered realism still require browser inspection. |
 | Boutique fixtures | Two fitting-suite portals/curtains, full-height mirrors, brass garment rails and individually hung garments added. | Source implemented; visual pending. |
 | Fashion catalogue | Six dress styles with local model-wearing-dress SVG previews, descriptions, Indian rupee prices, sizes XS–XL and Ivory/Black/Sage colour options. | Source updated; visual pending. |
 | Product detail | Existing responsive full-screen detail layout now displays dress details, size and colour choices. | Source updated; visual pending. |
@@ -27,8 +27,8 @@ This is the living acceptance checklist for the current ARTSPACE direction. The 
 
 ## Ordered remaining work
 
-1. **Fashion showroom visual acceptance** — capture the actual deployed 3D room; check mannequin scale, dress silhouette, model facing, camera framing, garment rail placement, fitting-room clearance and mirrors.
-2. **Garment realism** — refine the six dress meshes with more convincing fabric profiles, sleeves/straps, seams, folds and distinct silhouettes after inspecting a real render.
+1. **Fashion model visual acceptance** — verify the external CC0 human GLB loads from its host (including CORS), check scale/pose, dress coverage and model-to-garment fit in an actual browser capture.
+2. **Exact garment realism** — the current dress shells are catalogue-specific ARTSPACE geometry with subtle procedural drape, not scanned or simulation-fitted garments. Build exact dress meshes from approved garment references or source assets; verify sleeves, seams, hems, folds and fabric behaviour against each real dress.
 3. **Fashion product imagery** — replace the vector fallback illustrations with suitable high-quality fashion photography or approved model imagery if the user supplies/chooses references.
 4. **Product detail and fit** — verify size/colour controls, garment information and mobile layout.
 5. **Shopping bag and checkout** — verify saved wardrobe, cart persistence and line-item totals; keep checkout disabled until a real backend/payment integration exists.
@@ -43,6 +43,15 @@ This is the living acceptance checklist for the current ARTSPACE direction. The 
 - Kept the existing high exterior start, curved approach, eye-level entrance waypoints and 9.2-second camera sequence.
 - Updated the source validator to require the forward look-ahead behaviour and reject reliance on the old look spline.
 - Automated validation: passed (run 44939821665). GitHub Pages deployment: passed (runs 44939821312 and 44939821720). Visual verification: still pending; no rendered browser capture was available, so camera clearance is not yet accepted as visually solved.
+
+### Real-human fashion engine and mobile rendering optimization — 2026-11-22
+- Inspected the current boutique model-construction code and renderer before changing the display pipeline. The prior six figures were assembled from primitive heads, limbs and lathed dress shells, so they read as stylised mannequins rather than people.
+- Added a CC0 adult female base mesh from Innerscene/MakeHuman (163-bone rig, approximately 109k triangles, 4.3 MB GLB) as the new human anatomy source. The GLB is requested once after the cinematic entrance, then cloned for the six dress displays. The procedural body remains available if the remote asset fails or its host blocks cross-origin loading.
+- Retained ARTSPACE's six catalogue-specific garment silhouettes and added subtle radial fabric-fold deformation plus a more cloth-like physical material response. These are still authored geometry, not cloth simulation or exact scanned garments.
+- Mobile performance pass: disabled antialiasing and shadow maps on narrow screens, capped device pixel ratio at 1.0 on mobile / 1.5 on desktop, paced mobile rendering at up to 40 fps, and limited the detailed human model to the active look on mobile. Desktop keeps all six models visible.
+- Added an asset licence note documenting the CC0 source and runtime fallback.
+- Automated source validation and deployment are pending for this stage. Visual acceptance is pending: the external model's CORS/load behaviour, fit, pose, cloth coverage and actual mobile frame rate have not been inspected in a browser capture.
+- Important limitation: the current dress meshes are improved ARTSPACE geometry, not custom-fitted photoreal garment scans. Exact real-world garment matching still needs approved garment reference images or source 3D clothing assets.
 
 ## Verification rule
 
