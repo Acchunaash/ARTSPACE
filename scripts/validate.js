@@ -149,7 +149,7 @@ if (!modelBuilder.includes("const curvedBox=") ||
     !modelBuilder.includes("Curved architectural pass") ||
     !modelBuilder.includes("rotation:item.r") ||
     !modelBuilder.includes("[.91,.885,.82,1]") ||
-    !modelBuilder.includes("[.69,.81,.82,.32]")) {
+    !modelBuilder.includes("[.78,.88,.89,.22]")) {
   fail("The pavilion must include rotated curved rainscreen panels, a bowed canopy/portal and upgraded PBR material values.");
 }
 
