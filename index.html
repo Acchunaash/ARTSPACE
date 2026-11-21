@@ -335,8 +335,25 @@ if("serviceWorker" in navigator){
  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(error=>console.warn("ARTSPACE offline cache unavailable:",error)));
 }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"
- onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';"></script>
+<script>
+/* Load Three.js sequentially so app startup cannot race the CDN fallback. */
+window.__artspaceThreeReady=new Promise(resolve=>{
+ const sources=[
+  "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js",
+  "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
+ ];
+ const load=index=>{
+  if(index>=sources.length){resolve(false);return;}
+  const script=document.createElement("script");
+  script.src=sources[index];
+  script.async=true;
+  script.onload=()=>resolve(!!window.THREE);
+  script.onerror=()=>{console.warn("ARTSPACE Three.js source failed:",sources[index]);load(index+1);};
+  document.head.appendChild(script);
+ };
+ load(0);
+});
+</script>
 <script>
 const products = [
  {title:"THE BEAUTIFUL GAME",subtitle:"BURKINA FASO — 2026",price:5800,image:"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSI0MjAiIGhlaWdodD0iNTYwIiBmaWxsPSIjZThkN2JkIi8+PHBhdGggZD0iTTAgMzkwIFExMjAgMjYwIDIzMCAzNDAgVDQyMCAyNTAgVjU2MCBIMFoiIGZpbGw9IiNiZDNkMmMiLz48Y2lyY2xlIGN4PSIyODUiIGN5PSIxNTAiIHI9IjgyIiBmaWxsPSIjZTVhMzNlIi8+PHBhdGggZD0iTTkwIDQzMCBMMTUwIDE4MCBMMjI1IDQzMFoiIGZpbGw9IiMxODNlMzYiLz48cGF0aCBkPSJNMTcwIDQzMCBMMjYwIDIzMCBMMzUwIDQzMFoiIGZpbGw9IiNmMWU3ZDciLz48Y2lyY2xlIGN4PSIyMTAiIGN5PSIyNzUiIHI9IjM0IiBmaWxsPSIjMjUyMzIzIi8+PHBhdGggZD0iTTE5MCAzMDggTDE3MCAzOTAgTDI0NSAzOTAgTDIzMCAzMTBaIiBmaWxsPSIjMjUyMzIzIi8+PHBhdGggZD0iTTIwOCAzNDAgTDEyNSAzOTUgTTIyNSAzNDAgTDI5NSAzOTAiIHN0cm9rZT0iIzI1MjMyMyIgc3Ryb2tlLXdpZHRoPSIxOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8dGV4dCB4PSIyNCIgeT0iNTA1IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNyIgZm9udC13ZWlnaHQ9IjcwMCIgbGV0dGVyLXNwYWNpbmc9IjMiIGZpbGw9IiMyMjIiPlRIRSBCRUFVVElGVUwgR0FNRTwvdGV4dD4KICAgIDx0ZXh0IHg9IjI0IiB5PSI1MzAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBsZXR0ZXItc3BhY2luZz0iMiIgZmlsbD0iIzMzMyI+QlVSS0lOQSBGQVNPPC90ZXh0PgogICAgPC9zdmc+"},
@@ -461,7 +478,15 @@ window.addEventListener("resize",render);
 render();
 
 /* ADVANCED 3D GALLERY — WebGL scene with graceful CSS fallback */
-(function initArtspaceWebGL(){
+window.__artspaceThreeReady.then(loaded=>{
+ if(!loaded||!window.THREE){
+  let status=stage.querySelector(".webgl-status");
+  if(!status){status=document.createElement("div");status.className="webgl-status";status.setAttribute("role","status");stage.appendChild(status);}
+  status.textContent="3D library could not load. Check your connection; artwork preview remains available.";
+  console.error("ARTSPACE: both Three.js sources failed to load.");
+  return;
+ }
+ (function initArtspaceWebGL(){
  function show3DStatus(message){
   let status=stage.querySelector(".webgl-status");
   if(!status){status=document.createElement("div");status.className="webgl-status";status.setAttribute("role","status");stage.appendChild(status);}
@@ -659,6 +684,12 @@ render();
  document.addEventListener("visibilitychange",()=>{pageVisible=!document.hidden;if(pageVisible&&!raf)animate();else if(!pageVisible){cancelAnimationFrame(raf);raf=0;}});
  window.addEventListener("pagehide",()=>{cancelAnimationFrame(raf);raf=0;renderer.dispose();});
 })();
+}).catch(error=>{
+ console.error("ARTSPACE 3D startup failed:",error);
+ let status=stage.querySelector(".webgl-status");
+ if(!status){status=document.createElement("div");status.className="webgl-status";status.setAttribute("role","status");stage.appendChild(status);}
+ status.textContent="3D gallery could not start. Artwork preview remains available.";
+});
 
 </script>
 </body>
