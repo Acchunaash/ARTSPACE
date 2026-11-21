@@ -341,7 +341,7 @@ document.addEventListener("keydown",e=>{if(!artViewer.classList.contains("open")
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
 function move(n){current=(current+n+products.length)%products.length;stage.classList.add("camera-shift");render();clearTimeout(move.cameraTimer);move.cameraTimer=setTimeout(()=>stage.classList.remove("camera-shift"),460)}
 function renderWishlist(){document.getElementById("savedCount").textContent=wishlist.length;const list=document.getElementById("savedItems");if(!wishlist.length){list.innerHTML='<div class="cart-empty">No saved artworks yet.<br>Tap “Save to wishlist” on a print you love.</div>';return;}list.innerHTML=wishlist.map(index=>{const p=products[index];return '<article class="cart-item"><div class="cart-thumb"><img src="'+p.image+'" alt=""></div><div><h3>'+p.title+'</h3><div class="cart-meta">'+p.subtitle+'<br>'+money(p.price)+'</div><button class="saved-view" data-saved-view="'+index+'">VIEW ARTWORK ↗</button></div><button class="cart-close" data-saved-remove="'+index+'" aria-label="Remove '+p.title+'">×</button></article>';}).join("");}
-function openWishlist(){renderWishlist();document.getElementById("savedDrawer").classList.add("open");document.getElementById("savedBackdrop").classList.add("open");document.body.classList.add("wishlist-open");document.getElementById("savedDrawer").setAttribute("aria-hidden","false");document.getElementById("savedClose").focus();}
+function openWishlist(){closeCart();renderWishlist();document.getElementById("savedDrawer").classList.add("open");document.getElementById("savedBackdrop").classList.add("open");document.body.classList.add("wishlist-open");document.getElementById("savedDrawer").setAttribute("aria-hidden","false");document.getElementById("savedClose").focus();}
 function closeWishlist(){document.getElementById("savedDrawer").classList.remove("open");document.getElementById("savedBackdrop").classList.remove("open");document.body.classList.remove("wishlist-open");document.getElementById("savedDrawer").setAttribute("aria-hidden","true");}
 document.getElementById("wishlistButton").addEventListener("click",openWishlist);document.getElementById("savedClose").addEventListener("click",closeWishlist);document.getElementById("savedBackdrop").addEventListener("click",closeWishlist);document.getElementById("savedItems").addEventListener("click",e=>{const view=e.target.closest("[data-saved-view]"),remove=e.target.closest("[data-saved-remove]");if(view){current=Number(view.dataset.savedView);render();closeWishlist();document.getElementById("selectedProduct").scrollIntoView({behavior:"smooth"});}if(remove){wishlist=wishlist.filter(i=>i!==Number(remove.dataset.savedRemove));try{localStorage.setItem("artspace-wishlist",JSON.stringify(wishlist));}catch(e){}renderWishlist();syncWishlistButton();}});
 function syncWishlistButton(){const b=document.getElementById("saveButton");if(!b)return;const saved=wishlist.includes(current);b.setAttribute("aria-pressed",String(saved));b.textContent=saved?"♥ SAVED TO WISHLIST":"♡ SAVE TO WISHLIST";document.getElementById("savedCount").textContent=wishlist.length;}
@@ -376,10 +376,10 @@ function renderCart(){
  else list.innerHTML=cart.map((item,index)=>{const p=products[item.productIndex];return `<article class="cart-item"><div class="cart-thumb"><img src="${p.image}" alt=""></div><div><h3>${p.title}</h3><div class="cart-meta">${item.size} · ${item.finish.toUpperCase()}<br>${money(cartPrice(item))} EACH</div><div class="cart-actions"><button data-cart-action="minus" data-index="${index}" aria-label="Decrease quantity">−</button><span>${item.quantity}</span><button data-cart-action="plus" data-index="${index}" aria-label="Increase quantity">+</button><button class="remove-item" data-cart-action="remove" data-index="${index}">REMOVE</button></div></div><strong class="cart-price">${money(cartPrice(item)*item.quantity)}</strong></article>`;}).join("");
  const total=cart.reduce((sum,item)=>sum+cartPrice(item)*item.quantity,0);document.getElementById("cartTotal").textContent=money(total);document.getElementById("cartCheckout").disabled=!cart.length;const progress=Math.min(100,total/8000*100);document.getElementById("shippingProgressFill").style.width=progress+"%";document.getElementById("shippingProgressText").textContent=total>=8000?"You unlocked complimentary shipping.":"Add "+money(8000-total)+" more for complimentary shipping.";
 }
-function openCart(){renderCart();drawer.classList.add("open");backdrop.classList.add("open");document.body.classList.add("cart-open");drawer.setAttribute("aria-hidden","false");document.getElementById("cartClose").focus();}
+function openCart(){closeWishlist();renderCart();drawer.classList.add("open");backdrop.classList.add("open");document.body.classList.add("cart-open");drawer.setAttribute("aria-hidden","false");document.getElementById("cartClose").focus();}
 function closeCart(){drawer.classList.remove("open");backdrop.classList.remove("open");document.body.classList.remove("cart-open");drawer.setAttribute("aria-hidden","true");}
 document.getElementById("addButton").addEventListener("click",()=>{const found=cart.find(item=>item.productIndex===current&&item.size===selectedSize&&item.finish===selectedFinish);if(found)found.quantity++;else cart.push({productIndex:current,size:selectedSize,finish:selectedFinish,quantity:1});try{localStorage.setItem("artspace-cart",JSON.stringify(cart));}catch(e){}renderCart();toast(products[current].title+" added to your bag");});
-document.getElementById("bagButton").addEventListener("click",openCart);document.getElementById("cartClose").addEventListener("click",closeCart);backdrop.addEventListener("click",closeCart);document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCart();});
+document.getElementById("bagButton").addEventListener("click",openCart);document.getElementById("cartClose").addEventListener("click",closeCart);backdrop.addEventListener("click",closeCart);document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeCart();closeWishlist();}});
 document.getElementById("cartItems").addEventListener("click",e=>{const b=e.target.closest("[data-cart-action]");if(!b)return;const i=Number(b.dataset.index),a=b.dataset.cartAction,item=cart[i];if(!item)return;if(a==="plus")item.quantity++;if(a==="minus")item.quantity--;if(a==="remove"||item.quantity<=0)cart.splice(i,1);try{localStorage.setItem("artspace-cart",JSON.stringify(cart));}catch(e){}renderCart();});
 document.getElementById("cartCheckout").addEventListener("click",()=>toast("Online checkout will be added in a future update."));
 renderCart();
@@ -428,7 +428,8 @@ render();
   group.userData.index=index;gallery.add(group);cards3D.push(group);
  });
  const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
- let raf=0,isDragging3D=false,pointerStartX=0,lastPointerX=0,totalDrag=0,suppressCanvasClick=false;
+ let raf=0,isDragging3D=false,pointerStartX=0,lastPointerX=0,totalDrag=0,suppressCanvasClick=false,pageVisible=!document.hidden;
+ const reducedMotion=!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches);
  renderer.domElement.style.touchAction="pan-y";
  renderer.domElement.style.cursor="grab";
  renderer.domElement.tabIndex=0;
@@ -451,16 +452,18 @@ render();
  }
  window.updateArtspace3D=layoutCards;
  function animate(){
+  if(!pageVisible)return;
   raf=requestAnimationFrame(animate);
-  if(!isDragging3D){gallery.rotation.y*=.86;if(Math.abs(gallery.rotation.y)<.0008)gallery.rotation.y=0;}
+  if(!isDragging3D){gallery.rotation.y*=reducedMotion?0:.86;if(Math.abs(gallery.rotation.y)<.0008)gallery.rotation.y=0;}
+  const ease=reducedMotion?1:.105;
   cards3D.forEach(group=>{
    const u=group.userData;
-   group.position.x+=(u.targetX-group.position.x)*.105;
-   group.position.y+=(u.targetY-group.position.y)*.105;
-   group.position.z+=(u.targetZ-group.position.z)*.105;
-   group.rotation.y+=(u.targetRY-group.rotation.y)*.105;
+   group.position.x+=(u.targetX-group.position.x)*ease;
+   group.position.y+=(u.targetY-group.position.y)*ease;
+   group.position.z+=(u.targetZ-group.position.z)*ease;
+   group.rotation.y+=(u.targetRY-group.rotation.y)*ease;
    const target=u.targetScale||1;
-   const scale=group.scale.x+(target-group.scale.x)*.105;
+   const scale=group.scale.x+(target-group.scale.x)*ease;
    group.scale.setScalar(scale);
   });
   renderer.render(scene,camera);
@@ -509,7 +512,8 @@ render();
  if(window.ResizeObserver){const observer=new ResizeObserver(resize);observer.observe(stage);}
  window.addEventListener("resize",resize,{passive:true});
  resize();layoutCards();animate();
- window.addEventListener("pagehide",()=>{cancelAnimationFrame(raf);renderer.dispose();});
+ document.addEventListener("visibilitychange",()=>{pageVisible=!document.hidden;if(pageVisible&&!raf)animate();else if(!pageVisible){cancelAnimationFrame(raf);raf=0;}});
+ window.addEventListener("pagehide",()=>{cancelAnimationFrame(raf);raf=0;renderer.dispose();});
 })();
 
 </script>
