@@ -79,13 +79,26 @@ if (!html.includes("new THREE.CylinderGeometry(wallRadius,wallRadius,7.1,96,1,tr
 }
 
 if (!html.includes("gallery.position.set(0,0,wallCenterZ)") ||
-    !html.includes("const wallAngle=Math.PI+d*.255") ||
+    !html.includes("const d=index-(products.length-1)/2;") ||
+    !html.includes("const wallAngle=Math.PI+d*.235") ||
+    !html.includes("group.userData.targetScale=1") ||
+    html.includes("let d=index-current") ||
     !html.includes("const mountRadius=wallRadius-.072") ||
     !html.includes("group.userData.targetRY=wallAngle+Math.PI") ||
     html.includes("gallery.rotation.y+=(idleAngle-gallery.rotation.y)*.012")) {
   fail("3D artwork frames must be mounted to and face inward from the curved exhibition wall.");
 }
 
+
+/* All six artworks stay fixed on the curved wall; selection must not turn the wall into a carousel. */
+if (!html.includes("Fixed wall positions: selecting an artwork must never rearrange the other frames.") ||
+    !html.includes("const d=i-(cards.length-1)/2;") ||
+    !html.includes("card.style.opacity=\"1\"")) {
+  fail("Every artwork must remain visible in a fixed wall-mounted arrangement, not a slideshow.");
+}
+if (modelBuilder.includes("box(7,5.4,3.6,7.4,0,.35,1.8)")) {
+  fail("The dark oak core must not block the entrance sightline into the white gallery.");
+}
 
 /* Cinematic opening must show the whole exterior, then approach and pass through the entrance. */
 if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
