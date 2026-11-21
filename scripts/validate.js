@@ -93,12 +93,13 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
     !html.includes("addBox(exterior,19.5,.52,24.6,facadeMat,0,4,-1.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,-6.3,1.05,9.15)") ||
     !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,6.3,1.05,9.15)") ||
-    !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(15.2,8.3,25.8),new THREE.Vector3(13.4,6.8,21.2),new THREE.Vector3(9.2,5.0,17.2),new THREE.Vector3(4.8,3.25,14.6),new THREE.Vector3(1.25,1.9,12.55),new THREE.Vector3(0,1.65,10.95),introCameraEnd],false,\"centripetal\")") ||
-    !html.includes("new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,2.0,6),new THREE.Vector3(0,1.9,10),new THREE.Vector3(0,1.75,10.8),new THREE.Vector3(0,1.65,4),introLookEnd],false,\"centripetal\")") ||
+    !html.includes("new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(15.2,8.3,25.8),new THREE.Vector3(13.4,6.8,21.2),new THREE.Vector3(9.2,5.0,17.2),new THREE.Vector3(4.8,3.25,14.6),new THREE.Vector3(1.25,1.9,12.55),new THREE.Vector3(.35,1.65,11.85),new THREE.Vector3(0,1.65,10.9),new THREE.Vector3(0,1.65,8.6),new THREE.Vector3(0,1.65,6.4),introCameraEnd],false,\"centripetal\")") ||
+    !html.includes("new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,2.0,6),new THREE.Vector3(0,1.9,10),new THREE.Vector3(0,1.8,9.0),new THREE.Vector3(0,1.7,5.2),new THREE.Vector3(0,1.6,1.5),introLookEnd],false,\"centripetal\")") ||
     !html.includes("introCameraPath.getPointAt(pathT)") ||
-    !html.includes("const introDuration=reducedMotion?0:7800;") ||
+    !html.includes("const introDuration=reducedMotion?0:9200;") ||
     !html.includes("if(introRaw<.02){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}") ||
-    !html.includes("const pathT=easeCamera((introRaw-.02)/.98);") ||
+    !html.includes("const introCameraProgress=t=>t<.70?.74*easeCamera(t/.70):t<.86?.74+.12*easeCamera((t-.70)/.16):.86+.14*easeCamera((t-.86)/.14);") ||
+    !html.includes("const pathT=introCameraProgress((introRaw-.02)/.98);") ||
     !html.includes("introLookPath.getPointAt(pathT)") ||
     !html.includes("introCameraPath.points[0].copy(introCameraStart)") ||
     !html.includes("introCameraStart.x=13.5;") ||
@@ -256,6 +257,15 @@ if (!html.includes("const inlayMaterial=new THREE.MeshStandardMaterial") ||
     html.includes("new THREE.BoxGeometry(2.34,3.16,.018)")) {
   fail("3D artwork presentation requires open frame detailing, subtle protective glazing and correctly aimed individual picture lights.");
 }
+/* Walk-through threshold must be physically open: no full-width glass leaf may span the camera path. */
+if (!modelBuilder.includes("Open central portal: glazed sidelights and a high transom frame a clear, walk-through entrance.") ||
+    !modelBuilder.includes("box(3,1.55,5,.18,side*2.35,.85,11.86)") ||
+    !modelBuilder.includes("box(4,1.36,4.62,.035,side*2.35,.85,11.74)") ||
+    !modelBuilder.includes("box(3,6.1,.48,.18,0,3.35,11.86)") ||
+    modelBuilder.includes("box(4,5.75,4.25,.035,0,1,11.74)")) {
+  fail("The camera entrance must have a clear central opening with only side glazing and a high transom.");
+}
+
 /* Sculptural entrance and roof require layered continuous curves, deep soffit and portal ribs. */
 if (!modelBuilder.includes("Sculptural roof and entrance refinement") ||
     !modelBuilder.includes("curvedPanel(0,19.9,.24,3.35,0,3.56,11.05,.88)") ||
