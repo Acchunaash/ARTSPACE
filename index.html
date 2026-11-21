@@ -1329,7 +1329,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   if(index===2){addBoutiqueBox(group,.035,.72,.018,trimColor,0,2.08,.28);for(let k=0;k<4;k++){const button=new THREE.Mesh(new THREE.SphereGeometry(.025,8,8),railMetal);button.position.set(0,2.28-k*.16,.3);group.add(button);}}
   if(index===3||index===5){const seam=new THREE.Mesh(new THREE.TorusGeometry(.34,.012,6,48),trimColor);seam.position.y=1.22;group.add(seam);}
   const fallbackBody=new THREE.Group();fallbackBody.name="procedural-human-fallback";group.add(fallbackBody);group.userData.proceduralBody=fallbackBody;
-  const fallbackHair=new THREE.Group();fallbackHair.name="procedural-hair-fallback";group.add(fallbackHair);
+  const fallbackHair=new THREE.Group();fallbackHair.name="procedural-hair-fallback";group.add(fallbackHair);group.userData.proceduralHair=fallbackHair;
   const neck=new THREE.Mesh(new THREE.CylinderGeometry(.085,.09,.23,18),mannequinSkin);neck.position.y=2.62;fallbackBody.add(neck);
   const head=new THREE.Mesh(new THREE.SphereGeometry(.205,24,20),mannequinFace);head.position.set(0,2.91,.015);head.scale.set(.82,1.12,.88);fallbackBody.add(head);
   const hair=new THREE.Mesh(new THREE.SphereGeometry(.218,24,16),mannequinHair);hair.position.set(0,3.005,-.035);hair.scale.set(.9,1.08,.88);fallbackHair.add(hair);
@@ -1386,6 +1386,17 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
      human.traverse(node=>{if(node.isMesh){node.castShadow=window.innerWidth>=700;node.receiveShadow=window.innerWidth>=700;node.frustumCulled=true;}});
      group.add(human);
      if(group.userData.proceduralBody)group.userData.proceduralBody.visible=false;
+     if(group.userData.proceduralHair)group.userData.proceduralHair.visible=false;
+     /* Relax the imported MakeHuman A-pose into a natural showroom stance.
+        These joint names and pose axes follow the published MPFB default rig. */
+     const poseBone=(name,x,y,z)=>{const bone=human.getObjectByName(name);if(bone)bone.rotation.set(x,y,z,"XYZ");};
+     poseBone("clavicle.L",0,0,.1745);poseBone("clavicle.R",0,0,-.1745);
+     poseBone("upperarm01.L",0,0,.5236);poseBone("upperarm01.R",0,0,-.5236);
+     poseBone("lowerarm01.L",-.6458,0,0);poseBone("lowerarm01.R",-.6458,0,0);
+     poseBone("wrist.L",0,0,.08);poseBone("wrist.R",0,0,-.08);
+     poseBone("spine01",0,Math.sin(index*.9)*.025,0);
+     poseBone("head",0,Math.sin(index*.8)*.07,0);
+     human.updateMatrixWorld(true);
      group.userData.humanModel=human;
     });
     console.info("ARTSPACE: CC0 human base mesh loaded; six fashion looks now use realistic human anatomy.");
