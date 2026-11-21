@@ -1303,7 +1303,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  const mannequinFace=new THREE.MeshStandardMaterial({color:0xd6a88e,roughness:.6});
  const dressPalette=[0xd8c7b1,0x654358,0x8c9b7d,0xb85f49,0x26344a,0x687c60];
  const skirtWidths=[.64,.40,.58,.55,.34,.62];
- const cards3D=[];
+ 
  const cylinderBetween=(parent,a,b,r1,r2,mat)=>{
   const direction=new THREE.Vector3().subVectors(b,a),mesh=new THREE.Mesh(new THREE.CylinderGeometry(r2,r1,direction.length(),14),mat);
   mesh.position.copy(a).add(b).multiplyScalar(.5);mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),direction.normalize());mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh;
