@@ -75,23 +75,51 @@ for(const side of [-1,1]){
 box(1,6.45,.09,.18,0,2.96,12.48);box(2,6.45,.07,.2,0,3.1,12.52);
 // Build a single shared unit cube and cylinder mesh, then place many transformed instances.
 function cubeGeometry(){
- const p=[],n=[],idx=[];
+ const p=[],n=[],idx=[],bevel=.04,core=.5-bevel,segments=4;
  const faces=[
-  [[1,0,0],[[.5,-.5,-.5],[.5,.5,-.5],[.5,.5,.5],[.5,-.5,.5]]],
-  [[-1,0,0],[[-.5,-.5,.5],[-.5,.5,.5],[-.5,.5,-.5],[-.5,-.5,-.5]]],
-  [[0,1,0],[[-.5,.5,-.5],[-.5,.5,.5],[.5,.5,.5],[.5,.5,-.5]]],
-  [[0,-1,0],[[-.5,-.5,.5],[-.5,-.5,-.5],[.5,-.5,-.5],[.5,-.5,.5]]],
-  [[0,0,1],[[-.5,-.5,.5],[.5,-.5,.5],[.5,.5,.5],[-.5,.5,.5]]],
-  [[0,0,-1],[[.5,-.5,-.5],[-.5,-.5,-.5],[-.5,.5,-.5],[.5,.5,-.5]]]
+  [[.5,-.5,-.5],[.5,.5,-.5],[.5,.5,.5],[.5,-.5,.5]],
+  [[-.5,-.5,.5],[-.5,.5,.5],[-.5,.5,-.5],[-.5,-.5,-.5]],
+  [[-.5,.5,-.5],[-.5,.5,.5],[.5,.5,.5],[.5,.5,-.5]],
+  [[-.5,-.5,.5],[-.5,-.5,-.5],[.5,-.5,-.5],[.5,-.5,.5]],
+  [[-.5,-.5,.5],[.5,-.5,.5],[.5,.5,.5],[-.5,.5,.5]],
+  [[.5,-.5,-.5],[-.5,-.5,-.5],[-.5,.5,-.5],[.5,.5,-.5]]
  ];
- for(const [normal,verts] of faces){const base=p.length/3;for(const v of verts){p.push(...v);n.push(...normal);}idx.push(base,base+2,base+1,base,base+3,base+2);}
+ for(const corners of faces){
+  const base=p.length/3;
+  for(let j=0;j<=segments;j++)for(let i=0;i<=segments;i++){
+   const u=i/segments,v=j/segments;
+   const a=corners[0].map((x,k)=>x*(1-u)+corners[1][k]*u);
+   const b=corners[3].map((x,k)=>x*(1-u)+corners[2][k]*u);
+   const raw=a.map((x,k)=>x*(1-v)+b[k]*v);
+   const clamped=raw.map(x=>Math.max(-core,Math.min(core,x)));
+   const delta=raw.map((x,k)=>x-clamped[k]);
+   const len=Math.hypot(...delta)||1;
+   const normal=delta.map(x=>x/len);
+   const surface=clamped.map((x,k)=>x+normal[k]*bevel);
+   p.push(...surface);n.push(...normal);
+  }
+  for(let j=0;j<segments;j++)for(let i=0;i<segments;i++){
+   const a=base+j*(segments+1)+i,b=a+1,c=b+segments+1,d=a+segments+1;
+   idx.push(a,b,c,a,c,d);
+  }
+ }
  return {p,n,idx};
 }
 function cylinderGeometry(seg=16){
  const p=[],n=[],idx=[];
- for(let i=0;i<seg;i++){const a=i/seg*Math.PI*2,b=(i+1)/seg*Math.PI*2;const base=p.length/3;
+ for(let i=0;i<seg;i++){
+  const a=i/seg*Math.PI*2,b=(i+1)/seg*Math.PI*2,base=p.length/3;
   for(const [ang,y] of [[a,-.5],[b,-.5],[b,.5],[a,.5]]){p.push(Math.cos(ang)*.5,y,Math.sin(ang)*.5);n.push(Math.cos(ang),0,Math.sin(ang));}
-  idx.push(base,base+1,base+2,base,base+2,base+3);
+  idx.push(base,base+2,base+1,base,base+3,base+2);
+ }
+ const bottomCenter=p.length/3;p.push(0,-.5,0);n.push(0,-1,0);
+ const topCenter=p.length/3;p.push(0,.5,0);n.push(0,1,0);
+ for(let i=0;i<seg;i++){
+  const a=i/seg*Math.PI*2,b=(i+1)/seg*Math.PI*2;
+  const bi=p.length/3;p.push(Math.cos(a)*.5,-.5,Math.sin(a)*.5,Math.cos(b)*.5,-.5,Math.sin(b)*.5);n.push(0,-1,0,0,-1,0);
+  idx.push(bottomCenter,bi,bi+1);
+  const ti=p.length/3;p.push(Math.cos(a)*.5,.5,Math.sin(a)*.5,Math.cos(b)*.5,.5,Math.sin(b)*.5);n.push(0,1,0,0,1,0);
+  idx.push(topCenter,ti+1,ti);
  }
  return {p,n,idx};
 }
