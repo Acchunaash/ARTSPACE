@@ -132,6 +132,19 @@ if (!html.includes("https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.j
   fail("Both primary and fallback Three.js sources must be configured.");
 }
 
+/* The cinematic camera must wait for the detailed pavilion or a bounded fallback decision. */
+if (!html.includes("introReady=false") ||
+    !html.includes("settleIntro=reason=>") ||
+    !html.includes("12-second model timeout; procedural exterior retained") ||
+    !html.includes("detailed pavilion loaded") ||
+    !html.includes("GLB request failed; procedural exterior retained") ||
+    !html.includes("GLTFLoader unavailable; procedural exterior retained") ||
+    !html.includes("const introRaw=introReady?") ||
+    !html.includes("if(!introReady){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}") ||
+    html.includes("if(!introStartedAt)introStartedAt=performance.now();")) {
+  fail("The opening camera must hold the full exterior until the detailed pavilion loads or a bounded fallback is selected.");
+}
+
 /* The deployed exterior is a real glTF scene asset generated during build, not runtime box construction. */
 const modelBuilder = fs.readFileSync("scripts/build-pavilion.js", "utf8");
 if (!modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") ||
