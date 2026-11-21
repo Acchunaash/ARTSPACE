@@ -183,10 +183,10 @@ if (!html.includes("introReady=false") ||
 const modelBuilder = fs.readFileSync("scripts/build-pavilion.js", "utf8");
 if (!modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") ||
     !modelBuilder.includes("const curvedPanel=(m,w,h,d,x,y,z,bow)") ||
-    !modelBuilder.includes("const flute=flutedPanelGeometry(),all=[cube,cyl,curve42,curve58,flute]") ||
+    !modelBuilder.includes("const flute=flutedPanelGeometry(),roof=barrelRoofGeometry(),all=[cube,cyl,curve42,curve58,flute,roof]") ||
     !modelBuilder.includes("mesh:shape*materials.length+m") ||
-    !modelBuilder.includes("for(let shape=0;shape<5;shape++)") ||
-    !modelBuilder.includes("item.bow===.42?2:3") ||
+    !modelBuilder.includes("for(let shape=0;shape<6;shape++)") ||
+    !modelBuilder.includes("item.roof?5:item.fluted?4:item.curved?(item.bow===.42?2:3):item.c?1:0") ||
     !modelBuilder.includes("function flutedPanelGeometry(segments=48)") ||
     !modelBuilder.includes("flutedPanel(0,.22,4.48,.34") ||
     !modelBuilder.includes("Embed deterministic, tileable procedural material maps") ||
