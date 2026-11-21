@@ -80,3 +80,10 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Reworked the 3D wall layout so all six artworks occupy permanent, evenly spaced positions on the curved exhibition wall. Changing the selected artwork no longer rotates/rearranges the other frames or scales one into a carousel hero.
 - Updated the non-WebGL artwork presentation to keep every card visible and fixed in its wall arrangement, and strengthened automated checks against the old selection-relative layout and oak core.
 - Source changes are prepared for validation and deployment. Visual acceptance remains pending until a real rendered browser capture can be inspected; source changes alone cannot prove the entrance now looks correct on-device.
+
+
+### Wide interior room framing and material refinement — 2026-11-22
+- Inspected the current room shell, curved exhibition wall, vaulted ceiling, floor finish, wall-wash lighting and entrance camera before editing.
+- Widened the settled interior view by easing the camera field of view from 40° to 44° during the cinematic approach, so the visitor sees more of the room after crossing the entrance without changing the exterior camera path or the gallery geometry.
+- Refined the stone floor to a restrained satin finish and softened the bronze/gold architectural trim toward a quieter pale champagne-metal tone to reduce brown visual weight while keeping the white gallery palette.
+- Automated checks now require the wider interior camera framing and updated floor finish. Visual acceptance remains pending until an actual rendered capture can be inspected; these source changes do not prove the room looks realistic on-device.
