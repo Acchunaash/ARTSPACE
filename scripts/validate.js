@@ -102,6 +102,8 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
     !html.includes("introLookTarget.set(0,THREE.MathUtils.lerp(2.15,1.55,pathT),camera.position.z-6.5)") ||
     !html.includes("camera.lookAt(introLookTarget.set(0,THREE.MathUtils.lerp(2.15,1.55,pathT),camera.position.z-6.5));") ||
     !html.includes("camera.lookAt(introLookTarget.set(0,1.55,introCameraEnd.z-6.5));") ||
+    !html.includes("camera.lookAt(introLookTarget.set(0,2.15,introCameraStart.z-6.5));") ||
+    html.includes("introLookStart") || html.includes("introLookEnd") ||
     html.includes("introLookEnd") ||
     !html.includes("introCameraPath.points[0].copy(introCameraStart)") ||
     !html.includes("introCameraStart.x=13.5;") ||
