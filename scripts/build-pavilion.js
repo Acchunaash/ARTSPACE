@@ -84,7 +84,7 @@ function cubeGeometry(){
   [[0,0,1],[[-.5,-.5,.5],[.5,-.5,.5],[.5,.5,.5],[-.5,.5,.5]]],
   [[0,0,-1],[[.5,-.5,-.5],[-.5,-.5,-.5],[-.5,.5,-.5],[.5,.5,-.5]]]
  ];
- for(const [normal,verts] of faces){const base=p.length/3;for(const v of verts){p.push(...v);n.push(...normal);}idx.push(base,base+1,base+2,base,base+2,base+3);}
+ for(const [normal,verts] of faces){const base=p.length/3;for(const v of verts){p.push(...v);n.push(...normal);}idx.push(base,base+2,base+1,base,base+3,base+2);}
  return {p,n,idx};
 }
 function cylinderGeometry(seg=16){
