@@ -66,3 +66,9 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Defect found: when the 9.2-second intro completed, the camera's look target jumped from the moving 6.5 m forward target to a separate fixed target. Replaced that final target with the same forward look-ahead vector so the settled view has no target discontinuity.
 - Updated the automated validator to require the final look-ahead target and reject the obsolete endpoint target.
 - Visual acceptance remains pending: this is a source/geometry audit, not a rendered camera capture. The original video remains the gallery-fidelity reference, not evidence for the exterior.
+
+
+### Follow-up camera acceptance audit — 2026-11-22
+- Rechecked the committed path against the builder's portal and canopy placements. The approach reaches the centreline before crossing the entrance plane, stays at eye height through the portal, and the canopy soffit is above the camera line. The path's last outside waypoint is z=12.45; the entrance frame is centred near z=12.0; the next waypoints continue inside.
+- Found a regression in the prior cleanup: the two initial/loading camera branches still referenced the removed `introLookStart` symbol. Replaced both with the same explicit forward look-ahead target and strengthened the validator to reject obsolete look-target references.
+- This is now a source-level defect fixed; rendered visual acceptance is still not available from the current GitHub workflow. No claim is made that the user-visible camera clipping has been visually disproved.
