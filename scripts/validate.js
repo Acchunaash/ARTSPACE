@@ -273,14 +273,17 @@ if (!html.includes("new THREE.SpotLight(0xffedda,2.05,10.5") ||
 }
 
 /* Artwork frames require layered mounts, a fine perimeter inlay, safe low-opacity glazing and tuned per-print lighting. */
-if (!html.includes("const inlayMaterial=new THREE.MeshStandardMaterial") ||
+if (!html.includes("const inlayMaterial=new THREE.MeshStandardMaterial({color:0xb7b4aa,roughness:.56,metalness:.34})") ||
     !html.includes("const glazingMaterial=new THREE.MeshPhysicalMaterial") ||
     !html.includes("opacity:.055,clearcoat:.28") ||
-    !html.includes("const frameHighlightMaterial=new THREE.MeshStandardMaterial") ||
+    !html.includes("const frameHighlightMaterial=new THREE.MeshStandardMaterial({color:0x9e9d96,roughness:.58,metalness:.28})") ||
+    !html.includes("texture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy())") ||
+    !html.includes("plaqueContext.fillText(\"ARTSPACE  /  ORIGINAL WORK\",24,34)") ||
+    !html.includes("plaqueContext.fillText(product.title,24,78)") ||
     !html.includes("new THREE.SpotLight(0xffedda,2.05,10.5") ||
     !html.includes("targetZ+1.48") ||
     html.includes("new THREE.BoxGeometry(2.34,3.16,.018)")) {
-  fail("3D artwork presentation requires open frame detailing, subtle protective glazing and correctly aimed individual picture lights.");
+  fail("3D artwork presentation requires refined neutral metal mounts, sharp anisotropic artwork textures, restrained gallery labels, subtle glazing and correctly aimed individual picture lights.");
 }
 /* Walk-through threshold must be physically open: no full-width glass leaf may span the camera path. */
 if (!modelBuilder.includes("Open central portal: glazed sidelights and a high transom frame a clear, walk-through entrance.") ||
