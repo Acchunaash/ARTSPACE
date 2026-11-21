@@ -318,7 +318,7 @@ const cube=cubeGeometry(),cyl=cylinderGeometry(),curve42=curvedPanelGeometry(64,
 const flute=flutedPanelGeometry(),all=[cube,cyl,curve42,curve58,flute],bufferParts=[],views=[],accessors=[];
 let offset=0;
 function addBuffer(data,componentType,type,count,min,max){
- while(offset%4){bufferParts.push(0);offset++;}
+ while(offset%4){bufferParts.push(Buffer.from([0]));offset++;}
  const start=offset;const bytes=Buffer.from(data.buffer,data.byteOffset,data.byteLength);bufferParts.push(bytes);offset+=bytes.length;
  const view=views.length;views.push({buffer:0,byteOffset:start,byteLength:bytes.length});
  const acc={bufferView:view,componentType,type,count};if(min)acc.min=min;if(max)acc.max=max;accessors.push(acc);return accessors.length-1;
@@ -384,7 +384,7 @@ function normalPixels(height,size,strength=5){
 }
 const imageDefs=[],textureDefs=[];
 function embedTexture(png,name){
- while(offset%4){bufferParts.push(0);offset++;}
+ while(offset%4){bufferParts.push(Buffer.from([0]));offset++;}
  const start=offset;bufferParts.push(png);offset+=png.length;
  const view=views.length;views.push({buffer:0,byteOffset:start,byteLength:png.length});
  imageDefs.push({name,mimeType:"image/png",bufferView:view});
