@@ -20,7 +20,7 @@ const groups=materials.map(()=>[]);
 const add=(m,s,p)=>groups[m].push({s,p});
 const box=(m,w,h,d,x,y,z)=>add(m,[w,h,d],[x,y,z]);
 const cylinder=(m,r,h,x,y,z)=>groups[m].push({c:[r,h],p:[x,y,z]});
-// Floating plinth, long roof slab and continuous soffit.
+// Site plane and floating plinth, long roof slab and continuous soffit.\nbox(6,70,.08,70,0,-1.83,2);
 box(6,19,.48,24.2,0,-1.48,-.25);box(0,19.45,.22,24.65,0,-1.18,-.25);
 box(0,19.7,.46,24.8,0,3.72,-.25);box(1,19.78,.075,24.84,0,3.43,-.25);
 box(7,17.8,.10,22.6,0,3.46,-.25);
