@@ -386,7 +386,12 @@ render();
   group.userData.index=index;gallery.add(group);cards3D.push(group);
  });
  const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
- let raf=0;
+ let raf=0,isDragging3D=false,pointerStartX=0,lastPointerX=0,totalDrag=0,suppressCanvasClick=false;
+ renderer.domElement.style.touchAction="pan-y";
+ renderer.domElement.style.cursor="grab";
+ renderer.domElement.tabIndex=0;
+ renderer.domElement.setAttribute("role","application");
+ renderer.domElement.setAttribute("aria-label","Interactive 3D art gallery. Drag to rotate, use arrow keys to browse, and press Enter to open the selected artwork.");
  function resize(){
   const w=Math.max(1,stage.clientWidth),h=Math.max(1,stage.clientHeight);
   camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false);
@@ -405,6 +410,7 @@ render();
  window.updateArtspace3D=layoutCards;
  function animate(){
   raf=requestAnimationFrame(animate);
+  if(!isDragging3D){gallery.rotation.y*=.86;if(Math.abs(gallery.rotation.y)<.0008)gallery.rotation.y=0;}
   cards3D.forEach(group=>{
    const u=group.userData;
    group.position.x+=(u.targetX-group.position.x)*.105;
@@ -417,7 +423,36 @@ render();
   });
   renderer.render(scene,camera);
  }
+ renderer.domElement.addEventListener("pointerdown",event=>{
+  if(event.button!==undefined&&event.button!==0)return;
+  isDragging3D=true;pointerStartX=lastPointerX=event.clientX;totalDrag=0;
+  renderer.domElement.style.cursor="grabbing";
+  try{renderer.domElement.setPointerCapture(event.pointerId)}catch(e){}
+  event.stopPropagation();
+ });
+ renderer.domElement.addEventListener("pointermove",event=>{
+  if(!isDragging3D)return;
+  const dx=event.clientX-lastPointerX;lastPointerX=event.clientX;totalDrag+=dx;
+  if(Math.abs(totalDrag)>5){gallery.rotation.y+=dx*.006;suppressCanvasClick=true;}
+  event.stopPropagation();
+ });
+ function finish3DDrag(event){
+  if(!isDragging3D)return;
+  isDragging3D=false;renderer.domElement.style.cursor="grab";
+  const distance=event.clientX-pointerStartX;
+  if(Math.abs(distance)>38){move(distance<0?1:-1);suppressCanvasClick=true;}
+  event.stopPropagation();
+  if(suppressCanvasClick)setTimeout(()=>{suppressCanvasClick=false},350);
+ }
+ renderer.domElement.addEventListener("pointerup",finish3DDrag);
+ renderer.domElement.addEventListener("pointercancel",event=>{isDragging3D=false;renderer.domElement.style.cursor="grab";suppressCanvasClick=false;event.stopPropagation()});
+ renderer.domElement.addEventListener("keydown",event=>{
+  if(event.key==="ArrowRight"){event.preventDefault();move(1);}
+  if(event.key==="ArrowLeft"){event.preventDefault();move(-1);}
+  if(event.key==="Enter"||event.key===" "){event.preventDefault();openArtworkViewer();}
+ });
  renderer.domElement.addEventListener("click",event=>{
+  if(suppressCanvasClick){suppressCanvasClick=false;return;}
   const rect=renderer.domElement.getBoundingClientRect();
   pointer.x=((event.clientX-rect.left)/rect.width)*2-1;
   pointer.y=-((event.clientY-rect.top)/rect.height)*2+1;
