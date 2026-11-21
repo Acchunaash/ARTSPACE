@@ -89,6 +89,24 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
 .viewer-arrow{justify-self:center}
 .selected-image-bg{cursor:zoom-in}
 @media(max-width:600px){.art-viewer{grid-template-columns:38px minmax(0,1fr) 38px;gap:4px;padding:60px 8px 24px}.viewer-arrow{width:34px;height:34px}.viewer-close{right:14px;top:14px}.viewer-content img{max-height:calc(100dvh - 150px);max-width:100%;padding:6px}}
+
+/* STEP 9 — responsive 3D scene tuning */
+@media(max-width:700px){
+ .gallery-stage{perspective:1050px;perspective-origin:50% 44%}
+ .gallery-track{perspective:1050px}
+ .art-card{transform-origin:50% 52%}
+ .art-frame{padding:7px;box-shadow:0 16px 28px #1b211b20}
+ .gallery-stage:after{width:95vw;height:72%;top:8%}
+ .gallery-stage:before{left:7%;right:7%;bottom:9px}
+ .selected-image-bg{transform:perspective(900px) rotateY(-1.5deg)}
+}
+@media(max-width:380px){
+ .gallery-stage{height:315px}
+ .art-card{width:clamp(112px,36vw,145px)}
+ .gallery-arrow{width:30px;height:30px}
+ .viewer-caption span:first-child{font-size:10px}
+}
+@media(hover:none){.selected-image-wrap:hover .selected-image-bg{transform:perspective(1000px) rotateY(-2deg) rotateX(1deg) }}
 @media(prefers-reduced-motion:reduce){.art-viewer{transition:none}}
 /* STEP 6 — selected artwork reveal motion */
 @keyframes art-card-arrive{0%{filter:blur(2px);transform:translate3d(0,10px,0) scale(.96)}100%{filter:blur(0);}}
@@ -241,7 +259,7 @@ const track=document.getElementById("galleryTrack");
 const stage=document.getElementById("galleryStage");
 const money=n=>"₹"+n.toLocaleString("en-IN");
 function render(){
- const radius=clamp(window.innerWidth*.72,255,540);
+ const radius=window.innerWidth<=700?clamp(window.innerWidth*.62,175,280):clamp(window.innerWidth*.72,255,540);
  cards.forEach((card,i)=>{
    let d=i-current;
    if(d>3)d-=6;if(d< -3)d+=6;
