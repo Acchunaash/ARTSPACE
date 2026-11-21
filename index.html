@@ -334,6 +334,8 @@ function render(){
    card.setAttribute("aria-pressed",String(d===0));
  });
  const p=products[current];
+ document.title=p.title+" — ARTSPACE";
+ history.replaceState(null,"",location.pathname+location.search+"#artwork-"+(current+1));
  syncWishlistButton();
  document.getElementById("counter").textContent=`${String(current+1).padStart(2,"0")} / 06`;
  document.getElementById("imageIndex").textContent=`${String(current+1).padStart(2,"0")} / 06`;
