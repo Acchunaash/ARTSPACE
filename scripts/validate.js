@@ -39,6 +39,14 @@ catch (error) { fail("Web app manifest is invalid JSON: " + error.message); }
 try { new Function(fs.readFileSync("sw.js", "utf8")); }
 catch (error) { fail("Service worker has a syntax error: " + error.message); }
 
+try {
+  const schema = fs.readFileSync("supabase/migrations/0001_artspace_schema.sql", "utf8");
+  const seed = fs.readFileSync("supabase/seed.sql", "utf8");
+  if (!schema.includes("enable row level security")) fail("Database schema is missing Row Level Security.");
+  const seededProducts = [...seed.matchAll(/^  \('/gm)].length;
+  if (seededProducts !== 6) fail("Expected six initial catalog seed records, found " + seededProducts + ".");
+} catch (error) { fail("Database foundation files are missing or unreadable: " + error.message); }
+
 if (!html.includes('id="cartCheckout"') || !html.includes("Online payment is not enabled yet")) {
   fail("Checkout boundary messaging is missing.");
 }
