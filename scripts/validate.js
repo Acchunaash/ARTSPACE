@@ -98,8 +98,10 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
     !html.includes("introCameraPath.getPointAt(pathT)") ||
     !html.includes("introLookPath.getPointAt(pathT)") ||
     !html.includes("introCameraPath.points[0].copy(introCameraStart)") ||
-    !html.includes("new THREE.Vector3(-2,1.75,10.8)") ||
-    !html.includes("new THREE.Vector3(-.6,1.65,7.7)") ||
+    !html.includes("new THREE.Vector3(-.4,1.75,10.8)") ||
+    !html.includes("new THREE.Vector3(0,1.65,7.7)") ||
+    !html.includes("new THREE.Vector3(-1.2,2.15,13.5)") ||
+    !html.includes("if(camera.position.z<13.2){camera.position.x=THREE.MathUtils.clamp(camera.position.x,-2.4,2.4);camera.position.y=Math.min(camera.position.y,2.25);}") ||
     !html.includes("introCameraStart.z=Math.max(31,9.8/(Math.tan(THREE.MathUtils.degToRad(18))*Math.max(.35,aspect)))")) {
   fail("Curved exterior sweep, portal alignment, and continuous curved-gallery camera transition are missing.");
 }
