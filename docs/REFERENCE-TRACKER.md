@@ -52,7 +52,7 @@ Status labels:
 - Replaced the separate look spline—which had a near-door control point at the entrance plane—with a stable forward look target six metres ahead of the camera. The target height eases from 2.15 m to 1.55 m as the camera descends.
 - Kept the existing high exterior start, curved approach, eye-level entrance waypoints and 9.2-second camera sequence.
 - Updated the source validator to require the forward look-ahead behaviour and reject reliance on the old look spline.
-- Automated validation/deployment and visual verification: pending at time of this entry.
+- Automated validation: passed (run 44939821665). GitHub Pages deployment: passed (runs 44939821312 and 44939821720). Visual verification: still pending; no rendered browser capture was available, so camera clearance is not yet accepted as visually solved.
 
 ## Verification rule
 
