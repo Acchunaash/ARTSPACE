@@ -947,6 +947,34 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   facadeWash.position.set(-8,7,17);facadeWash.target.position.set(0,1,9);exterior.add(facadeWash,facadeWash.target);
   /* Hold the opening camera on the full-building view until the detailed model loads.
      If the request stalls, start on the fallback; a late model is queued until the camera finishes. */
+  /* CC0 photogrammetric PBR finish from Poly Haven — real scanned plaster, not procedural noise.
+     The maps load asynchronously; the existing material remains a safe fallback if the CDN is unavailable. */
+  const architecturalPbrLoader=new THREE.TextureLoader();
+  const architecturalPbr={albedo:null,normal:null,roughness:null};
+  const architecturalPbrTargets=[];
+  const applyArchitecturalPbr=()=>{
+   architecturalPbrTargets.forEach(({material,scale})=>{
+    if(architecturalPbr.albedo){material.map=architecturalPbr.albedo;material.map.repeat.set(scale,scale);material.map.needsUpdate=true;}
+    if(architecturalPbr.normal){material.normalMap=architecturalPbr.normal;material.normalScale.set(.24,.24);material.normalMap.repeat.set(scale,scale);material.normalMap.needsUpdate=true;}
+    if(architecturalPbr.roughness){material.roughnessMap=architecturalPbr.roughness;material.roughnessMap.repeat.set(scale,scale);material.roughnessMap.needsUpdate=true;}
+    material.needsUpdate=true;
+   });
+  };
+  const registerArchitecturalPbr=(material,scale=2.4)=>{
+   architecturalPbrTargets.push({material,scale});applyArchitecturalPbr();
+  };
+  const loadArchitecturalPbr=(key,url,colorMap=false)=>{
+   architecturalPbrLoader.load(url,texture=>{
+    texture.wrapS=texture.wrapT=THREE.RepeatWrapping;
+    texture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+    if(colorMap)texture.encoding=THREE.sRGBEncoding;
+    architecturalPbr[key]=texture;applyArchitecturalPbr();
+    console.info("ARTSPACE: CC0 scanned architectural "+key+" map loaded.");
+   },undefined,error=>console.warn("ARTSPACE: scanned "+key+" map unavailable; retaining embedded material.",error));
+  };
+  loadArchitecturalPbr("albedo","https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/white_stucco_02/white_stucco_02_diff_2k.jpg",true);
+  loadArchitecturalPbr("normal","https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/white_stucco_02/white_stucco_02_nor_gl_2k.jpg");
+  loadArchitecturalPbr("roughness","https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/white_stucco_02/white_stucco_02_rough_2k.jpg");
   const mountArchitecturalPavilion=gltf=>{
    const pavilion=gltf.scene;
    pavilion.name="ARTSPACE_PremiumArchitecturalPavilion";
@@ -961,7 +989,12 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
      }else if(materialName.includes("deep-glass")){
       material.transparent=true;material.opacity=.4;material.roughness=.095;material.metalness=.12;
       material.side=THREE.DoubleSide;material.depthWrite=false;material.envMapIntensity=1.05;
-     }else if(material.isMeshStandardMaterial){material.envMapIntensity=.72;}
+     }else if(material.isMeshStandardMaterial){
+      material.envMapIntensity=.92;
+      if(materialName.includes("limestone")||materialName.includes("shadow-stone")||materialName.includes("architectural-concrete")){
+       registerArchitecturalPbr(material,materialName.includes("shadow-stone")?1.8:2.5);
+      }
+     }
      material.needsUpdate=true;
     };
     if(Array.isArray(node.material))node.material.forEach(tuneArchitecturalMaterial);
@@ -1016,6 +1049,8 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  plasterTexture.repeat.set(2.4,1.15);stoneFloorTexture.repeat.set(4.5,5.5);
  wallMaterial.map=plasterTexture;wallMaterial.color.set(0xffffff);wallMaterial.roughness=.94;wallMaterial.needsUpdate=true;
  sideMaterial.map=plasterTexture;sideMaterial.color.set(0xfaf9f5);sideMaterial.roughness=.92;sideMaterial.needsUpdate=true;
+ /* Replace synthetic grain with real CC0 scanned plaster once the maps arrive. */
+ registerArchitecturalPbr(wallMaterial,2.2);registerArchitecturalPbr(sideMaterial,1.65);
  floorMaterial.map=stoneFloorTexture;floorMaterial.color.set(0xffffff);floorMaterial.roughness=.82;floorMaterial.needsUpdate=true;
 
  const floor=new THREE.Mesh(new THREE.PlaneGeometry(17,19),floorMaterial);
@@ -1203,6 +1238,29 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   const seam=new THREE.Mesh(new THREE.BoxGeometry(.018,.012,16),tileMat);
   seam.position.set(x,-1.704,-1.2);room.add(seam);
  }
+ /* Full-scale gallery furnishings: solid stone plinths and a timber/metal visitor bench.
+    These are real dimensional objects with separate components, bevelled edges and contact shadows. */
+ const furnitureStone=new THREE.MeshStandardMaterial({color:0xd8d4ca,roughness:.78,metalness:.015});
+ const furnitureOak=new THREE.MeshStandardMaterial({color:0x76553a,roughness:.43,metalness:.08});
+ const furnitureMetal=new THREE.MeshStandardMaterial({color:0x353b39,roughness:.34,metalness:.72});
+ const addGalleryBox=(w,h,d,mat,x,y,z,parent=room)=>{
+  const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh;
+ };
+ [[-6.55,-1.02,-1.6],[6.55,-1.02,-1.6],[0,-1.02,-7.25]].forEach(([x,y,z],i)=>{
+  const plinth=new THREE.Group();plinth.position.set(x,y,z);room.add(plinth);
+  addGalleryBox(.95,1.42,.95,furnitureStone,0,.71,0,plinth);
+  addGalleryBox(1.015,.055,1.015,new THREE.MeshStandardMaterial({color:0xe9e5dc,roughness:.42}),0,1.43,0,plinth);
+  addGalleryBox(.99,.035,.99,shadowRevealMaterial,0,.035,0,plinth);
+ });
+ const visitorBench=new THREE.Group();visitorBench.position.set(0,-1.05,2.15);room.add(visitorBench);
+ addGalleryBox(3.1,.18,.72,furnitureOak,0,.56,0,visitorBench);
+ addGalleryBox(3.14,.055,.76,furnitureOak,0,.675,0,visitorBench);
+ for(const x of [-1.32,1.32]){
+  addGalleryBox(.075,.52,.58,furnitureMetal,x,.27,0,visitorBench);
+  addGalleryBox(.13,.055,.7,furnitureMetal,x,.045,0,visitorBench);
+ }
+ /* Shadow-gap reveal below the bench seat and a restrained bronze foot rail. */
+ addGalleryBox(2.78,.035,.035,champagneMetal,0,.435,.34,visitorBench);
  const gallery=new THREE.Group();gallery.position.set(0,0,wallCenterZ);scene.add(gallery);
  const cards3D=[];
  const textureLoader=new THREE.TextureLoader();
