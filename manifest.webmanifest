@@ -1,7 +1,7 @@
 {
-  "name": "ARTSPACE — Art for everyday spaces",
+  "name": "ARTSPACE — The modern dress boutique",
   "short_name": "ARTSPACE",
-  "description": "An immersive gallery of expressive art prints.",
+  "description": "An immersive designer dress boutique with a curated womenswear collection.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
