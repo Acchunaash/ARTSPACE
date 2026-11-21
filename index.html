@@ -1386,9 +1386,9 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
    const introRaw=introReady?(introDuration?Math.min(1,(performance.now()-introStartedAt)/introDuration):1):0;
    const easeCamera=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
    const introCameraProgress=t=>t<.70?.74*easeCamera(t/.70):t<.86?.74+.12*easeCamera((t-.70)/.16):.86+.14*easeCamera((t-.86)/.14);
-   if(!introReady){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}
+   if(!introReady){camera.position.copy(introCameraStart);camera.lookAt(introLookTarget.set(0,2.15,introCameraStart.z-6.5));}
    else if(!introFinished){
-    if(introRaw<.02){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}
+    if(introRaw<.02){camera.position.copy(introCameraStart);camera.lookAt(introLookTarget.set(0,2.15,introCameraStart.z-6.5));}
     else{
      const pathT=introCameraProgress((introRaw-.02)/.98);
      camera.position.copy(introCameraPath.getPointAt(pathT));
