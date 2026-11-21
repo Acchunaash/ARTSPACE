@@ -32,10 +32,15 @@ box(0,19.8,.22,2.5,0,3.35,11.2);box(2,19.85,.08,.16,0,3.20,12.35);box(3,19.9,.09
 box(0,18.5,4.55,.45,0,1.05,-12.25);
 box(0,.42,5,23.5,-9.25,1,-.25);box(0,.42,5,23.5,9.25,1,-.25);
 // Curtain wall lobby, door leaves, transoms and bronze handles.
-box(3,6.1,4.65,.18,0,1,11.86);box(4,5.75,4.25,.035,0,1,11.74);
-for(const x of [-2.8,-1.9,-.95,0,.95,1.9,2.8])box(3,.045,4.28,.09,x,1,11.68);
-for(const y of [-1,.45,1.9,3.05])box(2,5.8,.035,.08,0,y,11.67);
-for(const x of [-.12,.12])box(2,.035,.95,.1,x,0,11.58);
+// Open central portal: glazed sidelights and a high transom frame a clear, walk-through entrance.
+for(const side of [-1,1]){
+ box(3,1.55,5,.18,side*2.35,.85,11.86);
+ box(4,1.36,4.62,.035,side*2.35,.85,11.74);
+ box(2,.045,4.62,.09,side*2.82,.85,11.68);
+}
+box(3,6.1,.48,.18,0,3.35,11.86);
+box(4,5.75,.34,.035,0,3.35,11.74);
+for(const x of [-2.8,2.8])box(2,.045,.46,.09,x,3.35,11.68);
 // Bronze brise-soleil and panelised stone elevations.
 for(const side of [-1,1]){
  for(let i=0;i<11;i++)box(2,.075,4.75,.19,side*(3.62+i*.49),1.05,11.9);
