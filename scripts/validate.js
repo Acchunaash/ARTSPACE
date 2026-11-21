@@ -267,7 +267,7 @@ if (!html.includes("new THREE.SpotLight(0xffedda,2.05,10.5") ||
     !html.includes("group.userData.artworkTarget.position.set") ||
     !html.includes("new THREE.BoxGeometry(2.29,3.09,.035)") ||
     !html.includes("new THREE.PlaneGeometry(2.12,.4)") ||
-    !html.includes("plaqueContext.fillText(product.title,24,61)") ||
+    !html.includes("plaqueContext.fillText(product.title,24,78)") ||
     !html.includes(".collection-card em{display:flex;justify-content:space-between")) {
   fail("Interior artwork mounting, per-piece lighting, title plaques and refined collection presentation are missing.");
 }
