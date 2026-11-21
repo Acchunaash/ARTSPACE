@@ -709,7 +709,7 @@ window.__artspaceThreeReady.then(loaded=>{
    for(let n=0;n<5;n++){const shrub=new THREE.Mesh(new THREE.IcosahedronGeometry(.43,1),leafMat);shrub.position.set(x-1+n*.5,-.98,12.5);shrub.scale.set(1,.82,1);shrub.castShadow=true;exterior.add(shrub);}
   });
   const exteriorFill=new THREE.DirectionalLight(0xfff4e4,.48);exteriorFill.position.set(12,8,18);exterior.add(exteriorFill);
-Architectural gallery shell: floor, rear wall, side walls and ceiling. */
+ /* Architectural gallery shell: floor, rear wall, side walls and ceiling. */
  const room=new THREE.Group();scene.add(room);
  const wallMaterial=new THREE.MeshStandardMaterial({color:0xf4f4f1,roughness:.96,metalness:0});
  const sideMaterial=new THREE.MeshStandardMaterial({color:0xe8e8e4,roughness:.96,metalness:0});
