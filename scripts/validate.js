@@ -416,7 +416,7 @@ for (const [file, markers] of Object.entries(artworkQuality)) {
   for (const marker of markers) {
     if (!asset.includes(marker)) fail("Curated artwork " + file + " is missing its expected composition/finish marker: " + marker);
   }
-  if ((asset.match(/<svg\\b/g) || []).length !== 1 || (asset.match(/<\\/svg>/g) || []).length !== 1) {
+  if ((asset.split("<svg").length - 1) !== 1 || (asset.split("</svg>").length - 1) !== 1) {
     fail("Curated artwork " + file + " must contain exactly one complete SVG root.");
   }
 }
