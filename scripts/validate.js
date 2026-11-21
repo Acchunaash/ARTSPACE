@@ -326,3 +326,13 @@ if (!html.includes("const limestonePanel=new THREE.MeshStandardMaterial") ||
 }
 
 console.log("ARTSPACE checks passed: HTML ids, DOM references, inline JavaScript, CSS braces, manifest, and service worker.");
+
+
+/* Original artwork collection: six individually maintained local SVG assets. */
+const artworkFiles = ["beautiful-game.svg","after-rain.svg","sunset-club.svg","blue-hour.svg","form-and-feel.svg","sunday-in-color.svg"];
+for (const file of artworkFiles) {
+  const asset = fs.readFileSync("assets/artworks/" + file, "utf8");
+  if (!asset.startsWith("<svg") || !asset.includes("</svg>") || !asset.includes("viewBox=")) fail("Artwork asset is invalid: " + file);
+  if (!html.includes("./assets/artworks/" + file)) fail("Artwork asset is not wired into the gallery: " + file);
+}
+if (/data:image\\/svg\\+xml;base64/.test(html)) fail("Inline placeholder artwork remains embedded in index.html.");
