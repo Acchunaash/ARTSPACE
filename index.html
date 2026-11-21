@@ -96,6 +96,8 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
 .viewer-close{position:absolute;right:24px;top:20px}
 .viewer-arrow{justify-self:center}
 .selected-image-bg{cursor:zoom-in}
+.selected-image-bg.finish-unframed{padding:10px;background:#fff}.selected-image-bg.finish-black-frame{padding:14px;background:#22231f;box-shadow:0 30px 55px #17181628,0 0 0 1px #000}.selected-image-bg.finish-oak-frame{padding:14px;background:linear-gradient(135deg,#c49b69,#8c633b);box-shadow:0 30px 55px #17181628,0 0 0 1px #78522f}.selected-image-bg.size-a3{width:min(66%,320px)}.selected-image-bg.size-a2{width:min(76%,380px)}.selected-image-bg.size-a1{width:min(86%,430px)}
+@media(max-width:700px){.selected-image-bg.size-a1{width:min(90%,340px)}.selected-image-bg.size-a2{width:min(78%,300px)}.selected-image-bg.size-a3{width:min(68%,260px)}}
 @media(max-width:600px){.art-viewer{grid-template-columns:38px minmax(0,1fr) 38px;gap:4px;padding:60px 8px 24px}.viewer-arrow{width:34px;height:34px}.viewer-close{right:14px;top:14px}.viewer-content img{max-height:calc(100dvh - 150px);max-width:100%;padding:6px}}
 
 /* STEP 9 — responsive 3D scene tuning */
@@ -361,7 +363,7 @@ function updatePrice(){
  const finishAdd={"Unframed":0,"Black frame":1800,"Oak frame":2200}[selectedFinish];
  document.getElementById("productPrice").textContent=money(base+sizeAdd+finishAdd);
  document.getElementById("sizeValue").textContent=selectedSize+" · "+({A3:"29.7 × 42 CM",A2:"42 × 59.4 CM",A1:"59.4 × 84.1 CM"}[selectedSize]);
- document.getElementById("finishValue").textContent=selectedFinish.toUpperCase();
+ document.getElementById("finishValue").textContent=selectedFinish.toUpperCase();const preview=document.querySelector(".selected-image-bg");preview.classList.remove("finish-unframed","finish-black-frame","finish-oak-frame","size-a3","size-a2","size-a1");preview.classList.add("finish-"+selectedFinish.toLowerCase().replace(" ","-"),"size-"+selectedSize.toLowerCase());
 }
 document.getElementById("prevBtn").addEventListener("click",()=>move(-1));
 document.getElementById("nextBtn").addEventListener("click",()=>move(1));
