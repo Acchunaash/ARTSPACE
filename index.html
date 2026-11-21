@@ -63,6 +63,11 @@ details{border-top:1px solid var(--line);padding:15px 0}details summary{font-siz
 footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items:center}footer>span{font-size:8px;color:#777}footer>a:last-child{font-size:9px}
 .toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);background:#171816;color:#fff;padding:14px 20px;font-size:12px;opacity:0;pointer-events:none;transition:.3s;z-index:20}.toast.show{opacity:1;transform:translate(-50%,0)}
 
+
+/* ADVANCED WEBGL GALLERY LAYER */
+.gallery-stage.webgl-ready .gallery-track{z-index:1}
+.artspace-webgl{position:absolute;inset:0;width:100%;height:100%;z-index:2;display:block;touch-action:pan-y;outline:none}
+.gallery-stage.webgl-ready .art-card{opacity:0!important;pointer-events:none!important}
 /* STEP 1 — immersive 3D environment foundation */
 .gallery-shell{isolation:isolate;background:radial-gradient(ellipse at 50% 38%,#fff 0%,#f0f1ec 34%,#e8e9e3 100%);border:1px solid #e3e4de;box-shadow:inset 0 1px #ffffffb8,0 28px 70px #2528200a}
 .gallery-shell:before{content:"";position:absolute;z-index:-1;inset:0;background:radial-gradient(ellipse at 50% 0%,#ffffffc9 0%,transparent 54%),linear-gradient(180deg,#ffffff22,transparent 45%,#d9dbd333);pointer-events:none}
@@ -240,7 +245,8 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
     <div class="cart-items" id="cartItems"></div>
     <div class="cart-summary"><div class="cart-total"><span>SUBTOTAL</span><span id="cartTotal">₹0</span></div><p class="cart-note">Shipping and taxes are calculated at checkout. This is a shopping-bag preview; online payment is not enabled yet.</p><button class="cart-checkout" id="cartCheckout" disabled>CONTINUE TO CHECKOUT ↗</button></div>
   </aside>
-  <script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.128.0/three.min.js"></script>
+<script>
 const products = [
  {title:"THE BEAUTIFUL GAME",subtitle:"BURKINA FASO — 2026",price:5800,image:"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSI0MjAiIGhlaWdodD0iNTYwIiBmaWxsPSIjZThkN2JkIi8+PHBhdGggZD0iTTAgMzkwIFExMjAgMjYwIDIzMCAzNDAgVDQyMCAyNTAgVjU2MCBIMFoiIGZpbGw9IiNiZDNkMmMiLz48Y2lyY2xlIGN4PSIyODUiIGN5PSIxNTAiIHI9IjgyIiBmaWxsPSIjZTVhMzNlIi8+PHBhdGggZD0iTTkwIDQzMCBMMTUwIDE4MCBMMjI1IDQzMFoiIGZpbGw9IiMxODNlMzYiLz48cGF0aCBkPSJNMTcwIDQzMCBMMjYwIDIzMCBMMzUwIDQzMFoiIGZpbGw9IiNmMWU3ZDciLz48Y2lyY2xlIGN4PSIyMTAiIGN5PSIyNzUiIHI9IjM0IiBmaWxsPSIjMjUyMzIzIi8+PHBhdGggZD0iTTE5MCAzMDggTDE3MCAzOTAgTDI0NSAzOTAgTDIzMCAzMTBaIiBmaWxsPSIjMjUyMzIzIi8+PHBhdGggZD0iTTIwOCAzNDAgTDEyNSAzOTUgTTIyNSAzNDAgTDI5NSAzOTAiIHN0cm9rZT0iIzI1MjMyMyIgc3Ryb2tlLXdpZHRoPSIxOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8dGV4dCB4PSIyNCIgeT0iNTA1IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNyIgZm9udC13ZWlnaHQ9IjcwMCIgbGV0dGVyLXNwYWNpbmc9IjMiIGZpbGw9IiMyMjIiPlRIRSBCRUFVVElGVUwgR0FNRTwvdGV4dD4KICAgIDx0ZXh0IHg9IjI0IiB5PSI1MzAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBsZXR0ZXItc3BhY2luZz0iMiIgZmlsbD0iIzMzMyI+QlVSS0lOQSBGQVNPPC90ZXh0PgogICAgPC9zdmc+"},
  {title:"AFTER THE RAIN",subtitle:"A STUDY IN COLOR — 2026",price:4600,image:"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSI0MjAiIGhlaWdodD0iNTYwIiBmaWxsPSIjZDhlM2RjIi8+PGNpcmNsZSBjeD0iMjA1IiBjeT0iMTkwIiByPSIxMjUiIGZpbGw9IiNlOWEzNWUiLz48cGF0aCBkPSJNMCAzNTAgTDEwMCAyMzAgTDE5MCAzNTAgTDI5MCAyMTAgTDQyMCAzNTAgVjU2MCBIMFoiIGZpbGw9IiMyNTRjNDkiLz48cGF0aCBkPSJNMCA0MzAgUTEyMCAzNTAgMjEwIDQzNSBUNDIwIDQxMCBWNTYwIEgwWiIgZmlsbD0iI2Q2NWI0MiIvPjxwYXRoIGQ9Ik0xMDUgNDMwIFEyMDUgMzE1IDMxNSA0MzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2YzZThkNiIgc3Ryb2tlLXdpZHRoPSIxMiIvPjxjaXJjbGUgY3g9IjIwNSIgY3k9IjMxNSIgcj0iMjgiIGZpbGw9IiNmM2U4ZDYiLz4KICAgIDx0ZXh0IHg9IjI0IiB5PSI1MDUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE3IiBmb250LXdlaWdodD0iNzAwIiBsZXR0ZXItc3BhY2luZz0iMyIgZmlsbD0iIzIyMiI+QUZURVIgVEhFIFJBSU48L3RleHQ+CiAgICA8dGV4dCB4PSIyNCIgeT0iNTMwIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgbGV0dGVyLXNwYWNpbmc9IjIiIGZpbGw9IiMzMzMiPkEgU1RVRFkgSU4gQ09MT1I8L3RleHQ+CiAgICA8L3N2Zz4="},
@@ -287,6 +293,7 @@ function render(){
  document.getElementById("productTitle").textContent=p.title;
  document.getElementById("productSubtitle").textContent=p.subtitle;
  updatePrice();
+ if(window.updateArtspace3D)window.updateArtspace3D();
 }
 const artViewer=document.getElementById("artViewer");
 function syncArtworkViewer(){document.getElementById("viewerImage").src=products[current].image;document.getElementById("viewerImage").alt=products[current].title;document.getElementById("viewerTitle").textContent=products[current].title;document.getElementById("viewerSubtitle").textContent=products[current].subtitle;}
@@ -340,6 +347,93 @@ stage.addEventListener("pointercancel",()=>dragging=false);
 document.addEventListener("keydown",e=>{if(e.key==="ArrowRight")move(1);if(e.key==="ArrowLeft")move(-1)});
 window.addEventListener("resize",render);
 render();
+
+/* ADVANCED 3D GALLERY — WebGL scene with graceful CSS fallback */
+(function initArtspaceWebGL(){
+ if(!window.THREE)return;
+ const THREE=window.THREE;
+ const scene=new THREE.Scene();
+ const camera=new THREE.PerspectiveCamera(36,1,.1,100);
+ camera.position.set(0,.12,11.8);
+ const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:"high-performance"});
+ renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.6));
+ renderer.setClearColor(0x000000,0);
+ renderer.outputEncoding=THREE.sRGBEncoding;
+ renderer.shadowMap.enabled=true;
+ renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+ renderer.domElement.className="artspace-webgl";
+ renderer.domElement.setAttribute("aria-label","Interactive three-dimensional artwork gallery");
+ stage.prepend(renderer.domElement);
+ stage.classList.add("webgl-ready");
+ scene.add(new THREE.HemisphereLight(0xffffff,0x77776d,1.35));
+ const keyLight=new THREE.DirectionalLight(0xffffff,2.0);
+ keyLight.position.set(-3,6,8);keyLight.castShadow=true;scene.add(keyLight);
+ const fillLight=new THREE.DirectionalLight(0xe5e9ff,.65);
+ fillLight.position.set(5,1,4);scene.add(fillLight);
+ const gallery=new THREE.Group();scene.add(gallery);
+ const cards3D=[];
+ const textureLoader=new THREE.TextureLoader();
+ products.forEach((product,index)=>{
+  const group=new THREE.Group();
+  const frame=new THREE.Mesh(new THREE.BoxGeometry(2.38,3.18,.14),new THREE.MeshStandardMaterial({color:0xf5f4ef,roughness:.78,metalness:.02}));
+  frame.castShadow=true;frame.receiveShadow=true;group.add(frame);
+  const texture=textureLoader.load(product.image);
+  texture.encoding=THREE.sRGBEncoding;
+  const print=new THREE.Mesh(new THREE.PlaneGeometry(2.17,2.89),new THREE.MeshStandardMaterial({map:texture,roughness:.86,metalness:0}));
+  print.position.z=.078;print.castShadow=true;group.add(print);
+  const edge=new THREE.Mesh(new THREE.BoxGeometry(2.23,2.95,.018),new THREE.MeshStandardMaterial({color:0xd7d5ce,roughness:.9}));
+  edge.position.z=.066;group.add(edge);
+  group.userData.index=index;gallery.add(group);cards3D.push(group);
+ });
+ const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
+ let raf=0;
+ function resize(){
+  const w=Math.max(1,stage.clientWidth),h=Math.max(1,stage.clientHeight);
+  camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false);
+ }
+ function layoutCards(){
+  cards3D.forEach((group,index)=>{
+   let d=index-current;if(d>3)d-=6;if(d< -3)d+=6;
+   const angle=d*.52;
+   group.userData.targetX=Math.sin(angle)*4.55;
+   group.userData.targetY=-Math.abs(d)*.055;
+   group.userData.targetZ=(Math.cos(angle)-1)*2.25;
+   group.userData.targetRY=-angle*.78;
+   group.userData.targetScale=d===0?1.08:Math.max(.72,1-Math.abs(d)*.105);
+  });
+ }
+ window.updateArtspace3D=layoutCards;
+ function animate(){
+  raf=requestAnimationFrame(animate);
+  cards3D.forEach(group=>{
+   const u=group.userData;
+   group.position.x+=(u.targetX-group.position.x)*.105;
+   group.position.y+=(u.targetY-group.position.y)*.105;
+   group.position.z+=(u.targetZ-group.position.z)*.105;
+   group.rotation.y+=(u.targetRY-group.rotation.y)*.105;
+   const target=u.targetScale||1;
+   const scale=group.scale.x+(target-group.scale.x)*.105;
+   group.scale.setScalar(scale);
+  });
+  renderer.render(scene,camera);
+ }
+ renderer.domElement.addEventListener("click",event=>{
+  const rect=renderer.domElement.getBoundingClientRect();
+  pointer.x=((event.clientX-rect.left)/rect.width)*2-1;
+  pointer.y=-((event.clientY-rect.top)/rect.height)*2+1;
+  raycaster.setFromCamera(pointer,camera);
+  const hits=raycaster.intersectObjects(gallery.children,true);
+  if(hits.length){
+   let node=hits[0].object;
+   while(node.parent&&node.parent!==gallery)node=node.parent;
+   if(Number.isInteger(node.userData.index)){current=node.userData.index;render();openArtworkViewer();}
+  }
+ });
+ if(window.ResizeObserver){const observer=new ResizeObserver(resize);observer.observe(stage);}
+ window.addEventListener("resize",resize,{passive:true});
+ resize();layoutCards();animate();
+ window.addEventListener("pagehide",()=>{cancelAnimationFrame(raf);renderer.dispose();});
+})();
 
 </script>
 </body>
