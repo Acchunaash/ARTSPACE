@@ -262,29 +262,32 @@ if (!html.includes("const makeMineralTexture=(base,contrast,seed)=>") ||
   fail("The gallery interior must retain its curved architectural cornice, layered ceiling, textured finishes, portal, wall details and warm wall-wash lighting.");
 }
 
-/* Interior artwork presentation requires individual wall lights, a gallery mat, title plaque and refined collection styling. */
-if (!html.includes("new THREE.SpotLight(0xffedda,2.05,10.5") ||
-    !html.includes("group.userData.artworkTarget.position.set") ||
-    !html.includes("new THREE.BoxGeometry(2.29,3.09,.035)") ||
-    !html.includes("new THREE.PlaneGeometry(2.12,.4)") ||
-    !html.includes("plaqueContext.fillText(product.title,24,78)") ||
-    !html.includes(".collection-card em{display:flex;justify-content:space-between")) {
-  fail("Interior artwork mounting, per-piece lighting, title plaques and refined collection presentation are missing.");
+/* Fashion boutique interior: mannequins, garment silhouettes, fitting suites and rails replace gallery frames. */
+if (!html.includes("new THREE.LatheGeometry(points,48)") ||
+    !html.includes("const dressPalette=[0xd8c7b1,0x654358,0x8c9b7d,0xb85f49,0x26344a,0x687c60]") ||
+    !html.includes("const fittingFabric=new THREE.MeshStandardMaterial") ||
+    !html.includes("Two private fitting suites") ||
+    !html.includes("Sculpted brass clothing rails") ||
+    !html.includes("new THREE.MeshPhysicalMaterial({color:0xe5e9e8,metalness:.92,roughness:.12") ||
+    !html.includes("group.userData.index=index") ||
+    !html.includes("group.userData.targetY=-1.72") ||
+    !html.includes("const cylinderBetween=")) {
+  fail("The 3D boutique must include dressed fashion mannequins, custom garment silhouettes, fitting suites, full-height mirrors and garment rails.");
+}
+if (!html.includes("THE SOLSTICE DRESS") ||
+    !html.includes("THE ATELIER SLIP") ||
+    !html.includes("THE SUNDAY SHIRT") ||
+    !html.includes("THE SCULPTED MIDI") ||
+    !html.includes("THE EVENING COLUMN") ||
+    !html.includes("THE GARDEN WRAP") ||
+    !html.includes('id="productDescription"') ||
+    !html.includes('data-size="XS"') ||
+    !html.includes('data-size="XL"') ||
+    !html.includes('data-finish="Ivory"') ||
+    !html.includes('data-finish="Sage"')) {
+  fail("The fashion catalogue must contain six dress styles, garment descriptions, apparel sizes and colour choices.");
 }
 
-/* Artwork frames require layered mounts, a fine perimeter inlay, safe low-opacity glazing and tuned per-print lighting. */
-if (!html.includes("const inlayMaterial=new THREE.MeshStandardMaterial({color:0xb7b4aa,roughness:.56,metalness:.34})") ||
-    !html.includes("const glazingMaterial=new THREE.MeshPhysicalMaterial") ||
-    !html.includes("opacity:.055,clearcoat:.28") ||
-    !html.includes("const frameHighlightMaterial=new THREE.MeshStandardMaterial({color:0x9e9d96,roughness:.58,metalness:.28})") ||
-    !html.includes("texture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy())") ||
-    !html.includes("plaqueContext.fillText(\"ARTSPACE  /  ORIGINAL WORK\",24,34)") ||
-    !html.includes("plaqueContext.fillText(product.title,24,78)") ||
-    !html.includes("new THREE.SpotLight(0xffedda,2.05,10.5") ||
-    !html.includes("targetZ+1.48") ||
-    html.includes("new THREE.BoxGeometry(2.34,3.16,.018)")) {
-  fail("3D artwork presentation requires refined neutral metal mounts, sharp anisotropic artwork textures, restrained gallery labels, subtle glazing and correctly aimed individual picture lights.");
-}
 /* Walk-through threshold must be physically open: no full-width glass leaf may span the camera path. */
 if (!modelBuilder.includes("Open central portal: glazed sidelights and a high transom frame a clear, walk-through entrance.") ||
     !modelBuilder.includes("box(3,1.55,5,.18,side*2.35,.85,11.86)") ||
@@ -393,30 +396,20 @@ if (!html.includes("const limestonePanel=new THREE.MeshStandardMaterial") ||
 console.log("ARTSPACE checks passed: HTML ids, DOM references, inline JavaScript, CSS braces, manifest, and service worker.");
 
 
-/* Original artwork collection: six individually maintained local SVG assets. */
-const artworkFiles = ["beautiful-game.svg","after-rain.svg","sunset-club.svg","blue-hour.svg","form-and-feel.svg","sunday-in-color.svg"];
-for (const file of artworkFiles) {
-  const asset = fs.readFileSync("assets/artworks/" + file, "utf8");
-  if (!asset.startsWith("<svg") || !asset.includes("</svg>") || !asset.includes("viewBox=")) fail("Artwork asset is invalid: " + file);
-  if (!html.includes("./assets/artworks/" + file)) fail("Artwork asset is not wired into the gallery: " + file);
+/* Fashion collection: six local model-wearing-dress illustrations are wired into the boutique fallback and product catalogue. */
+const fashionFiles = [
+ "solstice-dress.svg","atelier-slip.svg","sunday-shirt.svg",
+ "sculpted-midi.svg","evening-column.svg","garden-wrap.svg"
+];
+for (const file of fashionFiles) {
+ const asset = fs.readFileSync("assets/fashion/" + file, "utf8");
+ if (!asset.startsWith("<svg") || !asset.includes("</svg>") || !asset.includes("viewBox=") || !asset.includes("<path")) fail("Fashion illustration is invalid: " + file);
+ if (!html.includes("./assets/fashion/" + file)) fail("Fashion illustration is not wired into the boutique: " + file);
 }
-if (html.includes("data:image/svg+xml;base64")) fail("Inline placeholder artwork remains embedded in index.html.");
-
-/* Curated artwork pass: each print must retain its own layered composition and finish details. */
-const artworkQuality = {
-  "beautiful-game.svg": ["THE BEAUTIFUL GAME","linearGradient","pattern","clipPath"],
-  "after-rain.svg": ["AFTER THE RAIN","linearGradient","pattern","filter"],
-  "sunset-club.svg": ["SUNSET CLUB","linearGradient","pattern","clipPath"],
-  "blue-hour.svg": ["BLUE HOUR","linearGradient","pattern"],
-  "form-and-feel.svg": ["FORM &amp; FEEL","linearGradient","pattern"],
-  "sunday-in-color.svg": ["SUNDAY IN COLOR","linearGradient","pattern","clipPath"]
-};
-for (const [file, markers] of Object.entries(artworkQuality)) {
-  const asset = fs.readFileSync("assets/artworks/" + file, "utf8");
-  for (const marker of markers) {
-    if (!asset.includes(marker)) fail("Curated artwork " + file + " is missing its expected composition/finish marker: " + marker);
-  }
-  if ((asset.split("<svg").length - 1) !== 1 || (asset.split("</svg>").length - 1) !== 1) {
-    fail("Curated artwork " + file + " must contain exactly one complete SVG root.");
-  }
+if (!html.includes("Model wearing The Solstice Dress") || !html.includes("Model wearing The Garden Wrap")) {
+ fail("The boutique fallback must provide accessible descriptions of the fashion models.");
 }
+if (html.includes("THE PRINT COLLECTION") || html.includes("art prints, wall art")) {
+ fail("The storefront still contains visible art-gallery product positioning.");
+}
+console.log("ARTSPACE boutique checks passed: six fashion styles, dressed 3D mannequins, fitting rooms, rails, product sizes/colours, DOM and build structure.");
