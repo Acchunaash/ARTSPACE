@@ -60,8 +60,7 @@ for(const x of [-6.3,-3.2,0,3.2,6.3]){
 }
 for(const x of [-9.45,9.45])box(2,.11,.12,24.7,x,3.99,-.25);
 for(const z of [-12.4,12])box(2,19,.12,.11,0,3.99,z);
-// Gallery core and internal oak lining glimpsed through the lobby glazing.
-box(7,5.4,3.6,7.4,0,.35,1.8);box(0,5.7,.18,7.7,0,2.22,1.8);
+// Keep the entry sightline open: no dark timber core or brown wall blocks the white gallery beyond.
 // Forecourt terrace, broad shallow steps and warm recessed soffit lights.
 box(6,12,.2,5.5,0,-1.12,15);
 for(let i=0;i<4;i++)box(0,12,.16,1,0,-1.48+i*.14,16.5+i*.92);
