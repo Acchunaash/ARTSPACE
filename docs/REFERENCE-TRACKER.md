@@ -50,7 +50,7 @@ This is the living acceptance checklist for the current ARTSPACE direction. The 
 - Retained ARTSPACE's six catalogue-specific garment silhouettes and added subtle radial fabric-fold deformation plus a more cloth-like physical material response. These are still authored geometry, not cloth simulation or exact scanned garments.
 - Mobile performance pass: disabled antialiasing and shadow maps on narrow screens, capped device pixel ratio at 1.0 on mobile / 1.5 on desktop, paced mobile rendering at up to 40 fps, and limited the detailed human model to the active look on mobile. Desktop keeps all six models visible.
 - Added an asset licence note documenting the CC0 source and runtime fallback.
-- Automated source validation and deployment are pending for this stage. Visual acceptance is pending: the external model's CORS/load behaviour, fit, pose, cloth coverage and actual mobile frame rate have not been inspected in a browser capture.
+- Automated source/build validation passed on commit `23290d6e312d19aa80fff7cfb55cbd77fa0d217a` (run 44952633346). GitHub Pages build and deployment passed for the same commit (run 44952633210). The additional ARTSPACE deploy workflow is still finishing its post-deploy step. Visual acceptance is pending: the external model's CORS/load behaviour, fit, pose, cloth coverage and actual mobile frame rate have not been inspected in a browser capture.
 - Important limitation: the current dress meshes are improved ARTSPACE geometry, not custom-fitted photoreal garment scans. Exact real-world garment matching still needs approved garment reference images or source 3D clothing assets.
 
 ## Verification rule
