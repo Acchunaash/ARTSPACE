@@ -234,7 +234,7 @@ const nodes=[];
 for(let m=0;m<groups.length;m++)for(const item of groups[m]){
  const shape=item.curved?(item.bow===.42?2:3):item.c?1:0;
  const scale=item.c?[item.c[0]*2,item.c[1],item.c[0]*2]:item.s;
- nodes.push({name:materials[m][0]+(item.curved?"-continuous-curve":"-element"),mesh:m*4+shape,translation:item.p,scale,...(item.r?{rotation:item.r}:{})});
+ nodes.push({name:materials[m][0]+(item.curved?"-continuous-curve":"-element"),mesh:shape*materials.length+m,translation:item.p,scale,...(item.r?{rotation:item.r}:{})});
 }
 const gltfMaterials=materials.map(([name,color,metallic,roughness],i)=>({
  name,pbrMetallicRoughness:{baseColorFactor:color,metallicFactor:metallic,roughnessFactor:roughness},
