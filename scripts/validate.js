@@ -61,6 +61,14 @@ if (!html.includes("new THREE.CylinderGeometry(wallRadius,wallRadius,7.1,96,1,tr
   fail("The 3D exhibition wall and its curved architectural trim are missing.");
 }
 
+if (!html.includes("gallery.position.set(0,0,wallCenterZ)") ||
+    !html.includes("const wallAngle=Math.PI+d*.255") ||
+    !html.includes("const mountRadius=wallRadius-.072") ||
+    !html.includes("group.userData.targetRY=wallAngle+Math.PI") ||
+    html.includes("gallery.rotation.y+=(idleAngle-gallery.rotation.y)*.012")) {
+  fail("3D artwork frames must be mounted to and face inward from the curved exhibition wall.");
+}
+
 
 // Guard the Three.js loader against a race with the application initializer.
 if (!html.includes("window.__artspaceThreeReady=new Promise") ||
