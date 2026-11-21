@@ -334,7 +334,7 @@ for(let shape=0;shape<5;shape++){
   [Math.max(...g.p.filter((_,i)=>i%3===0)),Math.max(...g.p.filter((_,i)=>i%3===1)),Math.max(...g.p.filter((_,i)=>i%3===2))]);
  const norm=addBuffer(new Float32Array(g.n),5126,"VEC3",g.n.length/3);
  const ind=addBuffer(new Uint16Array(g.idx),5123,"SCALAR",g.idx.length);
- for(let m=0;m<materials.length;m++)meshDefs.push({name:materials[m][0]+"-"+(["box","cylinder","curved-panel-42cm","curved-canopy-58cm"][shape]),primitives:[{attributes:{POSITION:pos,NORMAL:n,TEXCOORD_0:texcoord},indices:ind,material:m}]});
+ for(let m=0;m<materials.length;m++)meshDefs.push({name:materials[m][0]+"-"+(["box","cylinder","curved-panel-42cm","curved-canopy-58cm","fluted-panel"][shape]),primitives:[{attributes:{POSITION:pos,NORMAL:norm,TEXCOORD_0:texcoord},indices:ind,material:m}]});
 }
 const nodes=[];
 for(let m=0;m<groups.length;m++)for(const item of groups[m]){
