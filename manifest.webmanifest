@@ -1,0 +1,18 @@
+{
+  "name": "ARTSPACE — Art for everyday spaces",
+  "short_name": "ARTSPACE",
+  "description": "An immersive gallery of expressive art prints.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f7f4",
+  "theme_color": "#f7f7f4",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
