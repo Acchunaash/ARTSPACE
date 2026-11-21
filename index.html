@@ -779,11 +779,11 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  const introCameraStart=new THREE.Vector3(13.5,9.2,31),introCameraEnd=new THREE.Vector3(0,1.65,4.7);
   /* New eight-second cinematic: high front-right establishing orbit, a broad descending S-curve,
      precise centre-door alignment, then a steady eye-level glide into the curved gallery. */
-  const introCameraPath=new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(15.2,8.3,25.8),new THREE.Vector3(13.4,6.8,21.2),new THREE.Vector3(9.2,5.0,17.2),new THREE.Vector3(4.8,3.25,14.6),new THREE.Vector3(1.25,1.9,12.55),new THREE.Vector3(0,1.65,10.95),introCameraEnd],false,"centripetal");
+  const introCameraPath=new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(15.2,8.3,25.8),new THREE.Vector3(13.4,6.8,21.2),new THREE.Vector3(9.2,5.0,17.2),new THREE.Vector3(4.8,3.25,14.6),new THREE.Vector3(1.25,1.9,12.55),new THREE.Vector3(.35,1.65,11.85),new THREE.Vector3(0,1.65,10.9),new THREE.Vector3(0,1.65,8.6),new THREE.Vector3(0,1.65,6.4),introCameraEnd],false,"centripetal");
  camera.position.copy(introCameraStart);
  const introLookStart=new THREE.Vector3(0,1.9,2),introLookEnd=new THREE.Vector3(0,1.5,-5.3),introLookTarget=new THREE.Vector3();
   /* Keep the gaze on the pavilion mass, then the portal, before carrying it into the exhibition room. */
-  const introLookPath=new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,2.0,6),new THREE.Vector3(0,1.9,10),new THREE.Vector3(0,1.75,10.8),new THREE.Vector3(0,1.65,4),introLookEnd],false,"centripetal");
+  const introLookPath=new THREE.CatmullRomCurve3([introLookStart,new THREE.Vector3(0,2.0,6),new THREE.Vector3(0,1.9,10),new THREE.Vector3(0,1.8,9.0),new THREE.Vector3(0,1.7,5.2),new THREE.Vector3(0,1.6,1.5),introLookEnd],false,"centripetal");
  let introStartedAt=0,introFinished=false,introReady=false,introLoadTimeout=0,introPausedAt=0,pendingArchitecturalPavilion=null;
  const settleIntro=reason=>{if(introReady)return;introReady=true;introStartedAt=performance.now();if(!pageVisible)introPausedAt=introStartedAt;if(introLoadTimeout)clearTimeout(introLoadTimeout);console.info("ARTSPACE: exterior intro ready — "+reason+".");};
  let renderer;
@@ -1384,14 +1384,15 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  function animate(){
   if(!pageVisible)return;
   raf=requestAnimationFrame(animate);
-  const introDuration=reducedMotion?0:7800;
+  const introDuration=reducedMotion?0:9200;
    const introRaw=introReady?(introDuration?Math.min(1,(performance.now()-introStartedAt)/introDuration):1):0;
    const easeCamera=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+   const introCameraProgress=t=>t<.70?.74*easeCamera(t/.70):t<.86?.74+.12*easeCamera((t-.70)/.16):.86+.14*easeCamera((t-.86)/.14);
    if(!introReady){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}
    else if(!introFinished){
     if(introRaw<.02){camera.position.copy(introCameraStart);camera.lookAt(introLookStart);}
     else{
-     const pathT=easeCamera((introRaw-.02)/.98);
+     const pathT=introCameraProgress((introRaw-.02)/.98);
      camera.position.copy(introCameraPath.getPointAt(pathT));
      camera.fov=THREE.MathUtils.lerp(40,36,pathT);camera.updateProjectionMatrix();
      /* The final two spline segments pass through the centred glazed portal at y=1.65,
