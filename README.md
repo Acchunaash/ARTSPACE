@@ -25,7 +25,15 @@ An immersive art-print gallery and storefront, built as a lightweight static web
 
 The current frontend is a static site. Open `index.html` in a local static server or use GitHub Pages. Three.js is loaded from a CDN; if it is unavailable, the CSS gallery remains available.
 
-GitHub Pages deployment is configured in `.github/workflows/deploy.yml` and runs on pushes to `main`.
+GitHub Pages deployment is configured in `.github/workflows/deploy.yml` and runs on pushes to `main`. The repository includes `.nojekyll` for straightforward static publishing.
+
+Automated source checks are defined in `.github/workflows/validate.yml` and can be run locally with:
+
+```sh
+node scripts/validate.js
+```
+
+The initial Supabase schema, Row Level Security policies, six-product seed data, and setup instructions are in `supabase/`. They are committed as a backend foundation but have not been deployed to a Supabase project.
 
 ## Current production boundary
 
