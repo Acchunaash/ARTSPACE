@@ -137,6 +137,8 @@ const modelBuilder = fs.readFileSync("scripts/build-pavilion.js", "utf8");
 if (!modelBuilder.includes("ARTSPACE architectural pavilion builder") ||
     !modelBuilder.includes("low-iron-glass") ||
     !modelBuilder.includes("champagne-bronze") ||
+    !modelBuilder.includes("idx.push(a,b,c,a,c,d)") ||
+    !modelBuilder.includes("idx.push(base,base+2,base+1,base,base+3,base+2)") ||
     !modelBuilder.includes("Roof monitors") ||
     !html.includes("window.__artspaceGLTFReady") ||
     !html.includes('pavilionLoader.load("./assets/artspace-pavilion.glb"') ||
