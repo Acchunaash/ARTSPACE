@@ -51,5 +51,16 @@ if (!html.includes('id="cartCheckout"') || !html.includes("Online payment is not
   fail("Checkout boundary messaging is missing.");
 }
 
+
+// Guard the Three.js loader against a race with the application initializer.
+if (!html.includes("window.__artspaceThreeReady=new Promise") ||
+    !html.includes("window.__artspaceThreeReady.then(loaded=>")) {
+  fail("Three.js must load sequentially before WebGL initialization.");
+}
+if (!html.includes("https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js") ||
+    !html.includes("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js")) {
+  fail("Both primary and fallback Three.js sources must be configured.");
+}
+
 if (process.exitCode) process.exit(process.exitCode);
 console.log("ARTSPACE checks passed: HTML ids, DOM references, inline JavaScript, CSS braces, manifest, and service worker.");
