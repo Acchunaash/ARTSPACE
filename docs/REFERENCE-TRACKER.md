@@ -111,3 +111,5 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - These are original vector illustrations, not photographic or hand-painted scans. The design source is upgraded; rendered visual acceptance and comparison against the missing exact Pinterest reference remain pending until a real browser capture/reference image is available.
 
 - CI caught a syntax error in the newly added SVG-root counting expression (the artwork files themselves were not the cause). Replaced the fragile regular-expression count with literal root-tag counts; the corrected validator commit now triggers a fresh validation run. The earlier failed run is retained in the audit trail and is not represented as a pass.
+
+- The next CI attempt exposed a pre-existing stale plaque assertion (it expected the old title baseline at y=61, while the already-refined plaque correctly places the title at y=78). Updated that assertion to match the actual live plaque layout; this was a validator mismatch, not an application regression. A fresh CI run is required.
