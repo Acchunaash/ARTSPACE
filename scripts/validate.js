@@ -137,6 +137,12 @@ if (!html.includes("new THREE.PlaneGeometry(17,19),floorMaterial") ||
     !html.includes("Curved plaster panel joints and end piers give the exhibition wall architectural scale.")) {
   fail("Gallery interior must have a vaulted ceiling, curved ceiling ribs, linear light channels and detailed curved-wall panel joints.");
 }
+if (!html.includes("const floorJointMaterial=new THREE.MeshStandardMaterial({color:0xbab7ae,roughness:.96,metalness:0})") ||
+    !html.includes("const floorJointY=-1.7175") ||
+    !html.includes("new THREE.BoxGeometry(.012,.003,19),floorJointMaterial") ||
+    !html.includes("new THREE.BoxGeometry(17,.003,.012),floorJointMaterial")) {
+  fail("The gallery floor must include restrained, large-format stone slab joints for architectural scale.");
+}
 /* Photoreal material pipeline: real Poly Haven CC0 PBR maps must augment the embedded fallback. */
 if (!html.includes("white_stucco_02_diff_2k.jpg") ||
     !html.includes("white_stucco_02_nor_gl_2k.jpg") ||
