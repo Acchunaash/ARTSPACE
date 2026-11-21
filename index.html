@@ -976,8 +976,21 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   printMaterial.map=texture;
   const print=new THREE.Mesh(new THREE.PlaneGeometry(2.08,2.78),printMaterial);
   print.position.z=.119;print.castShadow=true;group.add(print);
+  /* A recessed warm mount, slim metallic inner fillet and low-reflection glazing
+     give each print a layered, physical gallery frame without hiding its image. */
   const reveal=new THREE.Mesh(new THREE.PlaneGeometry(2.12,2.82),new THREE.MeshStandardMaterial({color:0xd8d0bf,roughness:.82}));
   reveal.position.z=.113;group.add(reveal);
+  const inlayMaterial=new THREE.MeshStandardMaterial({color:0xb18a60,roughness:.34,metalness:.72});
+  const inlayParts=[
+   [.018,2.99,.018,-1.13,0,.137],[.018,2.99,.018,1.13,0,.137],
+   [2.27,.018,.018,0,1.505,.137],[2.27,.018,.018,0,-1.505,.137]
+  ];
+  inlayParts.forEach(([w,h,d,x,y,z])=>{const edge=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),inlayMaterial);edge.position.set(x,y,z);group.add(edge);});
+  const glazingMaterial=new THREE.MeshPhysicalMaterial({color:0xffffff,roughness:.12,metalness:0,transparent:true,opacity:.055,clearcoat:.28,clearcoatRoughness:.12,side:THREE.DoubleSide,depthWrite:false});
+  const glazing=new THREE.Mesh(new THREE.PlaneGeometry(2.16,2.88),glazingMaterial);
+  glazing.position.z=.151;group.add(glazing);
+  const frameHighlight=new THREE.Mesh(new THREE.BoxGeometry(2.34,3.16,.018),new THREE.MeshStandardMaterial({color:0x9b7856,roughness:.42,metalness:.52}));
+  frameHighlight.position.z=.087;group.add(frameHighlight);
   const plaqueCanvas=document.createElement("canvas");plaqueCanvas.width=768;plaqueCanvas.height=144;
   const plaqueContext=plaqueCanvas.getContext("2d");
   if(plaqueContext){
@@ -989,7 +1002,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   const plaqueTexture=new THREE.CanvasTexture(plaqueCanvas);plaqueTexture.encoding=THREE.sRGBEncoding;
   const plaque=new THREE.Mesh(new THREE.PlaneGeometry(2.12,.4),new THREE.MeshBasicMaterial({map:plaqueTexture,transparent:false}));
   plaque.position.set(0,-1.84,.12);group.add(plaque);
-  const artworkLight=new THREE.SpotLight(0xffedda,1.65,9.5,Math.PI/5.2,.72,1.35);
+  const artworkLight=new THREE.SpotLight(0xffedda,2.05,10.5,Math.PI/5.5,.82,1.4);
   artworkLight.castShadow=false;
   const artworkTarget=new THREE.Object3D();
   gallery.add(artworkLight,artworkTarget);artworkLight.target=artworkTarget;
@@ -1039,7 +1052,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
    group.rotation.set(0,group.userData.targetRY,0);
    if(group.userData.artworkLight&&group.userData.artworkTarget){
     group.userData.artworkTarget.position.set(group.userData.targetX,group.userData.targetY,group.userData.targetZ);
-    group.userData.artworkLight.position.set(group.userData.targetX,group.userData.targetY+2.55,group.userData.targetZ+1.65);
+    group.userData.artworkLight.position.set(group.userData.targetX-.12,group.userData.targetY+2.72,group.userData.targetZ+1.48);
    }
   });
  }
