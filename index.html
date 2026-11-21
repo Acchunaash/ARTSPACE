@@ -1050,7 +1050,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  sideMaterial.map=plasterTexture;sideMaterial.color.set(0xfaf9f5);sideMaterial.roughness=.92;sideMaterial.needsUpdate=true;
  /* Replace synthetic grain with real CC0 scanned plaster once the maps arrive. */
  registerArchitecturalPbr(wallMaterial,2.2);registerArchitecturalPbr(sideMaterial,1.65);
- floorMaterial.map=stoneFloorTexture;floorMaterial.color.set(0xffffff);floorMaterial.roughness=.82;floorMaterial.needsUpdate=true;
+ floorMaterial.map=stoneFloorTexture;floorMaterial.color.set(0xffffff);floorMaterial.roughness=.68;floorMaterial.metalness=.025;floorMaterial.needsUpdate=true;
 
  const floor=new THREE.Mesh(new THREE.PlaneGeometry(17,19),floorMaterial);
  floor.rotation.x=-Math.PI/2;floor.position.set(0,-1.72,-1.15);floor.receiveShadow=true;room.add(floor);
@@ -1059,7 +1059,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  const curvedWallGeometry=new THREE.CylinderGeometry(wallRadius,wallRadius,7.1,96,1,true,wallStart,wallSweep);
  const curvedWall=new THREE.Mesh(curvedWallGeometry,wallMaterial);
  curvedWall.position.set(0,.1,wallCenterZ);curvedWall.receiveShadow=true;room.add(curvedWall);
- const curvedTrimMaterial=new THREE.MeshStandardMaterial({color:0xb78b61,roughness:.55,metalness:.35});
+ const curvedTrimMaterial=new THREE.MeshStandardMaterial({color:0xb2a58f,roughness:.62,metalness:.22});
  const arcPoints=(y,r=wallRadius)=>{const pts=[];for(let i=0;i<=96;i++){const a=wallStart+wallSweep*i/96;pts.push(new THREE.Vector3(Math.sin(a)*r,y,wallCenterZ+Math.cos(a)*r));}return pts;};
  const trimCurve=(y,material,r)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(arcPoints(y,r)),128,.035,8,false),material);
  room.add(trimCurve(-1.47,curvedTrimMaterial,wallRadius+.025));
@@ -1067,7 +1067,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  /* ARCHITECTURAL REBUILD — the curved exhibition wall is now composed as a layered gallery interior. */
  const warmLimestone=new THREE.MeshStandardMaterial({color:0xe4e0d6,roughness:.84,metalness:.015});
  const shadowRevealMaterial=new THREE.MeshStandardMaterial({color:0xaaa69b,roughness:.88,metalness:.04});
- const champagneMetal=new THREE.MeshStandardMaterial({color:0x9a7956,roughness:.38,metalness:.68});
+ const champagneMetal=new THREE.MeshStandardMaterial({color:0xaaa18f,roughness:.48,metalness:.48});
  const ceilingWarm=new THREE.MeshStandardMaterial({color:0xf4f0e7,roughness:.92,metalness:0});
  const coveGlowMaterial=new THREE.MeshStandardMaterial({color:0xffe8c8,emissive:0xffd49c,emissiveIntensity:.42,roughness:.32,metalness:.12});
  const makeArcDetail=(radius,y,material,tube=.025)=>{
@@ -1192,7 +1192,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   const channel=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),48,.032,8,false),coveGlowMaterial);
   room.add(channel);
  }
- const trimMaterial=new THREE.MeshStandardMaterial({color:0xb78b61,roughness:.55,metalness:.35});
+ const trimMaterial=new THREE.MeshStandardMaterial({color:0xb2a58f,roughness:.62,metalness:.22});
  [-8.42,8.42].forEach(x=>{
   const trim=new THREE.Mesh(new THREE.BoxGeometry(.055,.045,19),trimMaterial);
   trim.position.set(x,-1.58,-1.15);room.add(trim);
@@ -1392,12 +1392,12 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
     else{
      const pathT=introCameraProgress((introRaw-.02)/.98);
      camera.position.copy(introCameraPath.getPointAt(pathT));
-     camera.fov=THREE.MathUtils.lerp(40,36,pathT);camera.updateProjectionMatrix();
+     camera.fov=THREE.MathUtils.lerp(40,44,pathT);camera.updateProjectionMatrix();
      /* The path remains in front of the facade until centred at eye height; only then does it cross the open portal below the roof and continue into the room. */
      camera.lookAt(introLookTarget.set(0,THREE.MathUtils.lerp(2.15,1.55,pathT),camera.position.z-6.5));
     }
     if(introRaw>=1){
-    introFinished=true;camera.position.copy(introCameraEnd);camera.fov=36;camera.updateProjectionMatrix();camera.lookAt(introLookTarget.set(0,1.55,introCameraEnd.z-6.5));gallery.rotation.y=0;
+    introFinished=true;camera.position.copy(introCameraEnd);camera.fov=44;camera.updateProjectionMatrix();camera.lookAt(introLookTarget.set(0,1.55,introCameraEnd.z-6.5));gallery.rotation.y=0;
     if(pendingArchitecturalPavilion){mountArchitecturalPavilion(pendingArchitecturalPavilion);pendingArchitecturalPavilion=null;}
    }
   }
