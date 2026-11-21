@@ -71,7 +71,7 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
 .gallery-stage:after{content:"";position:absolute;z-index:0;top:4%;left:50%;width:min(62vw,720px);height:80%;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 36%,#ffffffa8 0%,#ffffff35 35%,transparent 72%);pointer-events:none}
 .gallery-track{z-index:1;perspective:1500px;perspective-origin:50% 44%;transform-style:preserve-3d}
 .art-card{backface-visibility:hidden;will-change:transform,opacity;transform-origin:50% 55%}
-.art-frame{position:relative;transform:translateZ(0);box-shadow:0 24px 42px #1b211b1c,0 4px 10px #1b211b0d,inset 0 0 0 1px #00000008}
+.art-frame{position:relative;display:block;transform-style:preserve-3d;transform:translateZ(0);box-shadow:0 24px 42px #1b211b1c,0 4px 10px #1b211b0d,inset 0 0 0 1px #00000008}.art-frame:before{content:"";position:absolute;z-index:-1;inset:5px -7px -7px 5px;background:linear-gradient(145deg,#d9d9d2,#aeb0a8);transform:translateZ(-9px);box-shadow:8px 12px 22px #17181620;border-radius:1px}.art-frame img{position:relative;z-index:1;border:1px solid #00000008}
 .art-frame:after{content:"";position:absolute;inset:0;background:linear-gradient(125deg,#ffffff55 0%,transparent 25%,transparent 72%,#00000008 100%);pointer-events:none}
 .art-card.active .art-frame{box-shadow:0 34px 58px #1b211b28,0 8px 18px #1b211b12,inset 0 0 0 1px #0000000a}
 .gallery-arrow{backdrop-filter:blur(12px);box-shadow:0 4px 16px #2528200c}
