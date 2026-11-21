@@ -33,7 +33,7 @@ Status labels:
 | Shopping bag | Side drawer and local cart interactions are implemented. | Source complete; visual pending. |
 | Checkout/payment | Checkout is explicitly disabled; there is no live payment/order backend. | Not complete. |
 | Exterior pavilion | Custom generated GLB with curved roof, facade elements, glazing, entrance portal and PBR materials; procedural fallback exists. | Source/build complete; visual pending. |
-| Exterior-to-interior camera | High exterior start, curved approach, eye-level doorway path and interior continuation exist. The look target has now been changed to a stable forward target through the doorway. | First repair committed; automated validation pending; visual pending. |
+| Exterior-to-interior camera | High exterior start, curved approach, eye-level doorway path and interior continuation exist. The look target uses a stable forward target through the doorway, including the final settled camera pose. | Source-audited and repaired: eye-level path is centred through the 6 m-wide exterior portal and 5.6 m-wide interior portal; camera eye height is 1.65 m beneath the 3.24 m canopy soffit (about 1.59 m vertical clearance at centre). Final gaze now matches the in-motion look-ahead vector, removing a direction snap at completion. Automated validation pending; visual pending. |
 
 ## Ordered remaining work
 
@@ -57,3 +57,12 @@ Status labels:
 ## Verification rule
 
 Automated validation proves source/build constraints only. A successful GitHub Pages deployment proves the deployment workflow completed. Neither proves visual similarity, photorealism, camera clearance, or correct appearance on the user's device. Those claims require an actual rendered capture inspected against the reference video.
+
+
+### Camera path / roof / entrance geometry re-audit — 2026-11-22
+- Re-read the live GitHub camera spline, animation progress, pavilion builder and interior portal geometry before editing.
+- Compared against the original clip: the clip's key movement is smooth lateral browsing along the curved white wall; it does not show an exterior. Kept the exterior approach as a separate project requirement and retained the high, sweeping exterior descent.
+- Source geometry audit: the pavilion entrance has a centred clear portal approximately 6 m wide; the inner gallery portal is approximately 5.6 m wide. The camera path is centred at x=0 and 1.65 m eye height while crossing both portal planes. The entrance canopy soffit is at about 3.24 m, giving about 1.59 m vertical clearance above the camera eye point at the centreline. The path does not intentionally pass through the roof mesh; the spline descends to eye level before crossing the doorway.
+- Defect found: when the 9.2-second intro completed, the camera's look target jumped from the moving 6.5 m forward target to a separate fixed target. Replaced that final target with the same forward look-ahead vector so the settled view has no target discontinuity.
+- Updated the automated validator to require the final look-ahead target and reject the obsolete endpoint target.
+- Visual acceptance remains pending: this is a source/geometry audit, not a rendered camera capture. The original video remains the gallery-fidelity reference, not evidence for the exterior.
