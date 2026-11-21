@@ -87,13 +87,23 @@ if (!html.includes("gallery.position.set(0,0,wallCenterZ)") ||
 }
 
 
-/* Room continuity and entrance path: keep the camera outside-to-inside and the shell aligned to the curved wall. */
+/* Cinematic opening must show the whole exterior, then approach and pass through the entrance. */
+if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
+    !html.includes("new THREE.PlaneGeometry(70,70)") ||
+    !html.includes("addBox(exterior,19.5,.52,24.6,facadeMat,0,4,-1.15)") ||
+    !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,-6.3,1.05,9.15)") ||
+    !html.includes("addBox(exterior,6.15,5.55,.42,facadeMat,6.3,1.05,9.15)") ||
+    !html.includes("new THREE.Vector3(0,9.2,31),introCameraApproach=new THREE.Vector3(0,5.8,18),introCameraThreshold=new THREE.Vector3(0,2.7,9.7),introCameraEnd=new THREE.Vector3(0,.12,4.7)") ||
+    !html.includes("if(introRaw<.18)") ||
+    !html.includes("introCameraApproach,introCameraThreshold") ||
+    !html.includes("introCameraThreshold,introCameraEnd")) {
+  fail("Full exterior building, glazed entrance, and staged outside-to-inside camera path are missing.");
+}
 if (!html.includes("new THREE.PlaneGeometry(17,19),floorMaterial") ||
     !html.includes("leftWall.position.set(-8.5,.15,-1.15)") ||
     !html.includes("rightWall.position.set(8.5,.15,-1.15)") ||
-    !html.includes("new THREE.PlaneGeometry(17,19),ceilingMaterial") ||
-    !html.includes("new THREE.Vector3(-5.6,.72,14.2),introCameraMid=new THREE.Vector3(2.8,.28,8.4),introCameraEnd=new THREE.Vector3(0,.12,4.7)")) {
-  fail("Gallery floor, side walls, ceiling, and inside-ending entrance camera path must stay aligned.");
+    !html.includes("new THREE.PlaneGeometry(17,19),ceilingMaterial")) {
+  fail("Gallery interior room geometry is missing or misaligned.");
 }
 if (!html.includes("if(!stage.classList.contains(\"webgl-ready\"))") ||
     !html.includes("new THREE.CanvasTexture(fallbackCanvas)")) {
