@@ -264,6 +264,61 @@ body{overflow-x:hidden;background:#f4f4f0}
 .selected-section{scroll-margin-top:24px}
 @media(max-width:700px){.topbar{height:54px}.gallery-shell{height:100svh;min-height:500px}.gallery-topline{top:64px}.gallery-bottomline{bottom:12px}.gallery-stage{height:100%}.desktop-nav{display:none}}
 @media(max-height:620px){.gallery-shell{min-height:100svh}.gallery-topline{top:62px}}
+
+/* STAGE D — full-viewport animated product detail transition */
+#selectedProduct{
+ position:fixed;inset:0;z-index:50;width:100%;height:100vh;height:100dvh;max-height:100dvh;
+ margin:0;padding:clamp(18px,4vh,42px) clamp(18px,6vw,88px) 34px;
+ display:grid;grid-template-columns:minmax(0,1.08fr) minmax(340px,.82fr);
+ grid-template-rows:auto minmax(0,1fr);gap:18px clamp(28px,7vw,110px);
+ align-items:center;overflow-y:auto;overscroll-behavior:contain;
+ background:radial-gradient(ellipse at 23% 42%,#fff 0%,#f5f5f1 42%,#eceee8 100%);
+ opacity:0;visibility:hidden;pointer-events:none;transform:translate3d(0,28px,0) scale(.985);
+ transition:opacity .42s ease,transform .62s cubic-bezier(.2,.78,.18,1),visibility .42s;
+}
+body.product-detail-open{overflow:hidden}
+body.product-detail-open #selectedProduct{
+ opacity:1;visibility:visible;pointer-events:auto;transform:translate3d(0,0,0) scale(1);
+}
+.product-detail-topline{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;
+ font:9px 'DM Mono',monospace;letter-spacing:1.5px;color:#777;min-height:38px}
+.product-detail-topline i{font-style:normal;color:#c2a17e;padding:0 8px}
+.product-detail-close{width:42px;height:42px;border:1px solid #c9cbc4;border-radius:50%;background:#ffffffb8;
+ color:var(--ink);font-size:25px;line-height:1;transition:background .2s,transform .2s}
+.product-detail-close:hover{background:#fff;transform:rotate(90deg)}
+#selectedProduct .selected-image-wrap{height:min(72vh,760px);min-height:360px;max-height:calc(100dvh - 125px);padding:clamp(18px,5vw,64px)}
+#selectedProduct .selected-image-bg{width:min(76%,520px);max-height:100%;display:grid;place-items:center}
+#selectedProduct .selected-image-bg img{max-height:calc(100dvh - 220px);width:100%;object-fit:contain}
+#selectedProduct .product-info{width:100%;max-width:520px;max-height:calc(100dvh - 110px);overflow-y:auto;padding:12px 8px 18px 0;overscroll-behavior:contain}
+#selectedProduct .product-info h2{font-size:clamp(32px,4.3vw,62px);max-width:10ch}
+#selectedProduct .product-description{max-width:44ch}
+#selectedProduct .image-index{bottom:16px;left:18px}
+body.product-detail-open #selectedProduct .selected-image-bg{animation:detail-art-arrive .72s cubic-bezier(.2,.75,.2,1) both}
+body.product-detail-open #selectedProduct .product-info>*{animation:detail-copy-arrive .48s cubic-bezier(.2,.75,.2,1) both}
+body.product-detail-open #selectedProduct .product-info>*:nth-child(2){animation-delay:.05s}
+body.product-detail-open #selectedProduct .product-info>*:nth-child(3){animation-delay:.09s}
+body.product-detail-open #selectedProduct .product-info>*:nth-child(4){animation-delay:.13s}
+@keyframes detail-art-arrive{from{opacity:0;transform:perspective(1100px) translate3d(-36px,12px,-40px) rotateY(-8deg) scale(.94)}to{opacity:1}}
+@keyframes detail-copy-arrive{from{opacity:0;transform:translate3d(0,15px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+@media(max-width:760px){
+ #selectedProduct{padding:12px 18px 30px;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto;gap:12px;align-content:start}
+ .product-detail-topline{position:sticky;top:-12px;z-index:2;background:#f5f5f1ed;margin:0 -18px;padding:8px 18px;backdrop-filter:blur(14px)}
+ #selectedProduct .selected-image-wrap{height:min(48vh,480px);min-height:260px;max-height:none;padding:22px}
+ #selectedProduct .selected-image-bg{width:min(64%,300px)}
+ #selectedProduct .selected-image-bg img{max-height:42vh}
+ #selectedProduct .product-info{max-width:none;max-height:none;overflow:visible;padding:10px 0 18px}
+ #selectedProduct .product-info h2{font-size:clamp(30px,9vw,44px);max-width:14ch}
+ #selectedProduct .product-description{margin:18px 0}
+}
+@media(max-width:380px){
+ #selectedProduct{padding-left:14px;padding-right:14px}
+ #selectedProduct .selected-image-wrap{min-height:235px}
+ #selectedProduct .option{padding:10px 11px}
+}
+@media(prefers-reduced-motion:reduce){
+ #selectedProduct,body.product-detail-open #selectedProduct .selected-image-bg,body.product-detail-open #selectedProduct .product-info>*{transition:none!important;animation:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -320,7 +375,8 @@ body{overflow-x:hidden;background:#f4f4f0}
       <div class="gallery-bottomline"><span>DRAG OR USE ARROWS TO EXPLORE</span><button id="exploreBtn">EXPLORE SELECTED ↗</button></div>
     </section>
 
-    <section class="selected-section" id="selectedProduct">
+    <section class="selected-section" id="selectedProduct" aria-hidden="true" inert>
+      <div class="product-detail-topline"><span>ARTSPACE <i>/</i> ARTWORK DETAIL</span><button class="product-detail-close" id="productDetailClose" type="button" aria-label="Close product details">×</button></div>
       <div class="selected-image-wrap">
         <div class="selected-image-bg"><img id="selectedImage" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSI0MjAiIGhlaWdodD0iNTYwIiBmaWxsPSIjZThkN2JkIi8+PHBhdGggZD0iTTAgMzkwIFExMjAgMjYwIDIzMCAzNDAgVDQyMCAyNTAgVjU2MCBIMFoiIGZpbGw9IiNiZDNkMmMiLz48Y2lyY2xlIGN4PSIyODUiIGN5PSIxNTAiIHI9IjgyIiBmaWxsPSIjZTVhMzNlIi8+PHBhdGggZD0iTTkwIDQzMCBMMTUwIDE4MCBMMjI1IDQzMFoiIGZpbGw9IiMxODNlMzYiLz48cGF0aCBkPSJNMTcwIDQzMCBMMjYwIDIzMCBMMzUwIDQzMFoiIGZpbGw9IiNmMWU3ZDciLz48Y2lyY2xlIGN4PSIyMTAiIGN5PSIyNzUiIHI9IjM0IiBmaWxsPSIjMjUyMzIzIi8+PHBhdGggZD0iTTE5MCAzMDggTDE3MCAzOTAgTDI0NSAzOTAgTDIzMCAzMTBaIiBmaWxsPSIjMjUyMzIzIi8+PHBhdGggZD0iTTIwOCAzNDAgTDEyNSAzOTUgTTIyNSAzNDAgTDI5NSAzOTAiIHN0cm9rZT0iIzI1MjMyMyIgc3Ryb2tlLXdpZHRoPSIxOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8dGV4dCB4PSIyNCIgeT0iNTA1IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNyIgZm9udC13ZWlnaHQ9IjcwMCIgbGV0dGVyLXNwYWNpbmc9IjMiIGZpbGw9IiMyMjIiPlRIRSBCRUFVVElGVUwgR0FNRTwvdGV4dD4KICAgIDx0ZXh0IHg9IjI0IiB5PSI1MzAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBsZXR0ZXItc3BhY2luZz0iMiIgZmlsbD0iIzMzMyI+QlVSS0lOQSBGQVNPPC90ZXh0PgogICAgPC9zdmc+" alt="Selected artwork"></div>
         <span class="image-index" id="imageIndex">01 / 06</span>
@@ -476,6 +532,29 @@ document.getElementById("viewerNext").addEventListener("click",()=>{move(1);sync
 artViewer.addEventListener("click",e=>{if(e.target===artViewer)closeArtworkViewer()});
 document.addEventListener("keydown",e=>{if(!artViewer.classList.contains("open"))return;if(e.key==="Escape")closeArtworkViewer();if(e.key==="ArrowRight"){move(1);syncArtworkViewer()}if(e.key==="ArrowLeft"){move(-1);syncArtworkViewer()}});
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+const selectedProduct=document.getElementById("selectedProduct");
+const productDetailClose=document.getElementById("productDetailClose");
+function openProductDetail(){
+ render();
+ selectedProduct.inert=false;
+ selectedProduct.setAttribute("aria-hidden","false");
+ document.body.classList.add("product-detail-open");
+ document.body.style.overflow="hidden";
+ productDetailClose.focus({preventScroll:true});
+}
+function closeProductDetail(){
+ if(!document.body.classList.contains("product-detail-open"))return;
+ document.body.classList.remove("product-detail-open");
+ selectedProduct.setAttribute("aria-hidden","true");
+ selectedProduct.inert=true;
+ document.body.style.overflow=(drawer.classList.contains("open")||document.getElementById("savedDrawer").classList.contains("open"))?"hidden":"";
+ document.getElementById("exploreBtn").focus({preventScroll:true});
+}
+productDetailClose.addEventListener("click",closeProductDetail);
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape"&&document.body.classList.contains("product-detail-open")){e.preventDefault();closeProductDetail();}
+});
+window.addEventListener("popstate",closeProductDetail);
 function move(n){current=(current+n+products.length)%products.length;stage.classList.add("camera-shift");render();clearTimeout(move.cameraTimer);move.cameraTimer=setTimeout(()=>stage.classList.remove("camera-shift"),460)}
 function renderWishlist(){document.getElementById("savedCount").textContent=wishlist.length;const list=document.getElementById("savedItems");if(!wishlist.length){list.innerHTML='<div class="cart-empty">No saved artworks yet.<br>Tap “Save to wishlist” on a print you love.</div>';return;}list.innerHTML=wishlist.map(index=>{const p=products[index];return '<article class="cart-item"><div class="cart-thumb"><img src="'+p.image+'" alt=""></div><div><h3>'+p.title+'</h3><div class="cart-meta">'+p.subtitle+'<br>'+money(p.price)+'</div><button class="saved-view" data-saved-view="'+index+'">VIEW ARTWORK ↗</button></div><button class="cart-close" data-saved-remove="'+index+'" aria-label="Remove '+p.title+'">×</button></article>';}).join("");}
 function openWishlist(){closeCart();renderWishlist();document.getElementById("savedDrawer").classList.add("open");document.getElementById("savedBackdrop").classList.add("open");document.body.classList.add("wishlist-open");document.getElementById("savedDrawer").setAttribute("aria-hidden","false");document.getElementById("savedClose").focus();}
@@ -501,8 +580,8 @@ function updatePrice(){
 }
 document.getElementById("prevBtn").addEventListener("click",()=>move(-1));
 document.getElementById("nextBtn").addEventListener("click",()=>move(1));
-cards.forEach(card=>card.addEventListener("click",()=>{if(stage.dataset.dragged==="true"){stage.dataset.dragged="false";return;}current=Number(card.dataset.index);render()}));
-document.getElementById("exploreBtn").addEventListener("click",()=>document.getElementById("selectedProduct").scrollIntoView({behavior:"smooth"}));
+cards.forEach(card=>card.addEventListener("click",()=>{if(stage.dataset.dragged==="true"){stage.dataset.dragged="false";return;}current=Number(card.dataset.index);openProductDetail()}));
+document.getElementById("exploreBtn").addEventListener("click",openProductDetail);
 document.querySelectorAll("#sizeOptions .option").forEach(b=>b.addEventListener("click",()=>{
  selectedSize=b.dataset.size;document.querySelectorAll("#sizeOptions .option").forEach(x=>x.classList.toggle("active",x===b));updatePrice();
 }));
@@ -767,7 +846,7 @@ window.__artspaceThreeReady.then(loaded=>{
  renderer.domElement.addEventListener("keydown",event=>{
   if(event.key==="ArrowRight"){event.preventDefault();move(1);}
   if(event.key==="ArrowLeft"){event.preventDefault();move(-1);}
-  if(event.key==="Enter"||event.key===" "){event.preventDefault();openArtworkViewer();}
+  if(event.key==="Enter"||event.key===" "){event.preventDefault();openProductDetail();}
  });
  renderer.domElement.addEventListener("click",event=>{
   if(suppressCanvasClick){suppressCanvasClick=false;return;}
@@ -779,7 +858,7 @@ window.__artspaceThreeReady.then(loaded=>{
   if(hits.length){
    let node=hits[0].object;
    while(node.parent&&node.parent!==gallery)node=node.parent;
-   if(Number.isInteger(node.userData.index)){current=node.userData.index;render();openArtworkViewer();}
+   if(Number.isInteger(node.userData.index)){current=node.userData.index;openProductDetail();}
   }
  });
  if(window.ResizeObserver){const observer=new ResizeObserver(resize);observer.observe(stage);}
