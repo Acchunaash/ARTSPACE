@@ -78,7 +78,8 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
 
 /* ADVANCED WEBGL GALLERY LAYER */
 .gallery-stage.webgl-ready .gallery-track{z-index:1}
-.artspace-webgl{position:absolute;inset:0;width:100%;height:100%;z-index:2;display:block;touch-action:pan-y;outline:none}
+.artspace-webgl{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;touch-action:pan-y;outline:none}
+.gallery-stage.webgl-ready .artspace-webgl{z-index:2}
 .webgl-status{position:absolute;z-index:6;left:50%;bottom:18px;transform:translateX(-50%);max-width:calc(100% - 32px);padding:10px 14px;border:1px solid #c9a77d;background:#172333ed;color:#fff;font:10px "DM Mono",monospace;letter-spacing:.4px;text-align:center;box-shadow:0 8px 24px #0003}.webgl-status[hidden]{display:none}
 .gallery-stage.webgl-ready .art-card{opacity:0!important;pointer-events:none!important}
 /* STEP 1 — immersive 3D environment foundation */
