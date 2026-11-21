@@ -335,4 +335,4 @@ for (const file of artworkFiles) {
   if (!asset.startsWith("<svg") || !asset.includes("</svg>") || !asset.includes("viewBox=")) fail("Artwork asset is invalid: " + file);
   if (!html.includes("./assets/artworks/" + file)) fail("Artwork asset is not wired into the gallery: " + file);
 }
-if (/data:image\\/svg\\+xml;base64/.test(html)) fail("Inline placeholder artwork remains embedded in index.html.");
+if (html.includes("data:image/svg+xml;base64")) fail("Inline placeholder artwork remains embedded in index.html.");
