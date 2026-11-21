@@ -17,7 +17,7 @@ const materials=[
  ["landscape-green",[.356,.435,.356,1],0,.95]
 ];
 const groups=materials.map(()=>[]);
-const add=(m,s,p)=>groups[m].push({s,p});
+const add=(m,s,p,extra={})=>groups[m].push({s,p,...extra});
 const box=(m,w,h,d,x,y,z)=>add(m,[w,h,d],[x,y,z]);
 const cylinder=(m,r,h,x,y,z)=>groups[m].push({c:[r,h],p:[x,y,z]});
 // Site plane and floating plinth, long roof slab and continuous soffit.\nbox(6,70,.08,70,0,-1.83,2);
