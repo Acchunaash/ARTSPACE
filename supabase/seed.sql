@@ -1,13 +1,13 @@
--- ARTSPACE initial catalog metadata.
--- Upload final artwork files to Supabase Storage and fill image_url before connecting the live catalog API.
+-- ARTSPACE designer dress boutique initial catalogue metadata.
+-- Upload approved garment imagery to Supabase Storage and fill image_url before connecting the live catalog API.
 insert into public.products (slug, title, subtitle, description, price_inr, category, active)
 values
-  ('the-beautiful-game', 'THE BEAUTIFUL GAME', 'BURKINA FASO — 2026', 'A celebration of movement, culture and the beautiful moments that bring us together.', 5800, 'SPORT', true),
-  ('after-the-rain', 'AFTER THE RAIN', 'A STUDY IN COLOR — 2026', 'A colorful landscape study with a calm, optimistic mood.', 4600, 'NATURE', true),
-  ('sunset-club', 'SUNSET CLUB', 'NO. 03 — SUMMER', 'A warm summer composition inspired by the last light of the day.', 4900, 'LANDSCAPE', true),
-  ('blue-hour', 'BLUE HOUR', 'AN EVENING IN MOTION', 'An atmospheric evening composition in layered blue and warm tones.', 5200, 'LANDSCAPE', true),
-  ('form-and-feel', 'FORM & FEEL', 'ABSTRACT COMPOSITION', 'A bold abstract study of shape, balance and color.', 4300, 'ABSTRACT', true),
-  ('sunday-in-color', 'SUNDAY IN COLOR', 'LIMITED ART PRINT', 'A bright, expressive print designed to bring color into everyday spaces.', 4800, 'COLOR', true)
+  ('the-solstice-dress', 'THE SOLSTICE DRESS', 'FLUID SATIN · WARM IVORY', 'A softly sculpted A-line silhouette in fluid satin, with a clean neckline and an elegant swing hem.', 6490, 'DAY', true),
+  ('the-atelier-slip', 'THE ATELIER SLIP', 'SILK BLEND · DEEP PLUM', 'A refined bias-cut slip dress with delicate straps and a fluid, elongated drape.', 5890, 'EVENING', true),
+  ('the-sunday-shirt', 'THE SUNDAY SHIRT', 'COTTON POPLIN · SOFT SAGE', 'An easy shirt dress with a defined waist, relaxed sleeves and a softly pleated skirt.', 5290, 'DAY', true),
+  ('the-sculpted-midi', 'THE SCULPTED MIDI', 'TEXTURED CREPE · TERRACOTTA', 'A structured midi dress with a shaped bodice and a confident architectural skirt.', 7290, 'STATEMENT', true),
+  ('the-evening-column', 'THE EVENING COLUMN', 'MATTE CREPE · MIDNIGHT', 'A sleek column silhouette with an elegant neckline and a long, uninterrupted line.', 8490, 'EVENING', true),
+  ('the-garden-wrap', 'THE GARDEN WRAP', 'PRINTED COTTON · BOTANICAL', 'A wrap dress with a softly gathered waist, gentle movement and a relaxed day-to-evening feel.', 6190, 'DAY', true)
 on conflict (slug) do update set
   title = excluded.title,
   subtitle = excluded.subtitle,
