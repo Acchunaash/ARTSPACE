@@ -1310,7 +1310,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  };
  products.forEach((product,index)=>{
   const group=new THREE.Group();
-  const dressColor=new THREE.MeshStandardMaterial({color:dressPalette[index],roughness:.42,metalness:index===0?.06:.015,side:THREE.DoubleSide});
+  const dressColor=new THREE.MeshPhysicalMaterial({color:dressPalette[index],roughness:index===1?.32:.56,metalness:0,clearcoat:index===1?.2:.045,clearcoatRoughness:.52,side:THREE.DoubleSide});
   const trimColor=new THREE.MeshStandardMaterial({color:index===1?0xd7b9c9:0xe8d7bd,roughness:.48,metalness:.24});
   const footMat=new THREE.MeshStandardMaterial({color:index===4?0x171c25:0x342c27,roughness:.34});
   const plinth=new THREE.Mesh(new THREE.CylinderGeometry(.55,.59,.13,64),new THREE.MeshStandardMaterial({color:0xd8d1c5,roughness:.38,metalness:.18}));
@@ -1318,7 +1318,11 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   const plinthLine=new THREE.Mesh(new THREE.TorusGeometry(.55,.012,8,64),railMetal);plinthLine.rotation.x=Math.PI/2;plinthLine.position.y=.145;group.add(plinthLine);
   const style=skirtWidths[index];
   const points=[new THREE.Vector2(0,.22),new THREE.Vector2(style,.22),new THREE.Vector2(style*.96,.34),new THREE.Vector2(style*.76,.72),new THREE.Vector2(.34,1.2),new THREE.Vector2(.255,1.55),new THREE.Vector2(.32,1.88),new THREE.Vector2(.35,2.18),new THREE.Vector2(.25,2.38),new THREE.Vector2(0,2.42)];
-  const dress=new THREE.Mesh(new THREE.LatheGeometry(points,64),dressColor);dress.position.y=.13;dress.scale.set(1.35,1.18,1.35);dress.castShadow=true;dress.receiveShadow=true;group.add(dress);
+  const dressGeometry=new THREE.LatheGeometry(points,64);
+  const dressVertices=dressGeometry.attributes.position;
+  for(let v=0;v<dressVertices.count;v++){const x=dressVertices.getX(v),y=dressVertices.getY(v),z=dressVertices.getZ(v),theta=Math.atan2(z,x),skirt=Math.max(0,Math.min(1,(1.48-y)/1.18)),radius=Math.hypot(x,z),fold=(Math.sin(theta*11+index*.8)*.012+Math.sin(theta*19-index)*.004)*skirt;const r=radius+fold;dressVertices.setXYZ(v,Math.cos(theta)*r,y,Math.sin(theta)*r);}
+  dressVertices.needsUpdate=true;dressGeometry.computeVertexNormals();
+  const dress=new THREE.Mesh(dressGeometry,dressColor);dress.position.y=.13;dress.scale.set(1.35,1.18,1.35);dress.castShadow=true;dress.receiveShadow=true;group.add(dress);
   const waist=new THREE.Mesh(new THREE.TorusGeometry(.275,.018,8,48),trimColor);waist.position.y=1.93;group.add(waist);
   const neckline=new THREE.Mesh(new THREE.TorusGeometry(.19,.018,8,48),trimColor);neckline.position.y=2.49;neckline.scale.set(1,.62,1);group.add(neckline);
   if(index===1){for(const side of [-1,1]){const strap=new THREE.Mesh(new THREE.CylinderGeometry(.018,.018,.42,8),trimColor);strap.position.set(side*.17,2.56,0);group.add(strap);}}
@@ -1378,6 +1382,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
      human.name="ARTSPACE_CC0_RealisticHuman_"+index;
      human.scale.setScalar(1.9);
      human.position.set(0,0,0);
+     human.visible=window.innerWidth>=700||index===current;
      human.traverse(node=>{if(node.isMesh){node.castShadow=window.innerWidth>=700;node.receiveShadow=window.innerWidth>=700;node.frustumCulled=true;}});
      group.add(human);
      if(group.userData.proceduralBody)group.userData.proceduralBody.visible=false;
@@ -1439,6 +1444,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
    group.userData.targetScale=1;
    group.position.set(group.userData.targetX,group.userData.targetY,group.userData.targetZ);
    group.rotation.set(0,group.userData.targetRY,0);
+   if(group.userData.humanModel)group.userData.humanModel.visible=window.innerWidth>=700||index===current;
    if(group.userData.artworkLight&&group.userData.artworkTarget){
     group.userData.artworkTarget.position.set(group.userData.targetX,group.userData.targetY+1.85,group.userData.targetZ);
     group.userData.artworkLight.position.set(group.userData.targetX-.25,group.userData.targetY+4.2,group.userData.targetZ+1.45);
