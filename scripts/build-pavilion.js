@@ -153,13 +153,13 @@ function cubeGeometry(){
  }
  return {p,n,idx};
 }
-function curvedPanelGeometry(segments=64){
+function curvedPanelGeometry(segments=64,bow=.12){
  const p=[],n=[],idx=[],rows=segments+1;
- const profile=u=>.12*(1-Math.pow(2*u-1,2));
+ const profile=u=>bow*(1-Math.pow(2*u-1,2));
  // Front and rear surfaces share a continuous curved profile with smooth analytic normals.
  for(let layer=0;layer<2;layer++){
   for(let j=0;j<=1;j++)for(let i=0;i<=segments;i++){
-   const u=i/segments,x=u-.5,y=j-.5,bend=profile(u),dzdu=.48*(1-2*u);
+   const u=i/segments,x=u-.5,y=j-.5,bend=bow*(1-Math.pow(2*u-1,2)),dzdu=4*bow*(1-2*u);
    const z=(layer===0?.5:-.5)+bend;
    const sign=layer===0?1:-1;
    const length=Math.hypot(dzdu,1);
@@ -211,8 +211,8 @@ function cylinderGeometry(seg=16){
  }
  return {p,n,idx};
 }
-const cube=cubeGeometry(),cyl=cylinderGeometry(),curve=curvedPanelGeometry();
-const all=[cube,cyl,curve],bufferParts=[],views=[],accessors=[];
+const cube=cubeGeometry(),cyl=cylinderGeometry(),curve42=curvedPanelGeometry(64,.42/.16),curve58=curvedPanelGeometry(64,.58/2.45);
+const all=[cube,cyl,curve42,curve58],bufferParts=[],views=[],accessors=[];
 let offset=0;
 function addBuffer(data,componentType,type,count,min,max){
  while(offset%4){bufferParts.push(0);offset++;}
@@ -221,20 +221,20 @@ function addBuffer(data,componentType,type,count,min,max){
  const acc={bufferView:view,componentType,type,count};if(min)acc.min=min;if(max)acc.max=max;accessors.push(acc);return accessors.length-1;
 }
 const meshDefs=[];
-for(let shape=0;shape<3;shape++){
+for(let shape=0;shape<4;shape++){
  const g=all[shape];
  const pos=addBuffer(new Float32Array(g.p),5126,"VEC3",g.p.length/3,
   [Math.min(...g.p.filter((_,i)=>i%3===0)),Math.min(...g.p.filter((_,i)=>i%3===1)),Math.min(...g.p.filter((_,i)=>i%3===2))],
   [Math.max(...g.p.filter((_,i)=>i%3===0)),Math.max(...g.p.filter((_,i)=>i%3===1)),Math.max(...g.p.filter((_,i)=>i%3===2))]);
  const norm=addBuffer(new Float32Array(g.n),5126,"VEC3",g.n.length/3);
  const ind=addBuffer(new Uint16Array(g.idx),5123,"SCALAR",g.idx.length);
- for(let m=0;m<materials.length;m++)meshDefs.push({name:materials[m][0]+"-"+(["box","cylinder","curved-panel"][shape]),primitives:[{attributes:{POSITION:pos,NORMAL:norm},indices:ind,material:m}]});
+ for(let m=0;m<materials.length;m++)meshDefs.push({name:materials[m][0]+"-"+(["box","cylinder","curved-panel-42cm","curved-canopy-58cm"][shape]),primitives:[{attributes:{POSITION:pos,NORMAL:norm},indices:ind,material:m}]});
 }
 const nodes=[];
 for(let m=0;m<groups.length;m++)for(const item of groups[m]){
- const shape=item.curved?2:item.c?1:0;
+ const shape=item.curved?(item.bow===.42?2:3):item.c?1:0;
  const scale=item.c?[item.c[0]*2,item.c[1],item.c[0]*2]:item.s;
- nodes.push({name:materials[m][0]+(item.curved?"-continuous-curve":"-element"),mesh:m*3+shape,translation:item.p,scale,...(item.r?{rotation:item.r}:{})});
+ nodes.push({name:materials[m][0]+(item.curved?"-continuous-curve":"-element"),mesh:m*4+shape,translation:item.p,scale,...(item.r?{rotation:item.r}:{})});
 }
 const gltfMaterials=materials.map(([name,color,metallic,roughness],i)=>({
  name,pbrMetallicRoughness:{baseColorFactor:color,metallicFactor:metallic,roughnessFactor:roughness},
