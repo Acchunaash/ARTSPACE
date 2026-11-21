@@ -87,3 +87,10 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Widened the settled interior view by easing the camera field of view from 40° to 44° during the cinematic approach, so the visitor sees more of the room after crossing the entrance without changing the exterior camera path or the gallery geometry.
 - Refined the stone floor to a restrained satin finish and softened the bronze/gold architectural trim toward a quieter pale champagne-metal tone to reduce brown visual weight while keeping the white gallery palette.
 - Automated checks now require the wider interior camera framing and updated floor finish. Visual acceptance remains pending until an actual rendered capture can be inspected; these source changes do not prove the room looks realistic on-device.
+
+### Large-format gallery floor detailing — 2026-11-22
+- Re-inspected the current interior source before changing it. The gallery floor was a single 17 m × 19 m textured plane with no visible slab module or joints, which weakened architectural scale.
+- Added restrained, evenly spaced large-format stone joints in a low-contrast warm-grey finish. The 2.125 m × 2.375 m module is aligned to the floor footprint; the floor material, room shell, artwork wall, camera path, exterior and shopping interactions are unchanged.
+- Added source-validator checks for the joint material and both joint directions.
+- Previous version's validation and both GitHub Pages deployment workflows were confirmed successful before this change. The new commit still requires its own validation and deployment.
+- Visual acceptance remains pending: no rendered browser capture is available, so the joint appearance and overall realism are not claimed as visually verified.
