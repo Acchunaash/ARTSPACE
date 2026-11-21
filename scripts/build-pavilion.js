@@ -73,6 +73,12 @@ for(const side of [-1,1]){
 }
 // Sculpted entrance portal reveals and a secondary bronze lintel.
 box(1,6.45,.09,.18,0,2.96,12.48);box(2,6.45,.07,.2,0,3.1,12.52);
+const curvedPanel=(m,w,h,d,x,y,z,bow)=>groups[m].push({s:[w,h,d],p:[x,y,z],curved:true,bow});
+// Continuous, smoothly bowed architectural skins sit behind the fine segmented joints.
+for(const side of [-1,1]){
+ curvedPanel(0,6.05,4.42,.16,side*6.55,1.05,12.13,.42);
+}
+curvedPanel(0,19.65,.28,2.45,0,3.48,12.05,.58);
 // Curved architectural pass: segmented stone rainscreen, bowed portal brow and a sweeping canopy edge.
 // Every segment follows a shallow continuous curve, with tangent rotation to avoid a box-like facade.
 const curvedBox=(m,w,h,d,x,y,z,angle)=>{
@@ -147,6 +153,46 @@ function cubeGeometry(){
  }
  return {p,n,idx};
 }
+function curvedPanelGeometry(segments=64){
+ const p=[],n=[],idx=[],rows=segments+1;
+ const profile=u=>.12*(1-Math.pow(2*u-1,2));
+ // Front and rear surfaces share a continuous curved profile with smooth analytic normals.
+ for(let layer=0;layer<2;layer++){
+  for(let j=0;j<=1;j++)for(let i=0;i<=segments;i++){
+   const u=i/segments,x=u-.5,y=j-.5,bend=profile(u),dzdu=.48*(1-2*u);
+   const z=(layer===0?.5:-.5)+bend;
+   const sign=layer===0?1:-1;
+   const length=Math.hypot(dzdu,1);
+   p.push(x,y,z);n.push(sign*(-dzdu/length),0,sign*(1/length));
+  }
+  const base=layer*rows*2;
+  for(let i=0;i<segments;i++){
+   const a=base+i,b=a+1,c=a+rows+1,d=a+rows;
+   if(layer===0)idx.push(a,b,c,a,c,d);else idx.push(a,c,b,a,d,c);
+  }
+ }
+ // Close the top, bottom and end edges so the curved cladding has real thickness.
+ const front=0,back=rows*2;
+ for(let i=0;i<segments;i++){
+  const f0=front+i,f1=f0+1,b0=back+i,b1=b0+1;
+  const t0=front+rows+i,t1=t0+1,bt0=back+rows+i,bt1=bt0+1;
+  idx.push(f0,b0,b1,f0,b1,f1,t0,t1,bt1,t0,bt1,bt0);
+ }
+ idx.push(front,front+rows,back+rows,front,back+rows,back);
+ const fe=front+segments,te=front+rows+segments,be=back+segments,bte=back+rows+segments;
+ idx.push(fe,be,bte,fe,bte,te);
+ // Recalculate normals from the closed indexed surface for clean edge shading.
+ const smooth=Array.from({length:p.length/3},()=>[0,0,0]);
+ for(let i=0;i<idx.length;i+=3){
+  const a=idx[i],b=idx[i+1],c=idx[i+2];
+  const A=p.slice(a*3,a*3+3),B=p.slice(b*3,b*3+3),C=p.slice(c*3,c*3+3);
+  const ab=B.map((v,k)=>v-A[k]),ac=C.map((v,k)=>v-A[k]);
+  const cr=[ab[1]*ac[2]-ab[2]*ac[1],ab[2]*ac[0]-ab[0]*ac[2],ab[0]*ac[1]-ab[1]*ac[0]];
+  for(const id of [a,b,c])for(let k=0;k<3;k++)smooth[id][k]+=cr[k];
+ }
+ for(let i=0;i<smooth.length;i++){const l=Math.hypot(...smooth[i])||1;n.splice(i*3,3,...smooth[i].map(v=>v/l));}
+ return {p,n,idx};
+}
 function cylinderGeometry(seg=16){
  const p=[],n=[],idx=[];
  for(let i=0;i<seg;i++){
@@ -165,8 +211,8 @@ function cylinderGeometry(seg=16){
  }
  return {p,n,idx};
 }
-const cube=cubeGeometry(),cyl=cylinderGeometry();
-const all=[cube,cyl],bufferParts=[],views=[],accessors=[];
+const cube=cubeGeometry(),cyl=cylinderGeometry(),curve=curvedPanelGeometry();
+const all=[cube,cyl,curve],bufferParts=[],views=[],accessors=[];
 let offset=0;
 function addBuffer(data,componentType,type,count,min,max){
  while(offset%4){bufferParts.push(0);offset++;}
@@ -175,20 +221,20 @@ function addBuffer(data,componentType,type,count,min,max){
  const acc={bufferView:view,componentType,type,count};if(min)acc.min=min;if(max)acc.max=max;accessors.push(acc);return accessors.length-1;
 }
 const meshDefs=[];
-for(let shape=0;shape<2;shape++){
+for(let shape=0;shape<3;shape++){
  const g=all[shape];
  const pos=addBuffer(new Float32Array(g.p),5126,"VEC3",g.p.length/3,
   [Math.min(...g.p.filter((_,i)=>i%3===0)),Math.min(...g.p.filter((_,i)=>i%3===1)),Math.min(...g.p.filter((_,i)=>i%3===2))],
   [Math.max(...g.p.filter((_,i)=>i%3===0)),Math.max(...g.p.filter((_,i)=>i%3===1)),Math.max(...g.p.filter((_,i)=>i%3===2))]);
  const norm=addBuffer(new Float32Array(g.n),5126,"VEC3",g.n.length/3);
  const ind=addBuffer(new Uint16Array(g.idx),5123,"SCALAR",g.idx.length);
- for(let m=0;m<materials.length;m++)meshDefs.push({name:materials[m][0]+"-"+(shape?"cylinder":"box"),primitives:[{attributes:{POSITION:pos,NORMAL:norm},indices:ind,material:m}]});
+ for(let m=0;m<materials.length;m++)meshDefs.push({name:materials[m][0]+"-"+(["box","cylinder","curved-panel"][shape]),primitives:[{attributes:{POSITION:pos,NORMAL:norm},indices:ind,material:m}]});
 }
 const nodes=[];
 for(let m=0;m<groups.length;m++)for(const item of groups[m]){
- const shape=item.c?1:0;
+ const shape=item.curved?2:item.c?1:0;
  const scale=item.c?[item.c[0]*2,item.c[1],item.c[0]*2]:item.s;
- nodes.push({name:materials[m][0]+"-element",mesh:m*2+shape,translation:item.p,scale,...(item.r?{rotation:item.r}:{})});
+ nodes.push({name:materials[m][0]+(item.curved?"-continuous-curve":"-element"),mesh:m*3+shape,translation:item.p,scale,...(item.r?{rotation:item.r}:{})});
 }
 const gltfMaterials=materials.map(([name,color,metallic,roughness],i)=>({
  name,pbrMetallicRoughness:{baseColorFactor:color,metallicFactor:metallic,roughnessFactor:roughness},
