@@ -326,7 +326,10 @@ function addBuffer(data,componentType,type,count,min,max){
 const meshDefs=[];
 for(let shape=0;shape<5;shape++){
  const g=all[shape];
- const uv=[];\n for(let i=0;i<g.p.length;i+=3){uv.push(g.p[i]+.5,g.p[i+1]+.5);}\n const texcoord=addBuffer(new Float32Array(uv),5126,"VEC2",uv.length/2);\n const pos=addBuffer(new Float32Array(g.p),5126,"VEC3",g.p.length/3,
+ const uv=[];
+ for(let i=0;i<g.p.length;i+=3){uv.push(g.p[i]+.5,g.p[i+1]+.5);}
+ const texcoord=addBuffer(new Float32Array(uv),5126,"VEC2",uv.length/2);
+ const pos=addBuffer(new Float32Array(g.p),5126,"VEC3",g.p.length/3,
   [Math.min(...g.p.filter((_,i)=>i%3===0)),Math.min(...g.p.filter((_,i)=>i%3===1)),Math.min(...g.p.filter((_,i)=>i%3===2))],
   [Math.max(...g.p.filter((_,i)=>i%3===0)),Math.max(...g.p.filter((_,i)=>i%3===1)),Math.max(...g.p.filter((_,i)=>i%3===2))]);
  const norm=addBuffer(new Float32Array(g.n),5126,"VEC3",g.n.length/3);
