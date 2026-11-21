@@ -634,24 +634,24 @@ const track=document.getElementById("galleryTrack");
 const stage=document.getElementById("galleryStage");
 const money=n=>"₹"+n.toLocaleString("en-IN");
 function render(){
- const radius=window.innerWidth<=700?clamp(window.innerWidth*.62,175,280):clamp(window.innerWidth*.72,255,540);
+ const radius=window.innerWidth<=700?clamp(window.innerWidth*.48,150,230):clamp(window.innerWidth*.62,260,470);
  cards.forEach((card,i)=>{
-   let d=i-current;
-   if(d>3)d-=6;if(d< -3)d+=6;
-   const angle=d*29;
+   /* Fixed wall positions: selecting an artwork must never rearrange the other frames. */
+   const d=i-(cards.length-1)/2;
+   const angle=d*18;
    const radians=angle*Math.PI/180;
    const x=Math.sin(radians)*radius;
-   const z=(Math.cos(radians)-1)*radius*.72;
-   const y=Math.abs(d)*5;
-   const scale=d===0?1.12:Math.max(.62,1-Math.abs(d)*.135);
-   const rotate=d===0?0:-angle*.9;
+   const z=(Math.cos(radians)-1)*radius*.42;
+   const y=0;
+   const scale=1;
+   const rotate=-angle*.9;
    card.style.transform=`translate3d(${x}px,${y}px,${z}px) rotateY(${rotate}deg) scale(${scale})`;
-   card.style.opacity=Math.abs(d)>2?.04:Math.max(.36,1-Math.abs(d)*.22);
-   card.style.zIndex=30-Math.abs(d);
-   card.style.filter=d===0?"none":"saturate(.76) brightness(.9)";
-   card.classList.toggle("active",d===0);
-   const caption=card.querySelector(".art-caption"); if(caption) caption.style.opacity=d===0?"1":"0";
-   card.setAttribute("aria-pressed",String(d===0));
+   card.style.opacity="1";
+   card.style.zIndex=20-Math.abs(d);
+   card.style.filter="none";
+   card.classList.toggle("active",i===current);
+   const caption=card.querySelector(".art-caption"); if(caption) caption.style.opacity="1";
+   card.setAttribute("aria-pressed",String(i===current));
  });
  const p=products[current];
  document.title=p.title+" — ARTSPACE";
@@ -1240,7 +1240,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  /* Full-scale gallery furnishings: solid stone plinths and a timber/metal visitor bench.
     These are real dimensional objects with separate components, bevelled edges and contact shadows. */
  const furnitureStone=new THREE.MeshStandardMaterial({color:0xd8d4ca,roughness:.78,metalness:.015});
- const furnitureOak=new THREE.MeshStandardMaterial({color:0x76553a,roughness:.43,metalness:.08});
+ const furnitureOak=new THREE.MeshStandardMaterial({color:0xd8d4ca,roughness:.78,metalness:.015});
  const furnitureMetal=new THREE.MeshStandardMaterial({color:0x353b39,roughness:.34,metalness:.72});
  const addGalleryBox=(w,h,d,mat,x,y,z,parent=room)=>{
   const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh;
@@ -1266,7 +1266,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  let textureLoadsComplete=0,textureLoadFailures=0;
  products.forEach((product,index)=>{
   const group=new THREE.Group();
-  const backingMaterial=new THREE.MeshStandardMaterial({color:0x76583d,roughness:.48,metalness:.12});
+  const backingMaterial=new THREE.MeshStandardMaterial({color:0xe5e1d8,roughness:.78,metalness:.015});
   const frame=new THREE.Mesh(new THREE.BoxGeometry(2.42,3.24,.16),backingMaterial);
   frame.castShadow=true;frame.receiveShadow=true;group.add(frame);
   const matBoard=new THREE.Mesh(new THREE.BoxGeometry(2.29,3.09,.035),new THREE.MeshStandardMaterial({color:0xf8f6ef,roughness:.94}));
@@ -1361,15 +1361,15 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
     pivoted at the wall centre so each frame stays attached while browsing. */
  function layoutCards(){
   cards3D.forEach((group,index)=>{
-   let d=index-current;if(d>3)d-=6;if(d< -3)d+=6;
-   const wallAngle=Math.PI+d*.255;
+   const d=index-(products.length-1)/2;
+   const wallAngle=Math.PI+d*.235;
    const mountRadius=wallRadius-.072;
    group.userData.wallAngle=wallAngle;
    group.userData.targetX=Math.sin(wallAngle)*mountRadius;
    group.userData.targetY=.1;
    group.userData.targetZ=Math.cos(wallAngle)*mountRadius;
    group.userData.targetRY=wallAngle+Math.PI;
-   group.userData.targetScale=d===0?1.08:Math.max(.78,1-Math.abs(d)*.075);
+   group.userData.targetScale=1;
    group.position.set(group.userData.targetX,group.userData.targetY,group.userData.targetZ);
    group.rotation.set(0,group.userData.targetRY,0);
    if(group.userData.artworkLight&&group.userData.artworkTarget){
