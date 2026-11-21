@@ -497,7 +497,10 @@ window.__artspaceThreeReady.then(loaded=>{
  const THREE=window.THREE;
  const scene=new THREE.Scene();
  const camera=new THREE.PerspectiveCamera(36,1,.1,100);
- camera.position.set(0,.12,11.8);
+ const introCameraStart=new THREE.Vector3(0,.38,18.5),introCameraEnd=new THREE.Vector3(0,.12,11.8);
+ camera.position.copy(introCameraStart);
+ const introLookStart=new THREE.Vector3(0,.05,-1),introLookEnd=new THREE.Vector3(0,.05,-2.6),introLookTarget=new THREE.Vector3();
+ let introStartedAt=0,introFinished=false;
  let renderer;
  try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:"high-performance"});}
  catch(error){console.error("ARTSPACE WebGL renderer creation failed:",error);show3DStatus("3D is unavailable in this browser. Showing artwork preview.");return;}
@@ -583,7 +586,7 @@ window.__artspaceThreeReady.then(loaded=>{
   print.position.z=.078;print.castShadow=true;group.add(print);
   const edge=new THREE.Mesh(new THREE.BoxGeometry(2.23,2.95,.018),new THREE.MeshStandardMaterial({color:0xd7d5ce,roughness:.9}));
   edge.position.z=.066;group.add(edge);
-  group.userData.index=index;gallery.add(group);cards3D.push(group);
+  group.userData.index=index;group.scale.setScalar(.62);gallery.add(group);cards3D.push(group);
  });
  const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
  let raf=0,isDragging3D=false,pointerStartX=0,lastPointerX=0,totalDrag=0,suppressCanvasClick=false,pageVisible=!document.hidden;
@@ -616,14 +619,25 @@ window.__artspaceThreeReady.then(loaded=>{
    group.userData.targetZ=(Math.cos(angle)-1)*2.25;
    group.userData.targetRY=-angle*.78;
    group.userData.targetScale=d===0?1.08:Math.max(.72,1-Math.abs(d)*.105);
+   if(!introFinished){group.position.set(group.userData.targetX+(index-2.5)*1.05,-.32,group.userData.targetZ-3.8);group.rotation.y=group.userData.targetRY+(index-2.5)*.16;}
   });
  }
  window.updateArtspace3D=layoutCards;
  function animate(){
   if(!pageVisible)return;
   raf=requestAnimationFrame(animate);
-  if(!isDragging3D&&!reducedMotion){const idleAngle=Math.sin(performance.now()*.00022)*.045;gallery.rotation.y+=(idleAngle-gallery.rotation.y)*.012;}
-  const ease=reducedMotion?1:.105;
+  if(!introStartedAt)introStartedAt=performance.now();
+  const introDuration=reducedMotion?0:4200;
+  const introRaw=introDuration?Math.min(1,(performance.now()-introStartedAt)/introDuration):1;
+  const introEase=1-Math.pow(1-introRaw,3);
+  if(!introFinished){
+   camera.position.lerpVectors(introCameraStart,introCameraEnd,introEase);
+   camera.lookAt(introLookTarget.lerpVectors(introLookStart,introLookEnd,introEase));
+   gallery.rotation.y=(1-introEase)*-.16;
+   if(introRaw>=1){introFinished=true;camera.position.copy(introCameraEnd);camera.lookAt(introLookEnd);gallery.rotation.y=0;}
+  }
+  if(introFinished&&!isDragging3D&&!reducedMotion){const idleAngle=Math.sin(performance.now()*.00022)*.045;gallery.rotation.y+=(idleAngle-gallery.rotation.y)*.012;}
+  const ease=reducedMotion?1:(introFinished?.105:.075);
   cards3D.forEach(group=>{
    const u=group.userData;
    group.position.x+=(u.targetX-group.position.x)*ease;
