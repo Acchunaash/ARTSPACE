@@ -263,6 +263,15 @@ if (!modelBuilder.includes("Sculptural roof and entrance refinement") ||
   fail("The pavilion sculptural roof canopy, recessed soffit and layered entrance portal are missing.");
 }
 
+/* Stage 2: the exterior roof is a real double-skin barrel-vault mesh, not a flat slab. */
+if (!modelBuilder.includes("function barrelRoofGeometry(nx=64,nz=24)") ||
+    !modelBuilder.includes("const flute=flutedPanelGeometry(),roof=barrelRoofGeometry()") ||
+    !modelBuilder.includes("item.roof?5") ||
+    !modelBuilder.includes('"barrel-vault-roof"') ||
+    !modelBuilder.includes("add(0,[19.7,.55,24.8],[0,3.68,-.25],{roof:true})") ||
+    modelBuilder.includes("box(0,19.7,.46,24.8,0,3.72,-.25)")) {
+  fail("Stage 2 requires the double-skin curved barrel-vault roof geometry in the pavilion GLB.");
+}
 if (!modelBuilder.includes("const curvedBox=") ||
     !modelBuilder.includes("const facadeCurve=(x)=>") ||
     !modelBuilder.includes("rotation:item.r") ||
