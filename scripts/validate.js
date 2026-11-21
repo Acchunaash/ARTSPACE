@@ -429,6 +429,16 @@ if (!html.includes("antialias:window.innerWidth>=700") ||
 }
 console.log("ARTSPACE boutique checks passed: six fashion styles, dressed 3D mannequins, fitting rooms, rails, product sizes/colours, DOM and build structure.");
 
+/* Natural boutique exposure: subdued ambient/fill, controlled key and dress spots, ACES filmic roll-off. */
+if (!html.includes("renderer.toneMapping=THREE.ACESFilmicToneMapping") ||
+    !html.includes("renderer.toneMappingExposure=.92") ||
+    !html.includes("new THREE.HemisphereLight(0xffffff,0x77776d,.34)") ||
+    !html.includes("new THREE.DirectionalLight(0xffffff,.82)") ||
+    !html.includes("new THREE.DirectionalLight(0xe5e9ff,.16)") ||
+    !html.includes("new THREE.PointLight(0xffd1a0,.72,10,2)") ||
+    !html.includes("new THREE.SpotLight(0xffebd4,1.15,9")) {
+ fail("The boutique must use restrained filmic exposure and balanced, non-blown-out model/dress lighting.");
+}
 /* Imported human figures must use relaxed MakeHuman arm poses and must not retain the fallback hair mesh. */
 if (!html.includes('group.userData.proceduralHair=fallbackHair') ||
     !html.includes('group.userData.proceduralHair.visible=false') ||
