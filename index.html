@@ -467,6 +467,23 @@ window.__artspaceThreeReady=new Promise(resolve=>{
 });
 </script>
 <script>
+/* Load the matching r128 GLTFLoader after Three.js; keep the procedural exterior as a safe fallback. */
+window.__artspaceGLTFReady=window.__artspaceThreeReady.then(loaded=>new Promise(resolve=>{
+ if(!loaded||!window.THREE){resolve(false);return;}
+ const sources=[
+  "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js",
+  "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/GLTFLoader.js"
+ ];
+ const load=index=>{
+  if(index>=sources.length){console.warn("ARTSPACE GLTFLoader unavailable; retaining fallback exterior.");resolve(false);return;}
+  const script=document.createElement("script");script.src=sources[index];script.async=true;
+  script.onload=()=>resolve(!!(window.THREE&&window.THREE.GLTFLoader));
+  script.onerror=()=>load(index+1);document.head.appendChild(script);
+ };
+ load(0);
+}));
+</script>
+<script>
 const products = [
  {title:"THE BEAUTIFUL GAME",subtitle:"BURKINA FASO — 2026",price:5800,image:"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSI0MjAiIGhlaWdodD0iNTYwIiBmaWxsPSIjZThkN2JkIi8+PHBhdGggZD0iTTAgMzkwIFExMjAgMjYwIDIzMCAzNDAgVDQyMCAyNTAgVjU2MCBIMFoiIGZpbGw9IiNiZDNkMmMiLz48Y2lyY2xlIGN4PSIyODUiIGN5PSIxNTAiIHI9IjgyIiBmaWxsPSIjZTVhMzNlIi8+PHBhdGggZD0iTTkwIDQzMCBMMTUwIDE4MCBMMjI1IDQzMFoiIGZpbGw9IiMxODNlMzYiLz48cGF0aCBkPSJNMTcwIDQzMCBMMjYwIDIzMCBMMzUwIDQzMFoiIGZpbGw9IiNmMWU3ZDciLz48Y2lyY2xlIGN4PSIyMTAiIGN5PSIyNzUiIHI9IjM0IiBmaWxsPSIjMjUyMzIzIi8+PHBhdGggZD0iTTE5MCAzMDggTDE3MCAzOTAgTDI0NSAzOTAgTDIzMCAzMTBaIiBmaWxsPSIjMjUyMzIzIi8+PHBhdGggZD0iTTIwOCAzNDAgTDEyNSAzOTUgTTIyNSAzNDAgTDI5NSAzOTAiIHN0cm9rZT0iIzI1MjMyMyIgc3Ryb2tlLXdpZHRoPSIxOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8dGV4dCB4PSIyNCIgeT0iNTA1IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNyIgZm9udC13ZWlnaHQ9IjcwMCIgbGV0dGVyLXNwYWNpbmc9IjMiIGZpbGw9IiMyMjIiPlRIRSBCRUFVVElGVUwgR0FNRTwvdGV4dD4KICAgIDx0ZXh0IHg9IjI0IiB5PSI1MzAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBsZXR0ZXItc3BhY2luZz0iMiIgZmlsbD0iIzMzMyI+QlVSS0lOQSBGQVNPPC90ZXh0PgogICAgPC9zdmc+"},
  {title:"AFTER THE RAIN",subtitle:"A STUDY IN COLOR — 2026",price:4600,image:"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSI0MjAiIGhlaWdodD0iNTYwIiBmaWxsPSIjZDhlM2RjIi8+PGNpcmNsZSBjeD0iMjA1IiBjeT0iMTkwIiByPSIxMjUiIGZpbGw9IiNlOWEzNWUiLz48cGF0aCBkPSJNMCAzNTAgTDEwMCAyMzAgTDE5MCAzNTAgTDI5MCAyMTAgTDQyMCAzNTAgVjU2MCBIMFoiIGZpbGw9IiMyNTRjNDkiLz48cGF0aCBkPSJNMCA0MzAgUTEyMCAzNTAgMjEwIDQzNSBUNDIwIDQxMCBWNTYwIEgwWiIgZmlsbD0iI2Q2NWI0MiIvPjxwYXRoIGQ9Ik0xMDUgNDMwIFEyMDUgMzE1IDMxNSA0MzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2YzZThkNiIgc3Ryb2tlLXdpZHRoPSIxMiIvPjxjaXJjbGUgY3g9IjIwNSIgY3k9IjMxNSIgcj0iMjgiIGZpbGw9IiNmM2U4ZDYiLz4KICAgIDx0ZXh0IHg9IjI0IiB5PSI1MDUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE3IiBmb250LXdlaWdodD0iNzAwIiBsZXR0ZXItc3BhY2luZz0iMyIgZmlsbD0iIzIyMiI+QUZURVIgVEhFIFJBSU48L3RleHQ+CiAgICA8dGV4dCB4PSIyNCIgeT0iNTMwIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgbGV0dGVyLXNwYWNpbmc9IjIiIGZpbGw9IiMzMzMiPkEgU1RVRFkgSU4gQ09MT1I8L3RleHQ+CiAgICA8L3N2Zz4="},
@@ -613,7 +630,7 @@ window.addEventListener("resize",render);
 render();
 
 /* ADVANCED 3D GALLERY — WebGL scene with graceful CSS fallback */
-window.__artspaceThreeReady.then(loaded=>{
+Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loaded,modelLoaderReady])=>{
  if(!loaded||!window.THREE){
   let status=stage.querySelector(".webgl-status");
   if(!status){status=document.createElement("div");status.className="webgl-status";status.setAttribute("role","status");stage.appendChild(status);}
@@ -768,6 +785,26 @@ window.__artspaceThreeReady.then(loaded=>{
   }
   const facadeWash=new THREE.SpotLight(0xffe6c8,1.15,24,Math.PI/4,.55,1.4);
   facadeWash.position.set(-8,7,17);facadeWash.target.position.set(0,1,9);exterior.add(facadeWash,facadeWash.target);
+  /* Load the authored GLB pavilion as the primary exterior; keep procedural geometry until it succeeds. */
+  let architecturalModelLoaded=false;
+  if(modelLoaderReady&&THREE.GLTFLoader){
+   const pavilionLoader=new THREE.GLTFLoader();
+   pavilionLoader.load("./assets/artspace-pavilion.glb",gltf=>{
+    const pavilion=gltf.scene;
+    pavilion.name="ARTSPACE_PremiumArchitecturalPavilion";
+    pavilion.traverse(node=>{
+     if(node.isMesh){node.castShadow=true;node.receiveShadow=true;}
+     if(node.material){node.material.needsUpdate=true;}
+    });
+    scene.add(pavilion);
+    exterior.visible=false;
+    architecturalModelLoaded=true;
+    stage.classList.add("architectural-model-ready");
+    console.info("ARTSPACE: detailed architectural pavilion GLB loaded successfully.");
+   },undefined,error=>{
+    console.warn("ARTSPACE pavilion GLB failed to load; using procedural exterior fallback.",error);
+   });
+  }
  /* Architectural gallery shell: floor, rear wall, side walls and ceiling. */
  const room=new THREE.Group();scene.add(room);
  const wallMaterial=new THREE.MeshStandardMaterial({color:0xf4f4f1,roughness:.96,metalness:0});
