@@ -670,9 +670,36 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  const fillLight=new THREE.DirectionalLight(0xe5e9ff,.65);
  fillLight.position.set(5,1,4);scene.add(fillLight);
 
+ /* Soft studio environment: broad ceiling panels create readable, restrained reflections
+    on the low-iron glazing without downloading a large HDR file. */
+ let architecturalEnvironment=null;
+ try{
+  const envCanvas=document.createElement("canvas");envCanvas.width=1024;envCanvas.height=512;
+  const envCtx=envCanvas.getContext("2d");
+  const envGradient=envCtx.createLinearGradient(0,0,0,512);
+  envGradient.addColorStop(0,"#dce5e6");envGradient.addColorStop(.42,"#f4f2eb");envGradient.addColorStop(1,"#737d7c");
+  envCtx.fillStyle=envGradient;envCtx.fillRect(0,0,1024,512);
+  envCtx.fillStyle="#fffdf4";
+  [[105,72,110,170],[345,38,82,205],[650,55,130,180],[850,95,72,150]].forEach(([x,y,w,h])=>envCtx.fillRect(x,y,w,h));
+  envCtx.fillStyle="rgba(255,255,255,.28)";envCtx.fillRect(0,245,1024,26);
+  const envTexture=new THREE.CanvasTexture(envCanvas);envTexture.mapping=THREE.EquirectangularReflectionMapping;
+  envTexture.encoding=THREE.sRGBEncoding;
+  const reflectionGenerator=new THREE.PMREMGenerator(renderer);
+  reflectionGenerator.compileEquirectangularShader();
+  architecturalEnvironment=reflectionGenerator.fromEquirectangular(envTexture);
+  scene.environment=architecturalEnvironment.texture;
+  envTexture.dispose();reflectionGenerator.dispose();
+ }catch(error){console.warn("ARTSPACE reflection environment unavailable; using direct lighting.",error);}
+ /* Warm, low-intensity interior pools make the lobby legible through the glass. */
+ [[0,2.05,5.2,1.35],[-4.1,1.35,-1.8,.72],[4.1,1.35,-1.8,.72]].forEach(([x,y,z,intensity])=>{
+  const interiorLight=new THREE.PointLight(0xffe5c9,intensity,15,2);
+  interiorLight.position.set(x,y,z);scene.add(interiorLight);
+ });
+
+
   /* Exterior museum pavilion: complete building silhouette and glazed central entrance. */
   const exterior=new THREE.Group();scene.add(exterior);
-  const facadeMat=new THREE.MeshStandardMaterial({color:0xf2f1ec,roughness:.66,metalness:.04}),stoneMat=new THREE.MeshStandardMaterial({color:0xd5d5ce,roughness:.78,metalness:.02}),darkMetal=new THREE.MeshStandardMaterial({color:0x29383d,roughness:.3,metalness:.78}),glassMat=new THREE.MeshStandardMaterial({color:0xa9c3c7,roughness:.075,metalness:.22,transparent:true,opacity:.2,side:THREE.DoubleSide,depthWrite:false}),glassFrameMat=new THREE.MeshStandardMaterial({color:0x52666b,roughness:.28,metalness:.72});
+  const facadeMat=new THREE.MeshStandardMaterial({color:0xf2f1ec,roughness:.66,metalness:.04}),stoneMat=new THREE.MeshStandardMaterial({color:0xd5d5ce,roughness:.78,metalness:.02}),darkMetal=new THREE.MeshStandardMaterial({color:0x29383d,roughness:.3,metalness:.78}),glassMat=new THREE.MeshStandardMaterial({color:0xa9c3c7,roughness:.055,metalness:.08,transparent:true,opacity:.14,side:THREE.DoubleSide,depthWrite:false}),glassFrameMat=new THREE.MeshStandardMaterial({color:0x52666b,roughness:.28,metalness:.72});
   const addBox=(parent,w,h,d,material,x,y,z)=>{const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh;};
   const exteriorGround=new THREE.Mesh(new THREE.PlaneGeometry(70,70),new THREE.MeshStandardMaterial({color:0xe5e5df,roughness:1}));
   exteriorGround.rotation.x=-Math.PI/2;exteriorGround.position.set(0,-1.79,2);exteriorGround.receiveShadow=true;exterior.add(exteriorGround);
@@ -731,7 +758,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   const limestoneShadow=new THREE.MeshStandardMaterial({color:0xaaa99f,roughness:.9,metalness:.02});
   const bronze=new THREE.MeshStandardMaterial({color:0x725b43,roughness:.34,metalness:.82});
   const darkReveal=new THREE.MeshStandardMaterial({color:0x303b3d,roughness:.48,metalness:.58});
-  const glassReflection=new THREE.MeshStandardMaterial({color:0xdce8e5,roughness:.12,metalness:.32,transparent:true,opacity:.24,side:THREE.DoubleSide,depthWrite:false});
+  const glassReflection=new THREE.MeshStandardMaterial({color:0xdce8e5,roughness:.075,metalness:.12,transparent:true,opacity:.13,side:THREE.DoubleSide,depthWrite:false});
   /* Fine-grain facade panels sit proud of a recessed shadow plane like a rainscreen system. */
   addBox(exterior,19.25,.12,.22,limestoneShadow,0,3.79,9.43);
   for(let side of [-1,1]){
@@ -794,7 +821,20 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
     pavilion.name="ARTSPACE_PremiumArchitecturalPavilion";
     pavilion.traverse(node=>{
      if(node.isMesh){node.castShadow=true;node.receiveShadow=true;}
-     if(node.material){node.material.needsUpdate=true;}
+     const tuneArchitecturalMaterial=material=>{
+      if(!material)return;
+      const materialName=(material.name||"").toLowerCase();
+      if(materialName.includes("low-iron-glass")){
+       material.transparent=true;material.opacity=.22;material.roughness=.055;material.metalness=.06;
+       material.side=THREE.DoubleSide;material.depthWrite=false;material.envMapIntensity=1.35;
+      }else if(materialName.includes("deep-glass")){
+       material.transparent=true;material.opacity=.4;material.roughness=.095;material.metalness=.12;
+       material.side=THREE.DoubleSide;material.depthWrite=false;material.envMapIntensity=1.05;
+      }else if(material.isMeshStandardMaterial){material.envMapIntensity=.72;}
+      material.needsUpdate=true;
+     };
+     if(Array.isArray(node.material))node.material.forEach(tuneArchitecturalMaterial);
+     else tuneArchitecturalMaterial(node.material);
     });
     scene.add(pavilion);
     const pavilionSign=sign.clone();pavilionSign.position.set(0,3.15,12.56);scene.add(pavilionSign);
