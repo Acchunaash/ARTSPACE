@@ -96,10 +96,6 @@ if (!html.includes("Fixed wall positions: selecting an artwork must never rearra
     !html.includes("card.style.opacity=\"1\"")) {
   fail("Every artwork must remain visible in a fixed wall-mounted arrangement, not a slideshow.");
 }
-if (modelBuilder.includes("box(7,5.4,3.6,7.4,0,.35,1.8)")) {
-  fail("The dark oak core must not block the entrance sightline into the white gallery.");
-}
-
 /* Cinematic opening must show the whole exterior, then approach and pass through the entrance. */
 if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
     !html.includes("new THREE.PlaneGeometry(70,70)") ||
@@ -201,6 +197,9 @@ if (!html.includes("introReady=false") ||
 
 /* The deployed exterior is a real glTF scene asset generated during build, not runtime box construction. */
 const modelBuilder = fs.readFileSync("scripts/build-pavilion.js", "utf8");
+if (modelBuilder.includes("box(7,5.4,3.6,7.4,0,.35,1.8)")) {
+  fail("The dark oak core must not block the entrance sightline into the white gallery.");
+}
 if (!modelBuilder.includes("function curvedPanelGeometry(segments=64,bow=.12)") ||
     !modelBuilder.includes("const curvedPanel=(m,w,h,d,x,y,z,bow)") ||
     !modelBuilder.includes("const flute=flutedPanelGeometry(),roof=barrelRoofGeometry(),all=[cube,cyl,curve42,curve58,flute,roof]") ||
