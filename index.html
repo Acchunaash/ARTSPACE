@@ -663,7 +663,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  const camera=new THREE.PerspectiveCamera(36,1,.1,100);
  const introCameraStart=new THREE.Vector3(0,9.2,31),introCameraEnd=new THREE.Vector3(0,1.65,4.7);
   /* Cinematic two-stage move: reveal the complete pavilion, arc toward the portal, then settle to human eye height before crossing the threshold. */
-  const introCameraPath=new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(-5.2,8.2,25),new THREE.Vector3(-6.2,6.25,19.2),new THREE.Vector3(-4.2,4.35,14.6),new THREE.Vector3(-1.8,2.35,10.8),new THREE.Vector3(-.35,1.72,8.9),introCameraEnd],false,"centripetal");
+  const introCameraPath=new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(-5.2,8.2,25),new THREE.Vector3(-6.2,6.25,19.2),new THREE.Vector3(-3.2,3.8,14.6),new THREE.Vector3(-1.0,2.15,10.8),new THREE.Vector3(-.2,1.68,8.9),introCameraEnd],false,"centripetal");
  camera.position.copy(introCameraStart);
  const introLookStart=new THREE.Vector3(0,1.7,8),introLookEnd=new THREE.Vector3(0,1.5,-5.3),introLookTarget=new THREE.Vector3();
   /* The gaze turns toward the real doorway, then continues into the curved exhibition room. */
