@@ -217,3 +217,10 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Kept the detailed pavilion and imported fashion-human assets as progressive enhancements when the loader is available within the bounded startup window.
 - Added a validator guard so future changes cannot make the optional GLTFLoader a blocking dependency again.
 - The diagnostic overlay continues to expose startup errors. GitHub Actions and browser rendering must still be checked after deployment; this source change alone does not prove the user's device can create a WebGL context.
+
+
+## 2026-11-22 — Remove visitor-side 3D CDN dependency
+- The prior startup adjustment did not resolve the user's issue. The 3D runtime still depended on loading Three.js from external CDNs on each visitor device, so CDN filtering, network instability or cache interference could still prevent the scene from initializing.
+- Replaced the browser-side CDN fallback loader with locally served, pinned Three.js r128, GLTFLoader and SkeletonUtils files. Added a build script to fetch these assets during GitHub Actions and include the MIT license in the Pages artifact.
+- Updated both deployment and validation workflows to build the local runtime, strengthened validation to require the local assets, and bumped the service-worker shell cache to v6.
+- This removes the external CDN from the critical browser startup path. Deployment and on-device WebGL rendering still need to be confirmed after the workflow completes.
