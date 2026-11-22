@@ -184,3 +184,9 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Kept the exterior entrance animation, camera path, pavilion GLB, boutique positions, fashion models, product selection, cart and checkout interactions unchanged.
 - Added regression checks for the oak/linen maps and fitting-room details.
 - Automated deployment and visual acceptance still require checking on the live site; source syntax and structure are not a substitute for a real rendered browser screenshot.
+
+## 2026-11-22 — Architectural lighting refinement
+- Added a soft warm facade daylight direction and cool skylight hemisphere fill to complement the existing studio reflection environment.
+- Added four warm ceiling light pools over the main boutique and fitting alcoves to improve oak, limestone and mannequin readability.
+- Preserved the existing ACES filmic exposure, shadow setup, camera entrance animation and mobile performance limits.
+- Meshy pavilion geometry and PBR texturing are complete, but GLB export is currently blocked by the connected Meshy plan; the existing pavilion asset remains in use.
