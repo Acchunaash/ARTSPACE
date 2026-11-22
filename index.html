@@ -993,7 +993,10 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   const mountArchitecturalPavilion=gltf=>{
    const pavilion=gltf.scene;
    pavilion.name="ARTSPACE_PremiumArchitecturalPavilion";
+   pavilion.scale.setScalar(1.35);
    pavilion.traverse(node=>{
+    const assetName=(node.name||"").toLowerCase();
+    if(/car|vehicle|hatchback|crossover|suv|wheel|tyre|tire|headlight/.test(assetName))node.visible=false;
     if(node.isMesh){node.castShadow=true;node.receiveShadow=true;}
     const tuneArchitecturalMaterial=material=>{
      if(!material)return;
@@ -1024,7 +1027,8 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   introLoadTimeout=window.setTimeout(()=>settleIntro("12-second model timeout; procedural exterior retained"),12000);
   if(modelLoaderReady&&THREE.GLTFLoader){
    const pavilionLoader=new THREE.GLTFLoader();
-   pavilionLoader.load("./assets/artspace-pavilion.glb",gltf=>{
+   pavilionLoader.setCrossOrigin("anonymous");
+   pavilionLoader.load("https://files.innerscene.com/library/compact-car-showroom-15-x-12-m-with-two-display-cars-047c113c/77d1c83db4f039981def/compact-car-showroom-15-x-12-m-with-two-display-cars.glb",gltf=>{
     if(introReady&&!introFinished){
      pendingArchitecturalPavilion=gltf;
      console.info("ARTSPACE: late pavilion queued until the entrance camera finishes.");
