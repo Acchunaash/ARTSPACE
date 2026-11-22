@@ -1645,7 +1645,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   },{threshold:.12,rootMargin:"0px 0px -36px 0px"});
  }
  markElements(document);
- const grid=document.getElementById("collectionGrid");
+ const grid=document.querySelector(".collection-grid");
  if(grid&&"MutationObserver" in window){
   const mutations=new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{if(node.nodeType===1)markElements(node);})));
   mutations.observe(grid,{childList:true,subtree:true});
