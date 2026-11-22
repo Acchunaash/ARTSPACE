@@ -1778,7 +1778,21 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  console.error("ARTSPACE 3D startup failed:",error);
  let status=stage.querySelector(".webgl-status");
  if(!status){status=document.createElement("div");status.className="webgl-status";status.setAttribute("role","status");stage.appendChild(status);}
- status.textContent="3D boutique could not start. Fashion preview remains available.";
+ const detail=String(error&&error.message?error.message:error||"Unknown startup error").replace(/\\s+/g," ").slice(0,180);
+ status.textContent="3D startup error: "+detail+". Fashion preview remains available.";
+ status.hidden=false;
+ stage.dataset.webglError=detail;
+});
+window.addEventListener("unhandledrejection",event=>{
+ const reason=event.reason;
+ console.error("ARTSPACE unhandled async error:",reason);
+ if(!stage.classList.contains("webgl-ready")){
+  let status=stage.querySelector(".webgl-status");
+  if(!status){status=document.createElement("div");status.className="webgl-status";status.setAttribute("role","status");stage.appendChild(status);}
+  const detail=String(reason&&reason.message?reason.message:reason||"Unknown async error").replace(/\\s+/g," ").slice(0,180);
+  status.textContent="3D asset error: "+detail+". Fashion preview remains available.";
+  status.hidden=false;stage.dataset.webglError=detail;
+ }
 });
 
 </script>
