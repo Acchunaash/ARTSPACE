@@ -197,3 +197,10 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Updated the pavilion loader to request the hosted GLB with anonymous CORS and scale it to fit the ARTSPACE scene. Added a best-effort name-based visibility filter for vehicle-related nodes so the showroom can read as a fashion space; the existing ARTSPACE fashion displays and procedural exterior fallback remain.
 - Updated automated validation to verify the external CC0 asset URL and CORS configuration rather than requiring the unavailable local Meshy GLB.
 - Important limitation: this is a free, reusable showroom asset adapted for ARTSPACE, not a custom AI-generated fashion boutique. The source model's vehicle meshes are hidden only when their node names match the filter. Browser CORS, object naming, orientation, scale and the final rendered fit still require visual acceptance; no claim is made that these have been verified.
+
+
+### Interior close-up framing and product display lighting — 2026-11-22
+- Tightened the final interior camera position and field of view after the preserved exterior-to-interior entrance animation: desktop FOV 36°, mobile FOV 39°, with a closer final look target. Exterior establishing shot and camera travel remain unchanged.
+- Added slim champagne-brass display frames around all six dress/mannequin plinths, recessed warm LED strips on both sides and top/bottom, subtle halo backing, and an aimed soft top spotlight.
+- Added small adjustable-looking cylindrical track-light housings and emissive lenses along both ceiling rails for more layered showroom detail.
+- Extended validator checks for the close interior camera and new frame/track lighting elements. Rendering and visual fit still require browser acceptance testing.
