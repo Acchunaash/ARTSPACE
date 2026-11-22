@@ -123,7 +123,7 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
   fail("Curved exterior sweep, portal alignment, and continuous curved-gallery camera transition are missing.");
 }
 if (!html.includes("new THREE.PlaneGeometry(17,19),floorMaterial") ||
-    !html.includes("floorMaterial.roughness=.68;floorMaterial.metalness=.025;") ||
+    !html.includes("floorMaterial.roughness=.48;floorMaterial.metalness=.035;") ||
     !html.includes("camera.fov=44;camera.updateProjectionMatrix();") ||
     !html.includes("leftWall.position.set(-8.5,.15,-1.15)") ||
     !html.includes("rightWall.position.set(8.5,.15,-1.15)") ||
@@ -147,7 +147,12 @@ if (!html.includes("white_stucco_02_diff_2k.jpg") ||
     !html.includes("white_stucco_02_rough_2k.jpg") ||
     !html.includes("registerArchitecturalPbr(wallMaterial,2.2)") ||
     !html.includes("material.roughnessMap=architecturalPbr.roughness") ||
-    !html.includes("CC0 scanned architectural")) {
+    !html.includes("CC0 scanned architectural") ||
+    !html.includes("const makeMicroSurface=(seed,base=128,amplitude=22)=>") ||
+    !html.includes("floorMaterial.bumpMap=stoneRelief;floorMaterial.bumpScale=.052;") ||
+    !html.includes("floorMaterial.roughnessMap=stoneRoughness;floorMaterial.roughness=.48;floorMaterial.metalness=.035;") ||
+    !html.includes("wallMaterial.bumpMap=plasterRelief;wallMaterial.bumpScale=.028;") ||
+    !html.includes("const furnitureOak=new THREE.MeshStandardMaterial({color:0x987451,roughness:.58,metalness:0})")) {
   fail("The real CC0 scanned PBR material pipeline is missing.");
 }
 if (!html.includes("const visitorBench=new THREE.Group()") ||
