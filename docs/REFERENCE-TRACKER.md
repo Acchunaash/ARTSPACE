@@ -154,3 +154,11 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Validation workflow passed on the final tracker revision (run 44973637590). The gated deploy workflow passed on commit 9ad1fe4c5ff4da20cb50dc739dbc605c4d85cb17 (run 44973637607), and the GitHub Pages build/deployment workflow also passed (run 44973637580).
 - The previous revision's Pages deployment succeeded despite its separate validation failure; that historical deployment is not treated as an acceptance pass.
 - Visual acceptance remains pending. No actual browser screenshot/render capture has been obtained, so the models, skin tones, dress colours and architectural details under the new lighting have not been visually verified.
+
+### Editorial scroll animations — 2026-11-22
+- Added restrained scroll-triggered reveal motion to the collection heading, filters, dynamically rendered dress cards, about-strip statements and footer. Elements fade and rise into view with a subtle stagger; the full-screen opening gallery and its cinematic WebGL camera path are not animated by this layer.
+- Added a slim top reading-progress indicator with accessible progress semantics. It updates using requestAnimationFrame and passive scroll listeners.
+- Added IntersectionObserver-based reveals and MutationObserver support for dress cards inserted by filtering/search, with immediate visibility fallback where observers are unavailable.
+- Respects `prefers-reduced-motion`: reveal transitions are disabled and the progress line is hidden for users who request reduced motion.
+- Updated `scripts/validate.js` to guard the scroll animation, dynamic-card, progress and reduced-motion hooks.
+- Automated validation and Pages deployment are pending for this revision. Visual acceptance remains pending until a real deployed-browser screenshot is inspected; source checks do not prove the rendered timing or appearance.
