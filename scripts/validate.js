@@ -471,9 +471,9 @@ if (!html.includes('progress.id="scrollProgress"') ||
 for (const asset of ["three.min.js", "GLTFLoader.js", "SkeletonUtils.js", "THREE-LICENSE.txt"]) {
  if (!fs.existsSync("assets/vendor/" + asset)) fail("Missing locally bundled 3D dependency: " + asset);
 }
-if (!html.includes('<script src="./assets/vendor/three.min.js"></script>') ||
-    !html.includes('<script src="./assets/vendor/GLTFLoader.js"></script>') ||
-    !html.includes('<script src="./assets/vendor/SkeletonUtils.js"></script>') ||
+if (!html.includes('<script src="./assets/vendor/three.min.js?v=artspace-3d-2"></script>') ||
+    !html.includes('<script src="./assets/vendor/GLTFLoader.js?v=artspace-3d-2"></script>') ||
+    !html.includes('<script src="./assets/vendor/SkeletonUtils.js?v=artspace-3d-2"></script>') ||
     !html.includes("window.__artspaceThreeReady=Promise.resolve(!!window.THREE)")) {
  fail("The 3D gallery must load its pinned Three.js runtime and model helpers from local assets.");
 }
