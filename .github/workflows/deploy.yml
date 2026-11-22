@@ -24,6 +24,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Bundle local Three.js runtime and model loaders
+        run: node scripts/build-vendor.js
       - name: Build architectural pavilion GLB
         run: node scripts/build-pavilion.js
       - name: Validate HTML, JavaScript, CSS and app files
@@ -37,6 +39,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Bundle local Three.js runtime and model loaders
+        run: node scripts/build-vendor.js
       - name: Build architectural pavilion GLB
         run: node scripts/build-pavilion.js
       - name: Configure Pages
