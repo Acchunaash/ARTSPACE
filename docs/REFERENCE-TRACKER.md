@@ -161,4 +161,5 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Added IntersectionObserver-based reveals and MutationObserver support for dress cards inserted by filtering/search, with immediate visibility fallback where observers are unavailable.
 - Respects `prefers-reduced-motion`: reveal transitions are disabled and the progress line is hidden for users who request reduced motion.
 - Updated `scripts/validate.js` to guard the scroll animation, dynamic-card, progress and reduced-motion hooks.
+- Corrected the progress-indicator regression check to match its intentional runtime-created DOM element; the indicator is created after the page body is available rather than hard-coded into the HTML.
 - Automated validation and Pages deployment are pending for this revision. Visual acceptance remains pending until a real deployed-browser screenshot is inspected; source checks do not prove the rendered timing or appearance.
