@@ -184,8 +184,8 @@ if (!html.includes("glassFrameMat=new THREE.MeshStandardMaterial") ||
 }
 
 // The runtime and matching model loaders are bundled locally during the Pages build.
-if (!html.includes('<script src="./assets/vendor/three.min.js"></script>') ||
-    !html.includes('<script src="./assets/vendor/GLTFLoader.js"></script>') ||
+if (!html.includes('<script src="./assets/vendor/three.min.js?v=artspace-3d-2"></script>') ||
+    !html.includes('<script src="./assets/vendor/GLTFLoader.js?v=artspace-3d-2"></script>') ||
     !html.includes("window.__artspaceThreeReady=Promise.resolve(!!window.THREE)") ||
     !html.includes("window.__artspaceGLTFReady=Promise.resolve(!!(window.THREE&&window.THREE.GLTFLoader))")) {
   fail("Three.js and its matching model loader must be loaded from local bundled assets before WebGL initialization.");
