@@ -15,6 +15,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build architectural pavilion GLB
+        run: node scripts/build-pavilion.js
+      - name: Validate HTML, JavaScript, CSS and app files
+        run: node scripts/validate.js
   build:
     runs-on: ubuntu-latest
     steps:
@@ -37,7 +50,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: [validate, build]
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
