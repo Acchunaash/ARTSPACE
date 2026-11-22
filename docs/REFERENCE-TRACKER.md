@@ -147,3 +147,10 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Replaced the pure-white basic-material ceiling panels and entrance light strip with muted, non-self-luminous standard materials so they no longer appear as blown-out white patches.
 - Updated regression checks to enforce the new lower lighting values. Geometry, camera and commerce interactions remain untouched.
 - Visual verification is still pending: source validation and deployment workflows must complete, and a real browser capture is needed to judge the result on-screen.
+### Lighting validator alignment and deployment safety gate — 2026-11-22
+- Re-inspected the latest index.html, scripts/validate.js, reference tracker and the failed GitHub Actions job before changing anything.
+- The failed validation log identified one stale regression expectation: the validator expected the primary hemisphere fill at .34, while the current natural-lighting implementation correctly uses .19. The source lighting was not increased; the validator was aligned to the already-committed .19 value. Exposure remains .68, with the existing reduced directional fill and dress spotlights unchanged.
+- Added a validation job to the GitHub Pages deploy workflow and made deployment depend on both successful validation and successful site build. This prevents future pushes from deploying an unvalidated source revision.
+- Validation workflow passed on commit 3e30bc88437c1f05ef8705fe71bec024ae6729bb (run 44973606251). The deploy workflow for that revision is still being checked; the Pages deployment is not yet marked complete in this entry.
+- The previous revision's Pages deployment succeeded despite its separate validation failure; that historical deployment is not treated as an acceptance pass.
+- Visual acceptance remains pending. No actual browser screenshot/render capture has been obtained, so the models, skin tones, dress colours and architectural details under the new lighting have not been visually verified.
