@@ -684,6 +684,7 @@ function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
 const selectedProduct=document.getElementById("selectedProduct");
 const productDetailClose=document.getElementById("productDetailClose");
 function openProductDetail(){
+ if(window.updateArtspace3D)window.updateArtspace3D();
  render();
  selectedProduct.inert=false;
  selectedProduct.setAttribute("aria-hidden","false");
@@ -704,7 +705,7 @@ document.addEventListener("keydown",e=>{
  if(e.key==="Escape"&&document.body.classList.contains("product-detail-open")){e.preventDefault();closeProductDetail();}
 });
 window.addEventListener("popstate",closeProductDetail);
-function move(n){current=(current+n+products.length)%products.length;stage.classList.add("camera-shift");render();clearTimeout(move.cameraTimer);move.cameraTimer=setTimeout(()=>stage.classList.remove("camera-shift"),460)}
+function move(n){current=(current+n+products.length)%products.length;stage.classList.add("camera-shift");if(window.updateArtspace3D)window.updateArtspace3D();render();clearTimeout(move.cameraTimer);move.cameraTimer=setTimeout(()=>stage.classList.remove("camera-shift"),460)}
 function renderWishlist(){document.getElementById("savedCount").textContent=wishlist.length;const list=document.getElementById("savedItems");if(!wishlist.length){list.innerHTML='<div class="cart-empty">No saved dresses yet.<br>Save a dress to your wardrobe edit.</div>';return;}list.innerHTML=wishlist.map(index=>{const p=products[index];return '<article class="cart-item"><div class="cart-thumb"><img src="'+p.image+'" alt=""></div><div><h3>'+p.title+'</h3><div class="cart-meta">'+p.subtitle+'<br>'+money(p.price)+'</div><button class="saved-view" data-saved-view="'+index+'">VIEW DRESS ↗</button></div><button class="cart-close" data-saved-remove="'+index+'" aria-label="Remove '+p.title+'">×</button></article>';}).join("");}
 function openWishlist(){closeCart();renderWishlist();document.getElementById("savedDrawer").classList.add("open");document.getElementById("savedBackdrop").classList.add("open");document.body.classList.add("wishlist-open");document.getElementById("savedDrawer").setAttribute("aria-hidden","false");document.getElementById("savedClose").focus();}
 function closeWishlist(){document.getElementById("savedDrawer").classList.remove("open");document.getElementById("savedBackdrop").classList.remove("open");document.body.classList.remove("wishlist-open");document.getElementById("savedDrawer").setAttribute("aria-hidden","true");}
@@ -1124,6 +1125,54 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  for(let z=-8.275;z<=5.975;z+=2.375){
   const joint=new THREE.Mesh(new THREE.BoxGeometry(17,.003,.012),floorJointMaterial);
   joint.position.set(0,floorJointY,z);joint.receiveShadow=true;room.add(joint);
+ }
+ /* INTERIOR DETAIL PASS — layered hospitality furniture, lighting and material accents. */
+ const interiorRugMat=new THREE.MeshStandardMaterial({color:0xaaa397,roughness:.98});
+ const interiorRug=new THREE.Mesh(new THREE.PlaneGeometry(5.8,3.1),interiorRugMat);
+ interiorRug.rotation.x=-Math.PI/2;interiorRug.position.set(0,-1.704,-1.35);room.add(interiorRug);
+ const rugBorderMat=new THREE.MeshStandardMaterial({color:0x8e806e,roughness:.9});
+ for(const edge of [-1,1]){
+  const rugEdge=new THREE.Mesh(new THREE.BoxGeometry(5.8,.008,.025),rugBorderMat);
+  rugEdge.position.set(0,-1.695,-1.35+edge*1.49);room.add(rugEdge);
+ }
+ /* Low travertine consultation table with a recessed brass foot and book stack. */
+ const tableStone=new THREE.MeshStandardMaterial({color:0xc9c2b5,roughness:.72});
+ const tableBase=new THREE.Mesh(new THREE.CylinderGeometry(.52,.58,.12,48),tableStone);
+ tableBase.position.set(0,-.98,-1.1);room.add(tableBase);
+ const tableFoot=new THREE.Mesh(new THREE.CylinderGeometry(.16,.2,.78,32),railMetal);
+ tableFoot.position.set(0,-1.39,-1.1);room.add(tableFoot);
+ const tableTop=new THREE.Mesh(new THREE.CylinderGeometry(.62,.62,.09,48),tableStone);
+ tableTop.position.set(0,-.91,-1.1);tableTop.castShadow=true;room.add(tableTop);
+ const bookMat=new THREE.MeshStandardMaterial({color:0xeee8dc,roughness:.9});
+ const book=new THREE.Mesh(new THREE.BoxGeometry(.42,.045,.29),bookMat);
+ book.position.set(-.12,-.82,-1.12);book.rotation.y=-.18;room.add(book);
+ const brassTray=new THREE.Mesh(new THREE.CylinderGeometry(.19,.19,.018,32),railMetal);
+ brassTray.position.set(.28,-.85,-1.05);room.add(brassTray);
+ /* Suspended linear brass lighting feature with warm luminous diffuser and fine cables. */
+ const pendantGroup=new THREE.Group();pendantGroup.position.set(0,2.9,-1.65);room.add(pendantGroup);
+ const pendantRail=addBoutiqueBox(pendantGroup,4.1,.055,.12,railMetal,0,0,0);
+ const pendantLensMat=new THREE.MeshStandardMaterial({color:0xffe5bd,emissive:0xffc77c,emissiveIntensity:1.35,roughness:.3});
+ addBoutiqueBox(pendantGroup,3.82,.025,.075,pendantLensMat,0,-.045,0);
+ for(const x of [-1.82,1.82]){
+  const cable=new THREE.Mesh(new THREE.CylinderGeometry(.009,.009,.72,8),railMetal);
+  cable.position.set(x,.36,0);pendantGroup.add(cable);
+ }
+ const pendantLight=new THREE.RectAreaLight(0xffd8a8,2.2,3.7,.7);
+ pendantLight.position.set(0,-.16,0);pendantGroup.add(pendantLight);
+ /* Architectural wall washers and warm recessed ceiling downlights. */
+ for(const x of [-5.2,-2.6,0,2.6,5.2]){
+  const trim=addBoutiqueBox(room,.72,.035,.16,railMetal,x,3.52,-3.6);
+  const diffuser=addBoutiqueBox(room,.58,.018,.105,pendantLensMat,x,3.49,-3.6);
+  const wash=new THREE.SpotLight(0xffe2c2,.48,5,.72,.72,1.2);
+  wash.position.set(x,3.42,-3.5);wash.target.position.set(x,1.05,-6.2);room.add(wash,wash.target);
+ }
+ /* Curated accessories: ceramic vessels and a sculptural branch on the welcome console. */
+ const ceramicMat=new THREE.MeshStandardMaterial({color:0xd6c9b7,roughness:.36});
+ for(const x of [-1.12,1.08]){
+  const vessel=new THREE.Mesh(new THREE.CylinderGeometry(.12,.19,.42,24),ceramicMat);
+  vessel.position.set(x,-.47,-2.15);room.add(vessel);
+  const neck=new THREE.Mesh(new THREE.CylinderGeometry(.07,.1,.16,20),ceramicMat);
+  neck.position.set(x,-.18,-2.15);room.add(neck);
  }
  /* Continuous concave exhibition wall: the visitor stands inside the arc. */
  const wallRadius=8.6,wallCenterZ=3.5,wallStart=Math.PI*.57,wallSweep=Math.PI*.86;
@@ -1590,8 +1639,13 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
    group.userData.targetY=-1.72;
    group.userData.targetZ=Math.cos(wallAngle)*mountRadius;
    group.userData.targetRY=wallAngle+Math.PI;
-   group.userData.targetScale=1;
+   group.userData.targetScale=index===current?1.18:.64;
    group.position.set(group.userData.targetX,group.userData.targetY,group.userData.targetZ);
+   if(index===current){
+    group.userData.targetY=-1.72;
+   }
+   /* Rotate the curved gallery so the chosen dress sits directly in the visitor's sightline. */
+   gallery.userData.targetRotation=Math.PI-wallAngle;
    group.rotation.set(0,group.userData.targetRY,0);
    if(group.userData.humanModel)group.userData.humanModel.visible=window.innerWidth>=700||index===current;
    if(group.userData.artworkLight&&group.userData.artworkTarget){
@@ -1628,6 +1682,11 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
    }
   }
   const ease=reducedMotion?1:(introFinished?.105:.075);
+  if(introFinished&&Number.isFinite(gallery.userData.targetRotation)){
+   let delta=gallery.userData.targetRotation-gallery.rotation.y;
+   delta=Math.atan2(Math.sin(delta),Math.cos(delta));
+   gallery.rotation.y+=delta*ease;
+  }
   cards3D.forEach(group=>{
    const u=group.userData;
    group.position.x+=(u.targetX-group.position.x)*ease;
