@@ -183,14 +183,18 @@ if (!html.includes("glassFrameMat=new THREE.MeshStandardMaterial") ||
   fail("Museum exterior must retain its facade fins, side glazing, canopy lights, planting and tuned daylight/shadows.");
 }
 
-// Guard the Three.js loader against a race with the application initializer.
-if (!html.includes("window.__artspaceThreeReady=new Promise") ||
-    !html.includes("window.__artspaceThreeReady.then(loaded=>")) {
-  fail("Three.js must load sequentially before WebGL initialization.");
+// The runtime and matching model loaders are bundled locally during the Pages build.
+if (!html.includes('<script src="./assets/vendor/three.min.js"></script>') ||
+    !html.includes('<script src="./assets/vendor/GLTFLoader.js"></script>') ||
+    !html.includes("window.__artspaceThreeReady=Promise.resolve(!!window.THREE)") ||
+    !html.includes("window.__artspaceGLTFReady=Promise.resolve(!!(window.THREE&&window.THREE.GLTFLoader))")) {
+  fail("Three.js and its matching model loader must be loaded from local bundled assets before WebGL initialization.");
 }
-if (!html.includes("https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js") ||
-    !html.includes("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js")) {
-  fail("Both primary and fallback Three.js sources must be configured.");
+for (const asset of ["three.min.js", "GLTFLoader.js", "SkeletonUtils.js", "THREE-LICENSE.txt"]) {
+  const assetPath = path.join(root, "assets", "vendor", asset);
+  if (!fs.existsSync(assetPath) || fs.statSync(assetPath).size < 100) {
+    fail(`Local 3D runtime asset is missing or incomplete: assets/vendor/${asset}`);
+  }
 }
 
 /* The cinematic camera must wait for the detailed pavilion or a bounded fallback decision. */
