@@ -463,8 +463,13 @@ if (!html.includes('progress.id="scrollProgress"') ||
  fail("Scroll reveals, dynamic collection-card observation, accessible page progress, or reduced-motion support are missing.");
 }
 
-/* Optional GLTF model CDN must not block the procedural WebGL boutique from starting. */
-if (!html.includes("Promise.race([window.__artspaceGLTFReady,new Promise(resolve=>window.setTimeout(()=>resolve(false),1200))])") ||
-    !html.includes("GLTFLoader is optional: never hold the entire WebGL gallery hostage")) {
- fail("The 3D gallery must start on Three.js even when the optional GLTFLoader CDN is slow or unavailable.");
+/* The 3D runtime must be bundled locally so visitor-side CDN failures cannot disable WebGL. */
+for (const asset of ["three.min.js", "GLTFLoader.js", "SkeletonUtils.js", "THREE-LICENSE.txt"]) {
+ if (!fs.existsSync("assets/vendor/" + asset)) fail("Missing locally bundled 3D dependency: " + asset);
+}
+if (!html.includes('<script src="./assets/vendor/three.min.js"></script>') ||
+    !html.includes('<script src="./assets/vendor/GLTFLoader.js"></script>') ||
+    !html.includes('<script src="./assets/vendor/SkeletonUtils.js"></script>') ||
+    !html.includes("window.__artspaceThreeReady=Promise.resolve(!!window.THREE)")) {
+ fail("The 3D gallery must load its pinned Three.js runtime and model helpers from local assets.");
 }
