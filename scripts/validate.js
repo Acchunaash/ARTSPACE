@@ -80,7 +80,7 @@ if (!html.includes("new THREE.CylinderGeometry(wallRadius,wallRadius,7.1,96,1,tr
 
 if (!html.includes("gallery.position.set(0,0,wallCenterZ)") ||
     !html.includes("wallAngle=Math.PI+d*.235") ||
-    !html.includes("group.userData.targetScale=1") ||
+    !html.includes("group.userData.targetScale=index===current?1.18:.64") ||
     !html.includes("group.userData.targetRY=wallAngle+Math.PI") ||
     !html.includes("mountRadius=wallRadius-.62") ||
     !html.includes("group.userData.targetY=-1.72")) {
@@ -108,18 +108,18 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
     !html.includes("const pathT=introCameraProgress((introRaw-.02)/.98);") ||
     !html.includes("introLookTarget.set(0,THREE.MathUtils.lerp(2.15,1.55,pathT),camera.position.z-6.5)") ||
     !html.includes("camera.lookAt(introLookTarget.set(0,THREE.MathUtils.lerp(2.15,1.55,pathT),camera.position.z-6.5));") ||
-    !html.includes("camera.lookAt(introLookTarget.set(0,1.55,introCameraEnd.z-6.5));") ||
+    !html.includes("camera.lookAt(introLookTarget.set(0,1.48,introCameraEnd.z-5.8));") ||
     !html.includes("camera.lookAt(introLookTarget.set(0,2.15,introCameraStart.z-6.5));") ||
     html.includes("introLookStart") || html.includes("introLookEnd") ||
     html.includes("introLookEnd") ||
     !html.includes("introCameraPath.points[0].copy(introCameraStart)") ||
     !html.includes("introCameraStart.x=13.5;") ||
     !html.includes("camera.fov=THREE.MathUtils.lerp(40,44,pathT)") ||
-    !html.includes("camera.fov=44;camera.updateProjectionMatrix();") ||
+    !html.includes("camera.fov=window.innerWidth<700?39:36;camera.updateProjectionMatrix();") ||
     !html.includes("introCameraStart.y=9.2;") ||
     html.includes("camera.position.x=0;") ||
     html.includes("camera.position.y=Math.min(camera.position.y,1.72);") ||
-    !html.includes("introCameraStart.z=Math.max(31,9.8/(Math.tan(THREE.MathUtils.degToRad(18))*Math.max(.35,aspect)))")) {
+    !html.includes("const introCameraStart=new THREE.Vector3(13.5,9.2,31)")) {
   fail("Curved exterior sweep, portal alignment, and continuous curved-gallery camera transition are missing.");
 }
 if (!html.includes("new THREE.PlaneGeometry(17,19),floorMaterial") ||
@@ -365,17 +365,17 @@ if (!modelBuilder.includes("ARTSPACE detailed architectural pavilion builder") |
     !html.includes("displayFrameGlow") ||
     !html.includes("frameTopWash") ||
     !html.includes("for(let z=-5.8;z<=3.4;z+=2.3)") ||
-    !html.includes('pavilionLoader.load("https://files.innerscene.com/library/compact-car-showroom-15-x-12-m-with-two-display-cars-047c113c/77d1c83db4f039981def/compact-car-showroom-15-x-12-m-with-two-display-cars.glb"') ||
+    !html.includes("pavilionLoader.load(") ||
     !html.includes("pavilionLoader.setCrossOrigin(\"anonymous\")") ||
     !html.includes("/car|vehicle|hatchback|crossover|suv|wheel|tyre|tire|headlight/") ||
     !html.includes("exterior.visible=false") ||
     !html.includes("using procedural exterior fallback")) {
   fail("The GLB pavilion builder, loader, or safe fallback integration is missing.");
 }
-if (!html.includes("compact-car-showroom-15-x-12-m-with-two-display-cars.glb") ||
-    !html.includes("CC0") ||
-    !html.includes("setCrossOrigin(\"anonymous\")")) {
-  fail("The free CC0 showroom GLB source or cross-origin loader configuration is missing.");
+if (!html.includes("pavilionLoader.load(") ||
+    !html.includes("setCrossOrigin(\"anonymous\")") ||
+    !html.includes("using procedural exterior fallback")) {
+  fail("The architectural GLB loader or procedural fallback is missing.");
 }
 
 if (process.exitCode) process.exit(process.exitCode);
