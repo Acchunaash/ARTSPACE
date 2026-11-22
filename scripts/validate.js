@@ -152,6 +152,11 @@ if (!html.includes("white_stucco_02_diff_2k.jpg") ||
     !html.includes("floorMaterial.bumpMap=stoneRelief;floorMaterial.bumpScale=.052;") ||
     !html.includes("floorMaterial.roughnessMap=stoneRoughness;floorMaterial.roughness=.48;floorMaterial.metalness=.035;") ||
     !html.includes("wallMaterial.bumpMap=plasterRelief;wallMaterial.bumpScale=.028;") ||
+    !html.includes("const makeOakMap=()=>") ||
+    !html.includes("const makeLinenMap=()=>") ||
+    !html.includes("boutiqueWood.map=oakMap;boutiqueWood.bumpMap=oakRelief;") ||
+    !html.includes("fittingFabric.map=linenMap;fittingFabric.bumpMap=linenRelief;") ||
+    !html.includes("Slim oak reveals, brass pulls and a recessed base") ||
     !html.includes("const furnitureOak=new THREE.MeshStandardMaterial({color:0x987451,roughness:.58,metalness:0})")) {
   fail("The real CC0 scanned PBR material pipeline is missing.");
 }
