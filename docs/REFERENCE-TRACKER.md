@@ -210,3 +210,10 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Updated the 3D gallery layout so the currently selected dress is enlarged while surrounding displays recede, and the curved gallery eases around to place that specific dress in the centre sightline.
 - Added interior staging: a bordered rug, travertine consultation table, brass foot and tray, stacked lookbook, suspended linear brass pendant with warm diffuser, ceiling wall-wash fittings, and ceramic vessels.
 - Verification: all five inline JavaScript blocks in `index.html` parse successfully. GitHub Pages deployment was pending at the time of this check; live visual rendering has not been independently verified.
+
+
+## 2026-11-22 — 3D startup reliability fix
+- Removed the optional GLTFLoader CDN from the critical rendering path. ARTSPACE now waits for Three.js, but only gives the optional model loader 1.2 seconds; if it is slow or blocked, the procedural 3D boutique starts instead of leaving the preview stuck.
+- Kept the detailed pavilion and imported fashion-human assets as progressive enhancements when the loader is available within the bounded startup window.
+- Added a validator guard so future changes cannot make the optional GLTFLoader a blocking dependency again.
+- The diagnostic overlay continues to expose startup errors. GitHub Actions and browser rendering must still be checked after deployment; this source change alone does not prove the user's device can create a WebGL context.
