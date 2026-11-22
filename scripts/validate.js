@@ -432,7 +432,7 @@ console.log("ARTSPACE boutique checks passed: six fashion styles, dressed 3D man
 /* Natural boutique exposure: subdued ambient/fill, controlled key and dress spots, ACES filmic roll-off. */
 if (!html.includes("renderer.toneMapping=THREE.ACESFilmicToneMapping") ||
     !html.includes("renderer.toneMappingExposure=.68") ||
-    !html.includes("new THREE.HemisphereLight(0xffffff,0x77776d,.34)") ||
+    !html.includes("new THREE.HemisphereLight(0xffffff,0x77776d,.19)") ||
     !html.includes("new THREE.DirectionalLight(0xffffff,.46)") ||
     !html.includes("new THREE.DirectionalLight(0xe5e9ff,.07)") ||
     !html.includes("new THREE.PointLight(0xffd1a0,.28,10,2)") ||
