@@ -769,7 +769,8 @@ window.addEventListener("resize",render);
 render();
 
 /* ADVANCED 3D GALLERY — WebGL scene with graceful CSS fallback */
-Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loaded,modelLoaderReady])=>{
+/* GLTFLoader is optional: never hold the entire WebGL gallery hostage to a third-party model CDN. */
+Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFReady,new Promise(resolve=>window.setTimeout(()=>resolve(false),1200))])]).then(([loaded,modelLoaderReady])=>{
  if(!loaded||!window.THREE){
   let status=stage.querySelector(".webgl-status");
   if(!status){status=document.createElement("div");status.className="webgl-status";status.setAttribute("role","status");stage.appendChild(status);}
