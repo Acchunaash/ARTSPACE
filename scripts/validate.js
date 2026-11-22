@@ -452,7 +452,7 @@ if (!html.includes('group.userData.proceduralHair=fallbackHair') ||
 
 
 /* Scroll experience: progressive reveals and accessible reading progress, with reduced-motion support. */
-if (!html.includes('id="scrollProgress"') ||
+if (!html.includes('progress.id="scrollProgress"') ||
     !html.includes('Page reading progress') ||
     !html.includes('.scroll-reveal.is-visible') ||
     !html.includes('IntersectionObserver') ||
