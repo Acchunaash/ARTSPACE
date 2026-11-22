@@ -1049,6 +1049,32 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
   return texture;
  };
+ /* PBR DETAIL PASS — fine, non-repeating mineral relief and roughness variation.
+    These maps add real light response to the plaster, limestone and honed floor. */
+ const makeMicroSurface=(seed,base=128,amplitude=22)=>{
+  const canvas=document.createElement("canvas");canvas.width=512;canvas.height=512;
+  const ctx=canvas.getContext("2d"),image=ctx.createImageData(512,512),data=image.data;
+  for(let y=0;y<512;y++)for(let x=0;x<512;x++){
+   const i=(y*512+x)*4;
+   const broad=Math.sin((x+seed*19)*.031)*Math.cos((y-seed*13)*.027)*.42;
+   const grain=Math.sin((x*1.73+y*2.11+seed)*.19)*.22;
+   const fine=Math.sin((x*7.1-y*5.7+seed*31)*.61)*.12;
+   const hash=Math.sin((x*127.1+y*311.7+seed*74.7)*.017)*.5;
+   const value=Math.max(0,Math.min(255,base+amplitude*(broad+grain+fine+hash)));
+   data[i]=data[i+1]=data[i+2]=value;data[i+3]=255;
+  }
+  ctx.putImageData(image,0,0);
+  const texture=new THREE.CanvasTexture(canvas);
+  texture.wrapS=texture.wrapT=THREE.RepeatWrapping;
+  texture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+  return texture;
+ };
+ const plasterRelief=makeMicroSurface(4,126,17);
+ const stoneRelief=makeMicroSurface(9,132,28);
+ const stoneRoughness=makeMicroSurface(12,184,26);
+ plasterRelief.repeat.set(2.2,1.65);
+ stoneRelief.repeat.set(4.5,5.5);
+ stoneRoughness.repeat.set(4.5,5.5);
  const plasterTexture=makeMineralTexture("#e9e7e0",.08,3);
  const stoneFloorTexture=makeMineralTexture("#d8d5cc",.1,7);
  plasterTexture.repeat.set(2.4,1.15);stoneFloorTexture.repeat.set(4.5,5.5);
@@ -1056,7 +1082,21 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  sideMaterial.map=plasterTexture;sideMaterial.color.set(0xfaf9f5);sideMaterial.roughness=.92;sideMaterial.needsUpdate=true;
  /* Replace synthetic grain with real CC0 scanned plaster once the maps arrive. */
  registerArchitecturalPbr(wallMaterial,2.2);registerArchitecturalPbr(sideMaterial,1.65);
- floorMaterial.map=stoneFloorTexture;floorMaterial.color.set(0xffffff);floorMaterial.roughness=.68;floorMaterial.metalness=.025;floorMaterial.needsUpdate=true;
+ wallMaterial.bumpMap=plasterRelief;wallMaterial.bumpScale=.028;
+ sideMaterial.bumpMap=plasterRelief;sideMaterial.bumpScale=.022;
+ floorMaterial.map=stoneFloorTexture;floorMaterial.color.set(0xffffff);
+ floorMaterial.bumpMap=stoneRelief;floorMaterial.bumpScale=.052;
+ floorMaterial.roughnessMap=stoneRoughness;floorMaterial.roughness=.48;floorMaterial.metalness=.035;
+ floorMaterial.needsUpdate=true;
+ /* Carry the same fine-grain surface response onto the exterior fallback and
+    the scanned pavilion's limestone/concrete materials without flattening their colour maps. */
+ [facadeMat,stoneMat,limestonePanel,limestoneShadow].forEach((material,index)=>{
+  material.bumpMap=index===1?stoneRelief:plasterRelief;
+  material.bumpScale=index===1?.045:.024;
+  material.roughness=index===0?.72:.84;
+  material.envMapIntensity=.9;
+  material.needsUpdate=true;
+ });
 
  const floor=new THREE.Mesh(new THREE.PlaneGeometry(17,19),floorMaterial);
  floor.rotation.x=-Math.PI/2;floor.position.set(0,-1.72,-1.15);floor.receiveShadow=true;room.add(floor);
@@ -1257,7 +1297,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  /* Full-scale gallery furnishings: solid stone plinths and a timber/metal visitor bench.
     These are real dimensional objects with separate components, bevelled edges and contact shadows. */
  const furnitureStone=new THREE.MeshStandardMaterial({color:0xd8d4ca,roughness:.78,metalness:.015});
- const furnitureOak=new THREE.MeshStandardMaterial({color:0xd8d4ca,roughness:.78,metalness:.015});
+ const furnitureOak=new THREE.MeshStandardMaterial({color:0x987451,roughness:.58,metalness:0});
  const furnitureMetal=new THREE.MeshStandardMaterial({color:0x353b39,roughness:.34,metalness:.72});
  const addGalleryBox=(w,h,d,mat,x,y,z,parent=room)=>{
   const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh;
