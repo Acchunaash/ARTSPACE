@@ -174,3 +174,13 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Updated the source validator to check the new material maps and timber finish, and aligned its expected floor material values.
 - Blender Bridge scene editing was unavailable because the connected account requires an active trial/subscription. This pass was therefore made in the website's Three.js source.
 - Visual acceptance is still pending: no live browser screenshot was available, so the rendered change must be inspected on the deployed site before claiming photorealistic acceptance.
+
+
+### Direct Three.js boutique realism pass — 2026-11-22
+- Continued without Blender by editing the live website's Three.js scene directly.
+- Added procedural quarter-sawn oak grain and subtle relief maps to the fitting-room joinery and visitor bench, plus a woven linen texture and fine bump response for fitting-room fabric panels.
+- Added slim brass-toned joinery reveals, a recessed fitting-room base and a small metal pull to give the fitting suites more convincing construction detail.
+- Textures are generated in-browser with CanvasTexture; no external assets or additional network requests are required.
+- Kept the exterior entrance animation, camera path, pavilion GLB, boutique positions, fashion models, product selection, cart and checkout interactions unchanged.
+- Added regression checks for the oak/linen maps and fitting-room details.
+- Automated deployment and visual acceptance still require checking on the live site; source syntax and structure are not a substitute for a real rendered browser screenshot.
