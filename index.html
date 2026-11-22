@@ -760,6 +760,7 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
  camera.position.copy(introCameraStart);
  const introLookTarget=new THREE.Vector3();
   /* Aim through the real doorway and keep a stable forward gaze; the target never rises toward the roof or reverses behind the camera. */
+ let pageVisible=!document.hidden;
  let introStartedAt=0,introFinished=false,introReady=false,introLoadTimeout=0,introPausedAt=0,pendingArchitecturalPavilion=null;
  const settleIntro=reason=>{if(introReady)return;introReady=true;introStartedAt=performance.now();if(!pageVisible)introPausedAt=introStartedAt;if(introLoadTimeout)clearTimeout(introLoadTimeout);console.info("ARTSPACE: exterior intro ready — "+reason+".");};
  let renderer;
@@ -1572,7 +1573,7 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
   script.async=true;script.onload=loadHuman;script.onerror=loadHuman;document.head.appendChild(script);
  };
  const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
- let raf=0,isDragging3D=false,pointerStartX=0,lastPointerX=0,totalDrag=0,suppressCanvasClick=false,pageVisible=!document.hidden;
+ let raf=0,isDragging3D=false,pointerStartX=0,lastPointerX=0,totalDrag=0,suppressCanvasClick=false;
  let lastFrameTime=0;const mobileFrameInterval=window.innerWidth<700?1000/40:0;
  const reducedMotion=!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches);
  renderer.domElement.style.touchAction="pan-y";
