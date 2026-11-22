@@ -164,3 +164,13 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Corrected the progress-indicator regression check to match its intentional runtime-created DOM element; the indicator is created after the page body is available rather than hard-coded into the HTML.
 - Corrected the dynamic-card observer to target the actual `.collection-grid` class, so cards inserted after filtering/search are picked up.
 - Automated validation and Pages deployment are pending for the final grid-observer correction. Visual acceptance remains pending until a real deployed-browser screenshot is inspected; source checks do not prove the rendered timing or appearance.
+
+
+### Architectural material realism pass — 2026-11-22
+- Added a physically based micro-surface pass to the live Three.js scene: deterministic mineral height maps for fine plaster/stone relief and a variable roughness map for the honed limestone floor.
+- Applied subtle bump response to the curved plaster gallery walls, exterior fallback cladding and pavilion limestone/concrete materials, while preserving the scanned Poly Haven plaster albedo/normal/roughness pipeline.
+- Tuned the floor to a more natural honed-stone response with restrained reflections and micro-relief; corrected the visitor bench timber material so it reads as warm oak rather than matching the stone plinth.
+- Preserved the existing exterior pavilion GLB, entrance camera path, interior geometry, fashion models, product interactions and responsive performance settings.
+- Updated the source validator to check the new material maps and timber finish, and aligned its expected floor material values.
+- Blender Bridge scene editing was unavailable because the connected account requires an active trial/subscription. This pass was therefore made in the website's Three.js source.
+- Visual acceptance is still pending: no live browser screenshot was available, so the rendered change must be inspected on the deployed site before claiming photorealistic acceptance.
