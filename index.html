@@ -1100,6 +1100,8 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
   const joint=new THREE.Mesh(new THREE.BoxGeometry(17,.003,.012),floorJointMaterial);
   joint.position.set(0,floorJointY,z);joint.receiveShadow=true;room.add(joint);
  }
+ /* Shared brass finish must exist before the table, pendant and ceiling fittings use it. */
+ const railMetal=new THREE.MeshStandardMaterial({color:0x9c8060,metalness:.78,roughness:.28});
  /* INTERIOR DETAIL PASS — layered hospitality furniture, lighting and material accents. */
  const interiorRugMat=new THREE.MeshStandardMaterial({color:0xaaa397,roughness:.98});
  const interiorRug=new THREE.Mesh(new THREE.PlaneGeometry(5.8,3.1),interiorRugMat);
@@ -1368,7 +1370,6 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
  const cards3D=[];
  
  /* Fashion showroom fittings: polished rails, fitting-room portals and full-height mirrors. */
- const railMetal=new THREE.MeshStandardMaterial({color:0x9c8060,metalness:.78,roughness:.28});
  const fittingFabric=new THREE.MeshStandardMaterial({color:0xe7dfd2,roughness:.98});
  const mirrorMat=new THREE.MeshPhysicalMaterial({color:0xe5e9e8,metalness:.92,roughness:.12,clearcoat:1,clearcoatRoughness:.08});
  const boutiqueWood=new THREE.MeshStandardMaterial({color:0x80634b,roughness:.62});
