@@ -1269,15 +1269,17 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   trim.position.set(x,-1.58,-1.15);room.add(trim);
  });
  const railMaterial=new THREE.MeshStandardMaterial({color:0x38485a,roughness:.55,metalness:.5});
+ const trackHousingMaterial=new THREE.MeshStandardMaterial({color:0x9b8061,metalness:.78,roughness:.3});
+ const trackLensMaterial=new THREE.MeshStandardMaterial({color:0xffe2b9,emissive:0xffc77e,emissiveIntensity:1.05,roughness:.32});
  [-3.5,3.5].forEach(x=>{
   const rail=new THREE.Mesh(new THREE.BoxGeometry(.075,.07,12),railMaterial);
   rail.position.set(x,3.43,-1.1);room.add(rail);
   for(let z=-5.8;z<=3.4;z+=2.3){
    const mount=new THREE.Mesh(new THREE.CylinderGeometry(.045,.055,.12,16),railMaterial);
    mount.position.set(x,3.34,z);room.add(mount);
-   const housing=new THREE.Mesh(new THREE.CylinderGeometry(.105,.075,.16,20),displayFrameMetal);
+   const housing=new THREE.Mesh(new THREE.CylinderGeometry(.105,.075,.16,20),trackHousingMaterial);
    housing.rotation.x=Math.PI/2;housing.position.set(x,3.22,z);room.add(housing);
-   const lens=new THREE.Mesh(new THREE.CircleGeometry(.065,20),displayFrameGlow);
+   const lens=new THREE.Mesh(new THREE.CircleGeometry(.065,20),trackLensMaterial);
    lens.position.set(x,3.135,z);lens.rotation.x=-Math.PI/2;room.add(lens);
   }
  });
