@@ -439,8 +439,11 @@ if (!html.includes("antialias:window.innerWidth>=700") ||
 }
 console.log("ARTSPACE boutique checks passed: six fashion styles, dressed 3D mannequins, fitting rooms, rails, product sizes/colours, DOM and build structure.");
 
-/* Natural boutique exposure: subdued ambient/fill, controlled key and dress spots, ACES filmic roll-off. */
-if (!html.includes("renderer.toneMapping=THREE.ACESFilmicToneMapping") ||
+/* Natural boutique exposure: balanced facade daylight, ceiling pools, warm interior bounce, controlled key and dress spots. */
+if (!html.includes("const facadeDaylight=new THREE.DirectionalLight(0xfff2df,.28)") ||
+    !html.includes("const skylightFill=new THREE.HemisphereLight(0xeaf1ff,0x9a8872,.12)") ||
+    !html.includes("const ceilingPool=new THREE.PointLight(0xffd8b5,intensity,12,2)") ||
+    !html.includes("renderer.toneMapping=THREE.ACESFilmicToneMapping") ||
     !html.includes("renderer.toneMappingExposure=.68") ||
     !html.includes("new THREE.HemisphereLight(0xffffff,0x77776d,.19)") ||
     !html.includes("new THREE.DirectionalLight(0xffffff,.46)") ||
