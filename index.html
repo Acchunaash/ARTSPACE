@@ -839,7 +839,7 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
   if(signCtx){signCtx.fillStyle="#263238";signCtx.font="600 104px Arial";signCtx.textAlign="center";signCtx.fillText("ARTSPACE",512,132);signCtx.font="26px Arial";signCtx.fillText("CONTEMPORARY ART GALLERY",512,184);}
   const signTexture=new THREE.CanvasTexture(signCanvas);signTexture.encoding=THREE.sRGBEncoding;
   const sign=new THREE.Mesh(new THREE.PlaneGeometry(4.9,1.05),new THREE.MeshBasicMaterial({map:signTexture,transparent:true,side:THREE.DoubleSide}));sign.position.set(0,3.15,8.91);exterior.add(sign);
- /*   /* Layered facade: shadow gaps, vertical fins, curtain-wall mullions and glazed side ribbons. */
+ /* Layered facade: shadow gaps, vertical fins, curtain-wall mullions and glazed side ribbons. */
   const revealMat=new THREE.MeshStandardMaterial({color:0xb9b9b1,roughness:.82,metalness:.04});
   addBox(exterior,19.85,.16,.34,stoneMat,0,3.72,9.15);
   addBox(exterior,20.25,.12,2.55,darkMetal,0,4.25,9.48);
@@ -995,29 +995,11 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
    });
    scene.add(pavilion);
    const pavilionSign=sign.clone();pavilionSign.position.set(0,3.15,12.56);scene.add(pavilionSign);
-   exterior.visible=false;
    stage.classList.add("architectural-model-ready");
-   console.info("ARTSPACE: detailed architectural pavilion GLB mounted successfully.");
+   console.info("ARTSPACE: procedural ARTSPACE pavilion retained; imported showroom model disabled.");
   };
-  introLoadTimeout=window.setTimeout(()=>settleIntro("12-second model timeout; procedural exterior retained"),12000);
-  if(modelLoaderReady&&THREE.GLTFLoader){
-   const pavilionLoader=new THREE.GLTFLoader();
-   pavilionLoader.setCrossOrigin("anonymous");
-   pavilionLoader.load("https://files.innerscene.com/library/compact-car-showroom-15-x-12-m-with-two-display-cars-047c113c/77d1c83db4f039981def/compact-car-showroom-15-x-12-m-with-two-display-cars.glb",gltf=>{
-    if(introReady&&!introFinished){
-     pendingArchitecturalPavilion=gltf;
-     console.info("ARTSPACE: late pavilion queued until the entrance camera finishes.");
-     return;
-    }
-    mountArchitecturalPavilion(gltf);
-    if(!introReady)settleIntro("detailed pavilion loaded");
-   },undefined,error=>{
-    console.warn("ARTSPACE pavilion GLB failed to load; using procedural exterior fallback.",error);
-    settleIntro("GLB request failed; procedural exterior retained");
-   });
-  }else{
-   settleIntro("GLTFLoader unavailable; procedural exterior retained");
-  }
+  /* Keep the purpose-built ARTSPACE building visible. The previous external asset was a car showroom and could hide this pavilion. */
+  settleIntro("ARTSPACE architectural building ready");
  /* Architectural gallery shell: floor, rear wall, side walls and ceiling. */
  const room=new THREE.Group();scene.add(room);
  const wallMaterial=new THREE.MeshStandardMaterial({color:0xf4f4f1,roughness:.96,metalness:0});
