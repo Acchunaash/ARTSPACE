@@ -190,3 +190,10 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Added four warm ceiling light pools over the main boutique and fitting alcoves to improve oak, limestone and mannequin readability.
 - Preserved the existing ACES filmic exposure, shadow setup, camera entrance animation and mobile performance limits.
 - Meshy pavilion geometry and PBR texturing are complete, but GLB export is currently blocked by the connected Meshy plan; the existing pavilion asset remains in use.
+
+
+### Free CC0 showroom model integration — 2026-11-22
+- User explicitly rejected paid 3D generation and asked for a free solution. Selected the Innerscene compact showroom GLB, published under CC0 (public domain dedication), with a glazed facade, cutaway roof/wall, polished floor, ceiling lighting tracks, lounge and sales desks. Source asset is approximately 10.7 MB and remains hosted by Innerscene; ARTSPACE loads it directly at runtime, so no paid generator or local asset upload is required.
+- Updated the pavilion loader to request the hosted GLB with anonymous CORS and scale it to fit the ARTSPACE scene. Added a best-effort name-based visibility filter for vehicle-related nodes so the showroom can read as a fashion space; the existing ARTSPACE fashion displays and procedural exterior fallback remain.
+- Updated automated validation to verify the external CC0 asset URL and CORS configuration rather than requiring the unavailable local Meshy GLB.
+- Important limitation: this is a free, reusable showroom asset adapted for ARTSPACE, not a custom AI-generated fashion boutique. The source model's vehicle meshes are hidden only when their node names match the filter. Browser CORS, object naming, orientation, scale and the final rendered fit still require visual acceptance; no claim is made that these have been verified.
