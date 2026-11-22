@@ -204,3 +204,9 @@ Automated validation proves source/build constraints only. A successful GitHub P
 - Added slim champagne-brass display frames around all six dress/mannequin plinths, recessed warm LED strips on both sides and top/bottom, subtle halo backing, and an aimed soft top spotlight.
 - Added small adjustable-looking cylindrical track-light housings and emissive lenses along both ceiling rails for more layered showroom detail.
 - Extended validator checks for the close interior camera and new frame/track lighting elements. Rendering and visual fit still require browser acceptance testing.
+
+
+## 2026-11-22 — Selected-dress focus and interior dressing
+- Updated the 3D gallery layout so the currently selected dress is enlarged while surrounding displays recede, and the curved gallery eases around to place that specific dress in the centre sightline.
+- Added interior staging: a bordered rug, travertine consultation table, brass foot and tray, stacked lookbook, suspended linear brass pendant with warm diffuser, ceiling wall-wash fittings, and ceramic vessels.
+- Verification: all five inline JavaScript blocks in `index.html` parse successfully. GitHub Pages deployment was pending at the time of this check; live visual rendering has not been independently verified.
