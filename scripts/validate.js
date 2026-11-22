@@ -462,3 +462,9 @@ if (!html.includes('progress.id="scrollProgress"') ||
     !html.includes('requestAnimationFrame(updateProgress)')) {
  fail("Scroll reveals, dynamic collection-card observation, accessible page progress, or reduced-motion support are missing.");
 }
+
+/* Optional GLTF model CDN must not block the procedural WebGL boutique from starting. */
+if (!html.includes("Promise.race([window.__artspaceGLTFReady,new Promise(resolve=>window.setTimeout(()=>resolve(false),1200))])") ||
+    !html.includes("GLTFLoader is optional: never hold the entire WebGL gallery hostage")) {
+ fail("The 3D gallery must start on Three.js even when the optional GLTFLoader CDN is slow or unavailable.");
+}
