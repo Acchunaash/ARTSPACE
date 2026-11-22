@@ -583,15 +583,17 @@ if("serviceWorker" in navigator){
 window.__artspaceThreeReady=new Promise(resolve=>{
  const sources=[
   "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js",
-  "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
+  "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js",
+  "https://unpkg.com/three@0.128.0/build/three.min.js"
  ];
  const load=index=>{
-  if(index>=sources.length){resolve(false);return;}
+  if(index>=sources.length){console.error("ARTSPACE: all Three.js CDN sources failed.");resolve(false);return;}
   const script=document.createElement("script");
-  script.src=sources[index];
-  script.async=true;
-  script.onload=()=>{if(window.THREE)resolve(true);else load(index+1);};
-  script.onerror=()=>{console.warn("ARTSPACE Three.js source failed:",sources[index]);load(index+1);};
+  let settled=false;
+  const timeout=window.setTimeout(()=>{if(settled)return;settled=true;script.remove();console.warn("ARTSPACE Three.js source timed out:",sources[index]);load(index+1);},3500);
+  script.src=sources[index];script.async=true;
+  script.onload=()=>{if(settled)return;settled=true;clearTimeout(timeout);if(window.THREE)resolve(true);else load(index+1);};
+  script.onerror=()=>{if(settled)return;settled=true;clearTimeout(timeout);console.warn("ARTSPACE Three.js source failed:",sources[index]);load(index+1);};
   document.head.appendChild(script);
  };
  load(0);
@@ -603,13 +605,17 @@ window.__artspaceGLTFReady=window.__artspaceThreeReady.then(loaded=>new Promise(
  if(!loaded||!window.THREE){resolve(false);return;}
  const sources=[
   "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js",
-  "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/GLTFLoader.js"
+  "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/GLTFLoader.js",
+  "https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"
  ];
  const load=index=>{
-  if(index>=sources.length){console.warn("ARTSPACE GLTFLoader unavailable; retaining boutique exterior.");resolve(false);return;}
-  const script=document.createElement("script");script.src=sources[index];script.async=true;
-  script.onload=()=>{if(window.THREE&&window.THREE.GLTFLoader)resolve(true);else load(index+1);};
-  script.onerror=()=>load(index+1);document.head.appendChild(script);
+  if(index>=sources.length){console.warn("ARTSPACE GLTFLoader unavailable; procedural 3D boutique remains active.");resolve(false);return;}
+  const script=document.createElement("script");let settled=false;
+  const timeout=window.setTimeout(()=>{if(settled)return;settled=true;script.remove();console.warn("ARTSPACE GLTFLoader source timed out:",sources[index]);load(index+1);},2500);
+  script.src=sources[index];script.async=true;
+  script.onload=()=>{if(settled)return;settled=true;clearTimeout(timeout);if(window.THREE&&window.THREE.GLTFLoader)resolve(true);else load(index+1);};
+  script.onerror=()=>{if(settled)return;settled=true;clearTimeout(timeout);load(index+1);};
+  document.head.appendChild(script);
  };
  load(0);
 }));
