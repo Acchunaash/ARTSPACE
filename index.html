@@ -1102,6 +1102,8 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
  }
  /* Shared brass finish must exist before the table, pendant and ceiling fittings use it. */
  const railMetal=new THREE.MeshStandardMaterial({color:0x9c8060,metalness:.78,roughness:.28});
+ /* Shared geometry helper is declared before any interior or product-frame uses. */
+ const addBoutiqueBox=(parent,w,h,d,mat,x,y,z)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;};
  /* INTERIOR DETAIL PASS — layered hospitality furniture, lighting and material accents. */
  const interiorRugMat=new THREE.MeshStandardMaterial({color:0xaaa397,roughness:.98});
  const interiorRug=new THREE.Mesh(new THREE.PlaneGeometry(5.8,3.1),interiorRugMat);
@@ -1407,7 +1409,7 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
  furnitureOak.map=oakMap;furnitureOak.bumpMap=oakRelief;furnitureOak.bumpScale=.028;furnitureOak.roughness=.5;furnitureOak.needsUpdate=true;
  fittingFabric.map=linenMap;fittingFabric.bumpMap=linenRelief;fittingFabric.bumpScale=.018;fittingFabric.roughness=.96;fittingFabric.needsUpdate=true;
 
- const addBoutiqueBox=(parent,w,h,d,mat,x,y,z)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;};
+ 
  for(const side of [-1,1]){
   const x=side*5.65,z=-6.55;
   addBoutiqueBox(room,2.35,3.5,.16,boutiqueWood,x,.02,z);
