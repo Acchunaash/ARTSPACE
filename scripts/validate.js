@@ -449,3 +449,15 @@ if (!html.includes('group.userData.proceduralHair=fallbackHair') ||
     !html.includes('human.updateMatrixWorld(true)')) {
  fail("The rigged human models must use relaxed showroom arm poses and suppress the duplicate procedural hair fallback.");
 }
+
+
+/* Scroll experience: progressive reveals and accessible reading progress, with reduced-motion support. */
+if (!html.includes('id="scrollProgress"') ||
+    !html.includes('Page reading progress') ||
+    !html.includes('.scroll-reveal.is-visible') ||
+    !html.includes('IntersectionObserver') ||
+    !html.includes('prefers-reduced-motion:reduce') ||
+    !html.includes('MutationObserver') ||
+    !html.includes('requestAnimationFrame(updateProgress)')) {
+ fail("Scroll reveals, dynamic collection-card observation, accessible page progress, or reduced-motion support are missing.");
+}
