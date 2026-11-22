@@ -191,7 +191,7 @@ if (!html.includes('<script src="./assets/vendor/three.min.js"></script>') ||
   fail("Three.js and its matching model loader must be loaded from local bundled assets before WebGL initialization.");
 }
 for (const asset of ["three.min.js", "GLTFLoader.js", "SkeletonUtils.js", "THREE-LICENSE.txt"]) {
-  const assetPath = path.join(root, "assets", "vendor", asset);
+  const assetPath = require("node:path").join(__dirname, "..", "assets", "vendor", asset);
   if (!fs.existsSync(assetPath) || fs.statSync(assetPath).size < 100) {
     fail(`Local 3D runtime asset is missing or incomplete: assets/vendor/${asset}`);
   }
