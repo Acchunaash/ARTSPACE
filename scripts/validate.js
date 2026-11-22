@@ -360,34 +360,17 @@ if (!modelBuilder.includes("ARTSPACE detailed architectural pavilion builder") |
     !modelBuilder.includes("idx.push(base,base+2,base+1,base,base+3,base+2)") ||
     !modelBuilder.includes("Roof monitors") ||
     !html.includes("window.__artspaceGLTFReady") ||
-    !html.includes('pavilionLoader.load("./assets/artspace-pavilion.glb"') ||
+    !html.includes('pavilionLoader.load("https://files.innerscene.com/library/compact-car-showroom-15-x-12-m-with-two-display-cars-047c113c/77d1c83db4f039981def/compact-car-showroom-15-x-12-m-with-two-display-cars.glb"') ||
+    !html.includes("pavilionLoader.setCrossOrigin(\"anonymous\")") ||
+    !html.includes("/car|vehicle|hatchback|crossover|suv|wheel|tyre|tire|headlight/") ||
     !html.includes("exterior.visible=false") ||
     !html.includes("using procedural exterior fallback")) {
   fail("The GLB pavilion builder, loader, or safe fallback integration is missing.");
 }
-if (!fs.existsSync("assets/artspace-pavilion.glb")) {
-  fail("The generated architectural pavilion GLB is missing from the build output.");
-} else {
-  const glb = fs.readFileSync("assets/artspace-pavilion.glb");
-  if (glb.length < 10000 || glb.toString("ascii", 0, 4) !== "glTF" || glb.readUInt32LE(4) !== 2 || glb.readUInt32LE(8) !== glb.length) {
-    fail("The generated pavilion is not a valid, complete glTF 2.0 binary.");
-  } else {
-    const jsonLength = glb.readUInt32LE(12);
-    try {
-      const model = JSON.parse(glb.toString("utf8", 20, 20 + jsonLength).trim());
-      if (model.asset?.version !== "2.0" || !model.nodes?.length || model.meshes?.length < 50 || model.materials?.length < 8 || model.textures?.length < 9 || model.images?.length < 9) {
-        fail("The pavilion GLB is missing expected architectural geometry, embedded texture maps, or PBR materials.");
-      }
-      const invalidMeshNodes=(model.nodes||[]).filter(node=>!Number.isInteger(node.mesh)||node.mesh<0||node.mesh>=model.meshes.length);
-      if(invalidMeshNodes.length)fail("Pavilion contains "+invalidMeshNodes.length+" nodes with invalid mesh references.");
-      const texturedMaterials=(model.materials||[]).filter(material=>material.pbrMetallicRoughness?.baseColorTexture&&material.normalTexture&&material.pbrMetallicRoughness?.metallicRoughnessTexture);
-      if(texturedMaterials.length<4)fail("Limestone, shadow stone, concrete and oak must each carry embedded albedo, normal and roughness maps.");
-      if(!model.materials[2]||model.materials[2].pbrMetallicRoughness?.baseColorTexture)fail("Bronze must not inherit a limestone albedo texture.");
-      if(!(model.nodes||[]).some(node=>node.name==="deep-glass-element")||!(model.nodes||[]).some(node=>node.name==="limestone-element"))fail("The model is missing separate glass and stone facade elements.");
-    } catch (error) {
-      fail("The pavilion GLB JSON chunk is invalid: " + error.message);
-    }
-  }
+if (!html.includes("compact-car-showroom-15-x-12-m-with-two-display-cars.glb") ||
+    !html.includes("CC0") ||
+    !html.includes("setCrossOrigin(\"anonymous\")")) {
+  fail("The free CC0 showroom GLB source or cross-origin loader configuration is missing.");
 }
 
 if (process.exitCode) process.exit(process.exitCode);
