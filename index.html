@@ -1645,7 +1645,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
     group.userData.targetY=-1.72;
    }
    /* Rotate the curved gallery so the chosen dress sits directly in the visitor's sightline. */
-   gallery.userData.targetRotation=Math.PI-wallAngle;
+   if(index===current)gallery.userData.targetRotation=Math.PI-wallAngle;
    group.rotation.set(0,group.userData.targetRY,0);
    if(group.userData.humanModel)group.userData.humanModel.visible=window.innerWidth>=700||index===current;
    if(group.userData.artworkLight&&group.userData.artworkTarget){
