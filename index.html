@@ -578,9 +578,9 @@ if("serviceWorker" in navigator){
  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(error=>console.warn("ARTSPACE offline cache unavailable:",error)));
 }
 </script>
-<script src="./assets/vendor/three.min.js"></script>
-<script src="./assets/vendor/GLTFLoader.js"></script>
-<script src="./assets/vendor/SkeletonUtils.js"></script>
+<script src="./assets/vendor/three.min.js?v=artspace-3d-2"></script>
+<script src="./assets/vendor/GLTFLoader.js?v=artspace-3d-2"></script>
+<script src="./assets/vendor/SkeletonUtils.js?v=artspace-3d-2"></script>
 <script>
 /* Three.js and its matching model helpers are served locally, not from visitor-side CDNs. */
 window.__artspaceThreeReady=Promise.resolve(!!window.THREE);
