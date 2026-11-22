@@ -124,7 +124,7 @@ if (!html.includes("const exterior=new THREE.Group();scene.add(exterior)") ||
 }
 if (!html.includes("new THREE.PlaneGeometry(17,19),floorMaterial") ||
     !html.includes("floorMaterial.roughness=.48;floorMaterial.metalness=.035;") ||
-    !html.includes("camera.fov=44;camera.updateProjectionMatrix();") ||
+    !html.includes("camera.fov=window.innerWidth<700?39:36;camera.updateProjectionMatrix();") ||
     !html.includes("leftWall.position.set(-8.5,.15,-1.15)") ||
     !html.includes("rightWall.position.set(8.5,.15,-1.15)") ||
     !html.includes("const vaultY=x=>3.65+.52*(1-Math.pow(x/8.5,2))") ||
