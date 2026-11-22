@@ -834,6 +834,16 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   interiorLight.position.set(x,y,z);scene.add(interiorLight);
  });
 
+ /* Physically motivated architectural lighting: cool daylight from the glazed
+    facade, broad skylight fill, and warm ceiling pools over the oak and limestone. */
+ const facadeDaylight=new THREE.DirectionalLight(0xfff2df,.28);
+ facadeDaylight.position.set(-7,8,13);scene.add(facadeDaylight);
+ const skylightFill=new THREE.HemisphereLight(0xeaf1ff,0x9a8872,.12);scene.add(skylightFill);
+ [[0,3.05,3.5,.48],[-5.35,2.8,-2.6,.3],[5.35,2.8,-2.6,.3],[0,2.75,-5.2,.24]].forEach(([x,y,z,intensity])=>{
+  const ceilingPool=new THREE.PointLight(0xffd8b5,intensity,12,2);
+  ceilingPool.position.set(x,y,z);scene.add(ceilingPool);
+ });
+
 
   /* Exterior museum pavilion: complete building silhouette and glazed central entrance. */
   const exterior=new THREE.Group();scene.add(exterior);
