@@ -780,7 +780,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  const THREE=window.THREE;
  const scene=new THREE.Scene();
  const camera=new THREE.PerspectiveCamera(40,1,.1,100);
- const introCameraStart=new THREE.Vector3(13.5,9.2,31),introCameraEnd=new THREE.Vector3(0,1.65,4.7);
+ const introCameraStart=new THREE.Vector3(13.5,9.2,31),introCameraEnd=new THREE.Vector3(0,1.55,3.5);
   /* High establishing orbit stays outside the front facade while descending; it reaches eye level in the forecourt, then crosses the central doorway and continues inside. */
   const introCameraPath=new THREE.CatmullRomCurve3([introCameraStart,new THREE.Vector3(15.2,8.5,26.5),new THREE.Vector3(13.5,6.5,22.5),new THREE.Vector3(9.5,4.4,19),new THREE.Vector3(5.2,2.65,16.8),new THREE.Vector3(1.8,1.75,15.1),new THREE.Vector3(0,1.65,13.65),new THREE.Vector3(0,1.65,12.45),new THREE.Vector3(0,1.65,10.2),new THREE.Vector3(0,1.65,7.2),introCameraEnd],false,"centripetal");
  camera.position.copy(introCameraStart);
@@ -1272,6 +1272,14 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
  [-3.5,3.5].forEach(x=>{
   const rail=new THREE.Mesh(new THREE.BoxGeometry(.075,.07,12),railMaterial);
   rail.position.set(x,3.43,-1.1);room.add(rail);
+  for(let z=-5.8;z<=3.4;z+=2.3){
+   const mount=new THREE.Mesh(new THREE.CylinderGeometry(.045,.055,.12,16),railMaterial);
+   mount.position.set(x,3.34,z);room.add(mount);
+   const housing=new THREE.Mesh(new THREE.CylinderGeometry(.105,.075,.16,20),displayFrameMetal);
+   housing.rotation.x=Math.PI/2;housing.position.set(x,3.22,z);room.add(housing);
+   const lens=new THREE.Mesh(new THREE.CircleGeometry(.065,20),displayFrameGlow);
+   lens.position.set(x,3.135,z);lens.rotation.x=-Math.PI/2;room.add(lens);
+  }
  });
  [-3.5,0,3.5].forEach(x=>{
   const lamp=new THREE.Mesh(new THREE.CylinderGeometry(.13,.17,.055,24),new THREE.MeshBasicMaterial({color:0xffd5a1}));
@@ -1454,6 +1462,26 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
   if(labelCtx){labelCtx.fillStyle="#f7f3eb";labelCtx.fillRect(0,0,512,96);labelCtx.fillStyle="#777064";labelCtx.font="600 15px Arial";labelCtx.fillText("ARTSPACE  /  THE DRESS EDIT",18,27);labelCtx.fillStyle="#292722";labelCtx.font="600 25px Arial";labelCtx.fillText(product.title,18,62);}
   const labelTexture=new THREE.CanvasTexture(labelCanvas);labelTexture.encoding=THREE.sRGBEncoding;
   const label=new THREE.Mesh(new THREE.PlaneGeometry(1.05,.2),new THREE.MeshBasicMaterial({map:labelTexture}));label.position.set(0,.17,.57);group.add(label);
+  /* Individual illuminated brass display frames: recessed shadow channel, warm LED edge and a soft top wash. */
+  const displayFrameMetal=new THREE.MeshStandardMaterial({color:0x8e7558,metalness:.82,roughness:.26});
+  const displayFrameGlow=new THREE.MeshStandardMaterial({color:0xffe2b9,emissive:0xffc77e,emissiveIntensity:1.05,roughness:.32});
+  const displayFrameDark=new THREE.MeshStandardMaterial({color:0x3b3934,metalness:.48,roughness:.42});
+  const frameZ=.49,frameHalfWidth=.96,frameBottom=.18,frameTop=3.62,frameHeight=frameTop-frameBottom;
+  [-1,1].forEach(side=>{
+   addBoutiqueBox(group,.038,frameHeight,.045,displayFrameDark,side*frameHalfWidth,(frameTop+frameBottom)/2,frameZ-.035);
+   addBoutiqueBox(group,.018,frameHeight-.12,.025,displayFrameGlow,side*(frameHalfWidth-.055),(frameTop+frameBottom)/2,frameZ+.012);
+   addBoutiqueBox(group,.045,frameHeight,.035,displayFrameMetal,side*frameHalfWidth,(frameTop+frameBottom)/2,frameZ-.06);
+  });
+  addBoutiqueBox(group,frameHalfWidth*2,.045,.045,displayFrameMetal,0,frameTop,frameZ-.06);
+  addBoutiqueBox(group,frameHalfWidth*2-.08,.018,.025,displayFrameGlow,0,frameTop-.055,frameZ+.012);
+  addBoutiqueBox(group,frameHalfWidth*2,.035,.045,displayFrameMetal,0,frameBottom,frameZ-.06);
+  addBoutiqueBox(group,frameHalfWidth*2-.12,.018,.025,displayFrameGlow,0,frameBottom+.045,frameZ+.012);
+  addBoutiqueBox(group,.9,.025,.08,displayFrameDark,0,.19,.64);
+  const frameTopWash=new THREE.SpotLight(0xffe3c2,.72,4.2,.62,.82,1.5);
+  frameTopWash.position.set(0,3.48,.88);frameTopWash.target.position.set(0,1.55,.12);
+  group.add(frameTopWash,frameTopWash.target);
+  const frameHalo=new THREE.Mesh(new THREE.PlaneGeometry(1.72,3.24),new THREE.MeshBasicMaterial({color:0xffd7a6,transparent:true,opacity:.045,side:THREE.DoubleSide,depthWrite:false}));
+  frameHalo.position.set(0,1.88,.46);group.add(frameHalo);
   const spot=new THREE.SpotLight(0xffebd4,.42,9,Math.PI/5,.82,1.4);spot.castShadow=false;
   const target=new THREE.Object3D();gallery.add(spot,target);spot.target=target;
   group.userData.artworkLight=spot;group.userData.artworkTarget=target;
@@ -1547,6 +1575,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
    introCameraStart.y=9.2;
    introCameraPath.points[0].copy(introCameraStart);
    introCameraPath.points[1].z=Math.max(25,introCameraStart.z*.8);
+   if(introFinished){camera.fov=window.innerWidth<700?39:36;camera.updateProjectionMatrix();camera.lookAt(introLookTarget.set(0,1.48,introCameraEnd.z-5.8));}
    if(!introStartedAt&&!introFinished)camera.position.copy(introCameraStart);
  }
  /* Mount every artwork directly onto the concave wall. The gallery group is
@@ -1591,7 +1620,7 @@ Promise.all([window.__artspaceThreeReady,window.__artspaceGLTFReady]).then(([loa
      camera.lookAt(introLookTarget.set(0,THREE.MathUtils.lerp(2.15,1.55,pathT),camera.position.z-6.5));
     }
     if(introRaw>=1){
-    introFinished=true;camera.position.copy(introCameraEnd);camera.fov=44;camera.updateProjectionMatrix();camera.lookAt(introLookTarget.set(0,1.55,introCameraEnd.z-6.5));gallery.rotation.y=0;
+    introFinished=true;camera.position.copy(introCameraEnd);camera.fov=window.innerWidth<700?39:36;camera.updateProjectionMatrix();camera.lookAt(introLookTarget.set(0,1.48,introCameraEnd.z-5.8));gallery.rotation.y=0;
     if(pendingArchitecturalPavilion){mountArchitecturalPavilion(pendingArchitecturalPavilion);pendingArchitecturalPavilion=null;}
     startFashionHumanLoad();
    }
