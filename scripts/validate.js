@@ -360,6 +360,11 @@ if (!modelBuilder.includes("ARTSPACE detailed architectural pavilion builder") |
     !modelBuilder.includes("idx.push(base,base+2,base+1,base,base+3,base+2)") ||
     !modelBuilder.includes("Roof monitors") ||
     !html.includes("window.__artspaceGLTFReady") ||
+    !html.includes("introCameraEnd=new THREE.Vector3(0,1.55,3.5)") ||
+    !html.includes("camera.fov=window.innerWidth<700?39:36") ||
+    !html.includes("displayFrameGlow") ||
+    !html.includes("frameTopWash") ||
+    !html.includes("for(let z=-5.8;z<=3.4;z+=2.3)") ||
     !html.includes('pavilionLoader.load("https://files.innerscene.com/library/compact-car-showroom-15-x-12-m-with-two-display-cars-047c113c/77d1c83db4f039981def/compact-car-showroom-15-x-12-m-with-two-display-cars.glb"') ||
     !html.includes("pavilionLoader.setCrossOrigin(\"anonymous\")") ||
     !html.includes("/car|vehicle|hatchback|crossover|suv|wheel|tyre|tire|headlight/") ||
