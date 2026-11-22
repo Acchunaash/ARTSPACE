@@ -995,11 +995,30 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
    });
    scene.add(pavilion);
    const pavilionSign=sign.clone();pavilionSign.position.set(0,3.15,12.56);scene.add(pavilionSign);
+   exterior.visible=false;
    stage.classList.add("architectural-model-ready");
-   console.info("ARTSPACE: procedural ARTSPACE pavilion retained; imported showroom model disabled.");
+   console.info("ARTSPACE: detailed architectural pavilion GLB mounted successfully.");
   };
-  /* Keep the purpose-built ARTSPACE building visible. The previous external asset was a car showroom and could hide this pavilion. */
-  settleIntro("ARTSPACE architectural building ready");
+  /* Keep the preferred detailed showroom model. The procedural facade remains visible as a fallback until the imported model loads successfully. */
+  introLoadTimeout=window.setTimeout(()=>settleIntro("12-second model timeout; procedural exterior retained"),12000);
+  if(modelLoaderReady&&THREE.GLTFLoader){
+   const pavilionLoader=new THREE.GLTFLoader();
+   pavilionLoader.setCrossOrigin("anonymous");
+   pavilionLoader.load("https://files.innerscene.com/library/compact-car-showroom-15-x-12-m-with-two-display-cars-047c113c/77d1c83db4f039981def/compact-car-showroom-15-x-12-m-with-two-display-cars.glb",gltf=>{
+    if(introReady&&!introFinished){
+     pendingArchitecturalPavilion=gltf;
+     console.info("ARTSPACE: late pavilion queued until the entrance camera finishes.");
+     return;
+    }
+    mountArchitecturalPavilion(gltf);
+    if(!introReady)settleIntro("detailed pavilion loaded");
+   },undefined,error=>{
+    console.warn("ARTSPACE pavilion GLB failed to load; using procedural exterior fallback.",error);
+    settleIntro("GLB request failed; procedural exterior retained");
+   });
+  }else{
+   settleIntro("GLTFLoader unavailable; procedural exterior retained");
+  }
  /* Architectural gallery shell: floor, rear wall, side walls and ceiling. */
  const room=new THREE.Group();scene.add(room);
  const wallMaterial=new THREE.MeshStandardMaterial({color:0xf4f4f1,roughness:.96,metalness:0});
