@@ -973,11 +973,12 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
   const mountArchitecturalPavilion=gltf=>{
    const pavilion=gltf.scene;
    pavilion.name="ARTSPACE_PremiumArchitecturalPavilion";
-   pavilion.scale.setScalar(1.35);
+   pavilion.scale.setScalar(1);
+   let meshCount=0;
    pavilion.traverse(node=>{
     const assetName=(node.name||"").toLowerCase();
     if(/car|vehicle|hatchback|crossover|suv|wheel|tyre|tire|headlight/.test(assetName))node.visible=false;
-    if(node.isMesh){node.castShadow=true;node.receiveShadow=true;}
+    if(node.isMesh){meshCount++;node.castShadow=true;node.receiveShadow=true;}
     const tuneArchitecturalMaterial=material=>{
      if(!material)return;
      const materialName=(material.name||"").toLowerCase();
@@ -998,27 +999,47 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
     if(Array.isArray(node.material))node.material.forEach(tuneArchitecturalMaterial);
     else tuneArchitecturalMaterial(node.material);
    });
+   pavilion.updateMatrixWorld(true);
+   const pavilionBounds=new THREE.Box3().setFromObject(pavilion);
+   const pavilionSize=pavilionBounds.getSize(new THREE.Vector3());
+   const pavilionCenter=pavilionBounds.getCenter(new THREE.Vector3());
+   if(meshCount<20||![pavilionSize.x,pavilionSize.y,pavilionSize.z].every(Number.isFinite)||pavilionSize.x<10||pavilionSize.y<2.5||pavilionSize.z<10){
+    console.error("ARTSPACE showroom model rejected: invalid geometry or dimensions",{meshCount,size:pavilionSize});
+    show3DStatus("Showroom model geometry is incomplete. Keeping the visible fallback.");
+    return false;
+   }
+   /* The GLB is authored in the same metre-scale as the camera path; avoid the old 1.35x scale that shifted the entrance. */
+   pavilion.position.x-=pavilionCenter.x;
+   pavilion.position.z-=pavilionCenter.z;
+   pavilion.position.y+=-1.79-pavilionBounds.min.y;
    scene.add(pavilion);
    const pavilionSign=sign.clone();pavilionSign.position.set(0,3.15,12.56);scene.add(pavilionSign);
    exterior.visible=false;
    stage.classList.add("architectural-model-ready");
-   console.info("ARTSPACE: locally built ARTSPACE showroom pavilion GLB mounted successfully.");
+   const status=stage.querySelector(".webgl-status");if(status)status.hidden=true;
+   console.info("ARTSPACE: showroom geometry verified and mounted.",{meshCount,size:pavilionSize,center:pavilionCenter});
+   return true;
   };
   /* Keep the preferred detailed showroom model. The procedural facade remains visible as a fallback until the imported model loads successfully. */
   introLoadTimeout=window.setTimeout(()=>settleIntro("12-second model timeout; procedural exterior retained"),12000);
   if(modelLoaderReady&&THREE.GLTFLoader){
    const pavilionLoader=new THREE.GLTFLoader();
    pavilionLoader.setCrossOrigin("anonymous");
+   show3DStatus("Loading the ARTSPACE showroom model…");
    pavilionLoader.load("./assets/artspace-pavilion.glb",gltf=>{
     if(introReady&&!introFinished){
      pendingArchitecturalPavilion=gltf;
      console.info("ARTSPACE: late pavilion queued until the entrance camera finishes.");
      return;
     }
-    mountArchitecturalPavilion(gltf);
-    if(!introReady)settleIntro("detailed pavilion loaded");
-   },undefined,error=>{
+    const mounted=mountArchitecturalPavilion(gltf);
+    if(!mounted)settleIntro("showroom geometry rejected; procedural exterior retained");
+    else if(!introReady)settleIntro("verified detailed pavilion loaded");
+   },event=>{
+    if(event.lengthComputable&&event.total>0)show3DStatus("Loading the ARTSPACE showroom model… "+Math.round(event.loaded/event.total*100)+"%");
+   },error=>{
     console.error("ARTSPACE local showroom pavilion GLB failed to load; using procedural exterior fallback.",error);
+    show3DStatus("Showroom model failed to load. Keeping the built-in boutique visible.");
     settleIntro("GLB request failed; procedural exterior retained");
    });
   }else{
@@ -1660,7 +1681,7 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
     }
     if(introRaw>=1){
     introFinished=true;camera.position.copy(introCameraEnd);camera.fov=window.innerWidth<700?39:36;camera.updateProjectionMatrix();camera.lookAt(introLookTarget.set(0,1.48,introCameraEnd.z-5.8));gallery.rotation.y=0;
-    if(pendingArchitecturalPavilion){mountArchitecturalPavilion(pendingArchitecturalPavilion);pendingArchitecturalPavilion=null;}
+    if(pendingArchitecturalPavilion){const mounted=mountArchitecturalPavilion(pendingArchitecturalPavilion);if(!mounted)show3DStatus("Showroom geometry is incomplete. Keeping the built-in fallback visible.");pendingArchitecturalPavilion=null;}
     startFashionHumanLoad();
    }
   }
