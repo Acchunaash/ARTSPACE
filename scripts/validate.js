@@ -208,7 +208,7 @@ if (!html.includes("introReady=false") ||
     !html.includes("if(!introReady){camera.position.copy(introCameraStart);camera.lookAt(introLookTarget.set(0,2.15,introCameraStart.z-6.5));}") ||
     !html.includes("pendingArchitecturalPavilion=null") ||
     !html.includes("late pavilion queued until the entrance camera finishes") ||
-    !html.includes("if(pendingArchitecturalPavilion){const mounted=mountArchitecturalPavilion(pendingArchitecturalPavilion);if(!mounted)show3DStatus("Showroom geometry is incomplete. Keeping the built-in fallback visible.");pendingArchitecturalPavilion=null;}") ||
+    !html.includes('if(pendingArchitecturalPavilion){const mounted=mountArchitecturalPavilion(pendingArchitecturalPavilion);if(!mounted)show3DStatus("Showroom geometry is incomplete. Keeping the built-in fallback visible.");pendingArchitecturalPavilion=null;}') ||
     !html.includes("introStartedAt+=performance.now()-introPausedAt") ||
     !html.includes("if(introReady&&!introFinished&&!introPausedAt)introPausedAt=performance.now()") ||
     html.includes("if(introReady){console.warn(\"ARTSPACE: pavilion arrived after the intro fallback timeout; keeping the stable fallback.\");return;}") ||
