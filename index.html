@@ -82,6 +82,11 @@ footer{padding:32px 5.5vw;display:flex;justify-content:space-between;align-items
 .gallery-stage.webgl-ready .artspace-webgl{z-index:2}
 .webgl-status{position:absolute;z-index:6;left:50%;bottom:18px;transform:translateX(-50%);max-width:calc(100% - 32px);padding:10px 14px;border:1px solid #c9a77d;background:#172333ed;color:#fff;font:10px "DM Mono",monospace;letter-spacing:.4px;text-align:center;box-shadow:0 8px 24px #0003}.webgl-status[hidden]{display:none}
 .gallery-stage.architectural-model-ready .art-card{opacity:0!important;pointer-events:none!important}
+/* Hard fallback: the six local dress cards must remain above an unready/transparent WebGL canvas. */
+.gallery-stage .gallery-track{z-index:4!important}
+.gallery-stage .art-card{opacity:1!important;visibility:visible!important}
+.gallery-stage.architectural-model-ready .artspace-webgl{z-index:5}
+.gallery-stage.architectural-model-ready .gallery-track{z-index:1!important}
 /* STEP 1 — immersive 3D environment foundation */
 .gallery-shell{isolation:isolate;background:radial-gradient(ellipse at 50% 38%,#fff 0%,#f0f1ec 34%,#e8e9e3 100%);border:1px solid #e3e4de;box-shadow:inset 0 1px #ffffffb8,0 28px 70px #2528200a}
 .gallery-shell:before{content:"";position:absolute;z-index:-1;inset:0;background:radial-gradient(ellipse at 50% 0%,#ffffffc9 0%,transparent 54%),linear-gradient(180deg,#ffffff22,transparent 45%,#d9dbd333);pointer-events:none}
