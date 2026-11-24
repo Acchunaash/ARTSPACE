@@ -546,7 +546,7 @@ footer>a:last-child{color:#555850}
 
     <section class="collection-section" id="allArtworks">
       <div class="collection-heading"><div><p class="eyebrow">THE WARDROBE EDIT</p><h2>Find your silhouette.</h2></div><span>06 SIGNATURE DRESSES</span></div>
-      <div class="collection-tools"><div class="collection-filters" id="collectionFilters"><button class="filter-chip active" data-filter="ALL">ALL</button><button class="filter-chip" data-filter="DAY">DAY DRESSES</button><button class="filter-chip" data-filter="EVENING">EVENING</button><button class="filter-chip" data-filter="STATEMENT">STATEMENT</button></div><input class="collection-search" id="collectionSearch" type="search" placeholder="Search dresses" aria-label="Search dresses"></div>
+      <div class="collection-tools"><div class="collection-filters" id="collectionFilters"><button class="filter-chip active" data-filter="ALL">ALL</button><button class="filter-chip" data-filter="DAY">DAYWEAR</button><button class="filter-chip" data-filter="EVENING">EVENING</button><button class="filter-chip" data-filter="STATEMENT">STATEMENT</button></div><input class="collection-search" id="collectionSearch" type="search" placeholder="Search clothing" aria-label="Search dresses"></div>
       <div class="collection-grid" id="collectionGrid" aria-live="polite"></div>
     </section>
 
@@ -593,12 +593,12 @@ window.__artspaceGLTFReady=Promise.resolve(!!(window.THREE&&window.THREE.GLTFLoa
 </script>
 <script>
 const products = [
- {title:"THE SOLSTICE DRESS",subtitle:"FLUID SATIN · WARM IVORY",price:6490,image:"./assets/fashion/solstice-dress.svg",description:"A softly sculpted A-line silhouette in fluid satin, with a clean neckline and an elegant swing hem."},
- {title:"THE ATELIER SLIP",subtitle:"SILK BLEND · DEEP PLUM",price:5890,image:"./assets/fashion/atelier-slip.svg",description:"A refined bias-cut slip dress with delicate straps and a fluid, elongated drape."},
- {title:"THE SUNDAY SHIRT",subtitle:"COTTON POPLIN · SOFT SAGE",price:5290,image:"./assets/fashion/sunday-shirt.svg",description:"An easy shirt dress with a defined waist, relaxed sleeves and a softly pleated skirt."},
- {title:"THE SCULPTED MIDI",subtitle:"TEXTURED CREPE · TERRACOTTA",price:7290,image:"./assets/fashion/sculpted-midi.svg",description:"A structured midi dress with a shaped bodice and a confident architectural skirt."},
- {title:"THE EVENING COLUMN",subtitle:"MATTE CREPE · MIDNIGHT",price:8490,image:"./assets/fashion/evening-column.svg",description:"A sleek column silhouette with an elegant neckline and a long, uninterrupted line."},
- {title:"THE GARDEN WRAP",subtitle:"PRINTED COTTON · BOTANICAL",price:6190,image:"./assets/fashion/garden-wrap.svg",description:"A wrap dress with a softly gathered waist, gentle movement and a relaxed day-to-evening feel."}
+ {title:"THE SOLSTICE DRESS",subtitle:"FLUID SATIN · WARM IVORY",price:6490,image:"./assets/fashion/solstice-dress.svg",description:"A softly sculpted A-line silhouette in fluid satin, with a clean neckline and an elegant swing hem.",garment:"dress"},
+ {title:"THE ATELIER SLIP",subtitle:"SILK BLEND · DEEP PLUM",price:5890,image:"./assets/fashion/atelier-slip.svg",description:"A refined bias-cut slip dress with delicate straps and a fluid, elongated drape.",garment:"dress"},
+ {title:"THE PLEATED SKIRT",subtitle:"FLUID TWILL · SOFT SAGE",price:4890,image:"./assets/fashion/pleated-skirt.svg",description:"A softly structured pleated skirt with a fluid A-line shape and considered movement.",garment:"skirt"},
+ {title:"THE DENIM JEANS",subtitle:"COTTON DENIM · INDIGO",price:5690,image:"./assets/fashion/denim-jeans.svg",description:"A clean, straight-leg denim silhouette with a classic waist and everyday structure.",garment:"jeans"},
+ {title:"THE WEEKEND HOODIE",subtitle:"BRUSHED FLEECE · STONE",price:6290,image:"./assets/fashion/weekend-hoodie.svg",description:"A relaxed hooded layer with a soft fleece finish, roomy sleeves and a practical front pocket.",garment:"hoodie"},
+ {title:"THE GARDEN WRAP",subtitle:"PRINTED COTTON · BOTANICAL",price:6190,image:"./assets/fashion/garden-wrap.svg",description:"A wrap dress with a softly gathered waist, gentle movement and a relaxed day-to-evening feel.",garment:"dress"}
 ];
 let current=0, selectedSize="S", selectedFinish="Ivory", startX=0, dragging=false;
 const sharedArtwork=location.hash.match(/^#dress-(\d+)$/);if(sharedArtwork){const sharedIndex=Number(sharedArtwork[1])-1;if(sharedIndex>=0&&sharedIndex<products.length)current=sharedIndex;}
@@ -691,8 +691,8 @@ function syncWishlistButton(){const b=document.getElementById("saveButton");if(!
 document.getElementById("saveButton").addEventListener("click",()=>{if(wishlist.includes(current))wishlist=wishlist.filter(i=>i!==current);else wishlist.push(current);try{localStorage.setItem("artspace-dress-wishlist",JSON.stringify(wishlist));}catch(e){}syncWishlistButton();toast(wishlist.includes(current)?"Saved to your wishlist":"Removed from your wishlist");});
 document.getElementById("shareButton").addEventListener("click",async()=>{const url=location.href.split("#")[0]+"#dress-"+(current+1);const data={title:products[current].title,text:"Explore this ARTSPACE dress: "+products[current].title,url};if(navigator.share){try{await navigator.share(data);}catch(e){if(e.name!=="AbortError")toast("Could not open the share menu");}}else if(navigator.clipboard&&navigator.clipboard.writeText){try{await navigator.clipboard.writeText(url);toast("Artwork link copied");}catch(e){toast("Copy is unavailable in this browser");}}else toast("Sharing is not available in this browser");});
 let activeCollectionFilter="ALL";
-const collectionCategory=["DAY","EVENING","DAY","STATEMENT","EVENING","DAY"];
-function renderCollection(){const grid=document.getElementById("collectionGrid"),query=document.getElementById("collectionSearch").value.trim().toLowerCase();const matches=products.map((p,index)=>({p,index})).filter(({p,index})=>(activeCollectionFilter==="ALL"||collectionCategory[index]===activeCollectionFilter)&&(p.title+" "+p.subtitle+" "+collectionCategory[index]).toLowerCase().includes(query));grid.innerHTML=matches.length?matches.map(({p,index})=>'<button class="collection-card" type="button" data-collection-index="'+index+'" aria-label="View '+p.title+'"><img src="'+p.image+'" alt="'+p.title+' dress" loading="lazy"><strong>'+p.title+'</strong><span>'+p.subtitle+'</span><em>'+money(p.price)+' · VIEW DRESS ↗</em></button>').join(""):'<p class="collection-empty">No dresses match your search. Try another style or colour.</p>';}
+const collectionCategory=["DAY","EVENING","DAY","DAY","STATEMENT","DAY"];
+function renderCollection(){const grid=document.getElementById("collectionGrid"),query=document.getElementById("collectionSearch").value.trim().toLowerCase();const matches=products.map((p,index)=>({p,index})).filter(({p,index})=>(activeCollectionFilter==="ALL"||collectionCategory[index]===activeCollectionFilter)&&(p.title+" "+p.subtitle+" "+collectionCategory[index]).toLowerCase().includes(query));grid.innerHTML=matches.length?matches.map(({p,index})=>'<button class="collection-card" type="button" data-collection-index="'+index+'" aria-label="View '+p.title+'"><img src="'+p.image+'" alt="'+p.title+'" loading="lazy"><strong>'+p.title+'</strong><span>'+p.subtitle+'</span><em>'+money(p.price)+' · VIEW DRESS ↗</em></button>').join(""):'<p class="collection-empty">No pieces match your search. Try another style or colour.</p>';}
 document.getElementById("collectionFilters").addEventListener("click",e=>{const b=e.target.closest("[data-filter]");if(!b)return;activeCollectionFilter=b.dataset.filter;document.querySelectorAll("#collectionFilters .filter-chip").forEach(x=>x.classList.toggle("active",x===b));renderCollection();});
 document.getElementById("collectionSearch").addEventListener("input",renderCollection);
 document.getElementById("collectionGrid").addEventListener("click",e=>{const card=e.target.closest("[data-collection-index]");if(!card)return;current=Number(card.dataset.collectionIndex);render();document.getElementById("selectedProduct").scrollIntoView({behavior:"smooth"});});
@@ -1480,6 +1480,7 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
  };
  products.forEach((product,index)=>{
   const group=new THREE.Group();
+  const garmentDisplay=new THREE.Group();garmentDisplay.name="procedural-garment-fallback";group.add(garmentDisplay);group.userData.proceduralGarment=garmentDisplay;
   const dressColor=new THREE.MeshPhysicalMaterial({color:dressPalette[index],roughness:index===1?.32:.56,metalness:0,clearcoat:index===1?.2:.045,clearcoatRoughness:.52,side:THREE.DoubleSide});
   const trimColor=new THREE.MeshStandardMaterial({color:index===1?0xd7b9c9:0xe8d7bd,roughness:.48,metalness:.24});
   const footMat=new THREE.MeshStandardMaterial({color:index===4?0x171c25:0x342c27,roughness:.34});
@@ -1492,12 +1493,12 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
   const dressVertices=dressGeometry.attributes.position;
   for(let v=0;v<dressVertices.count;v++){const x=dressVertices.getX(v),y=dressVertices.getY(v),z=dressVertices.getZ(v),theta=Math.atan2(z,x),skirt=Math.max(0,Math.min(1,(1.48-y)/1.18)),radius=Math.hypot(x,z),fold=(Math.sin(theta*11+index*.8)*.012+Math.sin(theta*19-index)*.004)*skirt;const r=radius+fold;dressVertices.setXYZ(v,Math.cos(theta)*r,y,Math.sin(theta)*r);}
   dressVertices.needsUpdate=true;dressGeometry.computeVertexNormals();
-  const dress=new THREE.Mesh(dressGeometry,dressColor);dress.position.y=.13;dress.scale.set(1.35,1.18,1.35);dress.castShadow=true;dress.receiveShadow=true;group.add(dress);
-  const waist=new THREE.Mesh(new THREE.TorusGeometry(.275,.018,8,48),trimColor);waist.position.y=1.93;group.add(waist);
-  const neckline=new THREE.Mesh(new THREE.TorusGeometry(.19,.018,8,48),trimColor);neckline.position.y=2.49;neckline.scale.set(1,.62,1);group.add(neckline);
-  if(index===1){for(const side of [-1,1]){const strap=new THREE.Mesh(new THREE.CylinderGeometry(.018,.018,.42,8),trimColor);strap.position.set(side*.17,2.56,0);group.add(strap);}}
-  if(index===2){addBoutiqueBox(group,.035,.72,.018,trimColor,0,2.08,.28);for(let k=0;k<4;k++){const button=new THREE.Mesh(new THREE.SphereGeometry(.025,8,8),railMetal);button.position.set(0,2.28-k*.16,.3);group.add(button);}}
-  if(index===3||index===5){const seam=new THREE.Mesh(new THREE.TorusGeometry(.34,.012,6,48),trimColor);seam.position.y=1.22;group.add(seam);}
+  const dress=new THREE.Mesh(dressGeometry,dressColor);dress.position.y=.13;dress.scale.set(1.35,1.18,1.35);dress.castShadow=true;dress.receiveShadow=true;garmentDisplay.add(dress);
+  const waist=new THREE.Mesh(new THREE.TorusGeometry(.275,.018,8,48),trimColor);waist.position.y=1.93;garmentDisplay.add(waist);
+  const neckline=new THREE.Mesh(new THREE.TorusGeometry(.19,.018,8,48),trimColor);neckline.position.y=2.49;neckline.scale.set(1,.62,1);garmentDisplay.add(neckline);
+  if(index===1){for(const side of [-1,1]){const strap=new THREE.Mesh(new THREE.CylinderGeometry(.018,.018,.42,8),trimColor);strap.position.set(side*.17,2.56,0);garmentDisplay.add(strap);}}
+  if(index===2){addBoutiqueBox(garmentDisplay,.035,.72,.018,trimColor,0,2.08,.28);for(let k=0;k<4;k++){const button=new THREE.Mesh(new THREE.SphereGeometry(.025,8,8),railMetal);button.position.set(0,2.28-k*.16,.3);garmentDisplay.add(button);}}
+  if(index===3||index===5){const seam=new THREE.Mesh(new THREE.TorusGeometry(.34,.012,6,48),trimColor);seam.position.y=1.22;garmentDisplay.add(seam);}
   const fallbackBody=new THREE.Group();fallbackBody.name="procedural-human-fallback";group.add(fallbackBody);group.userData.proceduralBody=fallbackBody;
   const fallbackHair=new THREE.Group();fallbackHair.name="procedural-hair-fallback";group.add(fallbackHair);group.userData.proceduralHair=fallbackHair;
   const neck=new THREE.Mesh(new THREE.CylinderGeometry(.085,.09,.23,18),mannequinSkin);neck.position.y=2.62;fallbackBody.add(neck);
@@ -1545,10 +1546,62 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
  /* REAL HUMAN FASHION ENGINE — CC0 MakeHuman-derived adult female base mesh.
     Loaded once after the entrance, cloned per look, and paired with each catalogue dress mesh. */
  const fashionHumanUrl="https://files.innerscene.com/library/female-base-mesh-3d-person-rigged-a-pose-dba97ed5/c5dce4aeeb1e549cec36/female-base-mesh-base_female.glb";
+ const garmentAssignments=["dress","dress","skirt","jeans","hoodie","dress"];
+ const garmentAssetUrls={
+  dress:"https://raw.githubusercontent.com/kblood/CharacterCreator/master/output/clothing_dress.glb",
+  skirt:"https://raw.githubusercontent.com/kblood/CharacterCreator/master/output/clothing_skirt.glb",
+  jeans:"https://raw.githubusercontent.com/kblood/CharacterCreator/master/output/clothing_jeans.glb",
+  hoodie:"https://raw.githubusercontent.com/kblood/CharacterCreator/master/output/clothing_hoodie.glb"
+ };
+ let garmentAssetsStarted=false;
+ const startGarmentAssetLoad=()=>{
+  if(garmentAssetsStarted||!modelLoaderReady||!THREE.GLTFLoader||!THREE.SkeletonUtils)return;
+  garmentAssetsStarted=true;
+  const garmentLoader=new THREE.GLTFLoader();garmentLoader.setCrossOrigin("anonymous");
+  Object.entries(garmentAssetUrls).forEach(([type,url])=>{
+   const indices=garmentAssignments.map((value,index)=>value===type?index:-1).filter(index=>index>=0);
+   if(!indices.length)return;
+   garmentLoader.load(url,gltf=>{
+    indices.forEach(index=>{
+     const group=cards3D[index];if(!group)return;
+     const garment=THREE.SkeletonUtils.clone(gltf.scene);
+     garment.name="ARTSPACE_CC0_"+type+"_garment_"+index;
+     garment.scale.setScalar(1.9);garment.position.set(0,0,0);
+     garment.visible=window.innerWidth>=700||index===current;
+     garment.traverse(node=>{
+      if(!node.isMesh)return;
+      node.castShadow=window.innerWidth>=700;node.receiveShadow=window.innerWidth>=700;
+      node.frustumCulled=false;
+      const tune=material=>{
+       if(!material)return material;
+       const next=material.clone();
+       if("roughness" in next)next.roughness=Math.max(.48,next.roughness||.7);
+       if("metalness" in next)next.metalness=0;
+       return next;
+      };
+      node.material=Array.isArray(node.material)?node.material.map(tune):tune(node.material);
+     });
+     const poseBone=(name,x,y,z)=>{const bone=garment.getObjectByName(name);if(bone)bone.rotation.set(x,y,z,"XYZ");};
+     poseBone("clavicle_l",0,0,.1745);poseBone("clavicle_r",0,0,-.1745);
+     poseBone("upperarm_l",0,0,.5236);poseBone("upperarm_r",0,0,-.5236);
+     poseBone("lowerarm_l",-.6458,0,0);poseBone("lowerarm_r",-.6458,0,0);
+     poseBone("spine_01",0,Math.sin(index*.9)*.025,0);
+     poseBone("head",0,Math.sin(index*.8)*.07,0);
+     garment.updateMatrixWorld(true);group.add(garment);
+     group.userData.importedGarment=garment;
+     if(group.userData.proceduralGarment)group.userData.proceduralGarment.visible=false;
+    });
+    console.info("ARTSPACE: CC0 "+type+" clothing GLB loaded for products "+indices.join(", ")+".");
+   },undefined,error=>{
+    console.warn("ARTSPACE: CC0 "+type+" clothing model could not load; keeping the built-in garment visible.",error);
+   });
+  });
+ };
  let fashionHumanLoadStarted=false;
  const startFashionHumanLoad=()=>{
   if(fashionHumanLoadStarted||!modelLoaderReady||!THREE.GLTFLoader)return;
   fashionHumanLoadStarted=true;
+  startGarmentAssetLoad();
   const loadHuman=()=>{
    const loader=new THREE.GLTFLoader();loader.setCrossOrigin("anonymous");
    loader.load(fashionHumanUrl,gltf=>{
@@ -1652,6 +1705,7 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
    if(index===current)gallery.userData.targetRotation=Math.PI-wallAngle;
    group.rotation.set(0,group.userData.targetRY,0);
    if(group.userData.humanModel)group.userData.humanModel.visible=window.innerWidth>=700||index===current;
+   if(group.userData.importedGarment)group.userData.importedGarment.visible=window.innerWidth>=700||index===current;
    if(group.userData.artworkLight&&group.userData.artworkTarget){
     group.userData.artworkTarget.position.set(group.userData.targetX,group.userData.targetY+1.85,group.userData.targetZ);
     group.userData.artworkLight.position.set(group.userData.targetX-.25,group.userData.targetY+4.2,group.userData.targetZ+1.45);
