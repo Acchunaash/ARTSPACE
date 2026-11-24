@@ -473,6 +473,14 @@ footer>a:last-child{color:#555850}
 @media(max-width:700px){.scroll-reveal{transform:translate3d(0,18px,0);transition-duration:.65s}}
 @media(prefers-reduced-motion:reduce){#scrollProgress{display:none}.scroll-reveal,.scroll-reveal.is-visible{opacity:1!important;transform:none!important;transition:none!important;will-change:auto}}
 
+
+/* MOBILE 3D FASHION FIX: poster carousel is only a fallback. */
+.gallery-stage.webgl-ready .artspace-webgl{z-index:3!important;opacity:1!important}
+.gallery-stage.webgl-ready .gallery-track{z-index:1!important}
+.gallery-stage.webgl-ready .art-card{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+.gallery-stage.webgl-ready .gallery-arrow{z-index:7!important}
+.gallery-stage:not(.webgl-ready) .gallery-track{z-index:4!important}
+.gallery-stage:not(.webgl-ready) .art-card{opacity:1!important;visibility:visible!important}
 </style>
 </head>
 <body>
