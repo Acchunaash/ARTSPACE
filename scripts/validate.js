@@ -37,10 +37,10 @@ try{
  if(!/^<!doctype html>/i.test(showroom.trim()))fail("Showroom page is missing its HTML5 doctype.");
  const showroomRequired=['id="showroomCanvas"','id="stage"','data-view="arrival"','data-view="interior"',"./assets/artspace-pavilion.glb","./assets/vendor/three.min.js","./assets/vendor/GLTFLoader.js","Drag to orbit","display islands","showroom.html"];
  for(const token of showroomRequired)if(!showroom.includes(token))fail("Showroom page is missing: "+token);
- const showroomScripts=[...showroom.matchAll(/<script\\b(?![^>]*\\bsrc=)[^>]*>([\\s\\S]*?)<\\/script>/gi)];
+ const showroomScripts=[...showroom.matchAll(/<script\b(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)];
  if(!showroomScripts.length)fail("Showroom page has no application script.");
  showroomScripts.forEach((match,index)=>{try{new vm.Script(match[1],{filename:"showroom-inline-"+(index+1)});}catch(error){fail("Showroom JavaScript syntax error: "+error.message);}});
- const showroomStyle=(showroom.match(/<style[^>]*>([\\s\\S]*?)<\\/style>/i)||[, ""])[1].replace(/\\/\\*[\\s\\S]*?\\*\\//g,"");
+ const showroomStyle=(showroom.match(/<style[^>]*>([\s\S]*?)<\/style>/i)||[, ""])[1].replace(/\/\*[\s\S]*?\*\//g,"");
  let showroomDepth=0;for(const char of showroomStyle){if(char==="{")showroomDepth++;if(char==="}")showroomDepth--;if(showroomDepth<0){fail("Showroom CSS has an unexpected closing brace.");break;}}
  if(showroomDepth!==0)fail("Showroom CSS braces are unbalanced.");
  for(const asset of ["assets/artspace-pavilion.glb","assets/vendor/three.min.js","assets/vendor/GLTFLoader.js"]){if(!fs.existsSync(asset)||fs.statSync(asset).size<1000)fail("Generated 3D asset is missing or too small: "+asset);}
