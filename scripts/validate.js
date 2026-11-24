@@ -30,5 +30,20 @@ if(!html.includes("Secure online checkout and payment will be connected in a lat
 if(!html.includes("The ARTSPACE 3D studio")||!html.includes("true, high-quality model"))fail("The 3D studio roadmap and truthful product-detail disclosure are missing.");
 if(!html.includes("camera-controls")||!html.includes("rotation-per-second")||!html.includes("CC0 1.0")||!html.includes("model.addEventListener"))fail("Interactive 3D controls, model licence, or fallback handling are missing.");
 if(!html.includes("@media(max-width:600px)")||!html.includes("prefers-reduced-motion"))fail("Mobile layout or reduced-motion support is missing.");
+
+// Validate the dedicated interactive showroom page and the generated local 3D assets.
+try{
+ const showroom=fs.readFileSync("showroom.html","utf8");
+ if(!/^<!doctype html>/i.test(showroom.trim()))fail("Showroom page is missing its HTML5 doctype.");
+ const showroomRequired=['id="showroomCanvas"','id="stage"','data-view="arrival"','data-view="interior"',"./assets/artspace-pavilion.glb","./assets/vendor/three.min.js","./assets/vendor/GLTFLoader.js","Drag to orbit","display islands","showroom.html"];
+ for(const token of showroomRequired)if(!showroom.includes(token))fail("Showroom page is missing: "+token);
+ const showroomScripts=[...showroom.matchAll(/<script\\b(?![^>]*\\bsrc=)[^>]*>([\\s\\S]*?)<\\/script>/gi)];
+ if(!showroomScripts.length)fail("Showroom page has no application script.");
+ showroomScripts.forEach((match,index)=>{try{new vm.Script(match[1],{filename:"showroom-inline-"+(index+1)});}catch(error){fail("Showroom JavaScript syntax error: "+error.message);}});
+ const showroomStyle=(showroom.match(/<style[^>]*>([\\s\\S]*?)<\\/style>/i)||[, ""])[1].replace(/\\/\\*[\\s\\S]*?\\*\\//g,"");
+ let showroomDepth=0;for(const char of showroomStyle){if(char==="{")showroomDepth++;if(char==="}")showroomDepth--;if(showroomDepth<0){fail("Showroom CSS has an unexpected closing brace.");break;}}
+ if(showroomDepth!==0)fail("Showroom CSS braces are unbalanced.");
+ for(const asset of ["assets/artspace-pavilion.glb","assets/vendor/three.min.js","assets/vendor/GLTFLoader.js"]){if(!fs.existsSync(asset)||fs.statSync(asset).size<1000)fail("Generated 3D asset is missing or too small: "+asset);}
+}catch(error){fail("Showroom foundation files are missing: "+error.message);}
 if(process.exitCode)process.exit(process.exitCode);
-console.log("ARTSPACE validation passed: fresh storefront, responsive layout, collection filters, product detail, bag preview, accessibility, 3D model controls and fallback, and backend boundaries.");
+console.log("ARTSPACE validation passed: fresh storefront, responsive layout, collection filters, product detail, bag preview, accessibility, 3D model controls, immersive showroom page, local architecture runtime, and backend boundaries.");
