@@ -1,6 +1,6 @@
 # ARTSPACE
 
-An immersive art-print gallery and storefront, built as a lightweight static website.
+An immersive fashion boutique and storefront, built as a lightweight static website.
 
 ## Project links
 
