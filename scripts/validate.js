@@ -23,7 +23,7 @@ try{
  const count=[...seed.matchAll(/^  \('/gm)].length;
  if(count!==6)fail("Expected six catalog seed records, found "+count+".");
 }catch(error){fail("Database foundation files are missing: "+error.message);}
-const required=['id="collection"','id="experience"','id="bagOpen"','id="bagDrawer"','id="productDetail"','id="products"','data-filter="dresses"','function openDetail(card)','function renderBag()','id="toast"','id="studio3d"','id="corsetViewer"','id="corsetModel"'];
+const required=['href="showroom.html"','Enter the showroom','id="collection"','id="experience"','id="bagOpen"','id="bagDrawer"','id="productDetail"','id="products"','data-filter="dresses"','function openDetail(card)','function renderBag()','id="toast"','id="studio3d"','id="corsetViewer"','id="corsetModel"'];
 for(const token of required)if(!html.includes(token))fail("Missing storefront feature: "+token);
 if((html.match(/class="product"/g)||[]).length<4)fail("The collection must contain at least four product entries.");
 if(!html.includes("Secure online checkout and payment will be connected in a later release."))fail("Checkout boundary messaging is missing.");
