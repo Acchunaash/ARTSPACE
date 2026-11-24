@@ -304,7 +304,9 @@ if (!html.includes("THE SOLSTICE DRESS") ||
     !html.includes("clothing_hoodie.glb") ||
     !html.includes("THREE.SkeletonUtils.clone(gltf.scene)") ||
     !html.includes("group.userData.proceduralGarment.visible=false") ||
-    !html.includes(".gallery-stage.webgl-ready .artspace-webgl{opacity:1}")) {
+    !html.includes(".gallery-stage.webgl-ready .artspace-webgl{opacity:1}") ||
+    !html.includes(".gallery-stage.webgl-ready .art-card{opacity:0!important;visibility:hidden!important;pointer-events:none!important}") ||
+    !html.includes(".gallery-stage.webgl-ready .gallery-track{z-index:1!important}")) {
   fail("The clothing catalogue must include dresses, a skirt, jeans, a hoodie, and the four rigged CC0 garment assets with safe fallback behaviour.");
 }
 
