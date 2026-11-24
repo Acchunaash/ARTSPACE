@@ -7,8 +7,8 @@
   <meta name="description" content="Explore a curated clothing collection with rigged 3D dresses, skirts, jeans and hoodies in an immersive ARTSPACE boutique.">
   <meta name="keywords" content="designer dresses, fashion boutique, womenswear, ARTSPACE, clothing">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="ARTSPACE — The modern dress boutique">
-  <meta property="og:description" content="Explore a sculptural 3D boutique and a considered collection of dresses.">
+  <meta property="og:title" content="ARTSPACE — The modern fashion boutique">
+  <meta property="og:description" content="Explore a sculptural 3D boutique and a considered collection of clothing.">
   <meta property="og:url" content="https://acchunaash.github.io/ARTSPACE/">
   <meta name="twitter:card" content="summary">
   <link rel="canonical" href="https://acchunaash.github.io/ARTSPACE/">
@@ -479,9 +479,9 @@ footer>a:last-child{color:#555850}
   <header class="topbar">
     <a class="wordmark" href="#" aria-label="Artspace home">ARTSPACE<span>®</span></a>
     <nav class="desktop-nav" aria-label="Main navigation">
-      <a href="#gallery">COLLECTION</a><a href="#allArtworks">DRESSES</a><a href="#about">ABOUT</a><a href="#contact">CONTACT</a>
+      <a href="#gallery">COLLECTION</a><a href="#allArtworks">CLOTHING</a><a href="#about">ABOUT</a><a href="#contact">CONTACT</a>
     </nav>
-    <button class="bag-button" id="wishlistButton" aria-label="Saved dresses">SAVED <span id="savedCount">0</span></button>
+    <button class="bag-button" id="wishlistButton" aria-label="Saved pieces">SAVED <span id="savedCount">0</span></button>
     <button class="bag-button" id="bagButton" aria-label="Shopping bag">BAG <span id="bagCount">0</span></button>
   </header>
 
@@ -495,7 +495,7 @@ footer>a:last-child{color:#555850}
     </section>
 
     <section class="gallery-shell" id="gallery" aria-label="Immersive three-dimensional fashion boutique">
-      <div class="gallery-topline"><span>THE DRESS COLLECTION</span><span id="counter">01 / 06</span></div>
+      <div class="gallery-topline"><span>THE CLOTHING COLLECTION</span><span id="counter">01 / 06</span></div>
       <div class="gallery-stage" id="galleryStage">
         <button class="gallery-arrow prev" id="prevBtn" aria-label="Previous artwork">←</button>
         <div class="gallery-track" id="galleryTrack">
@@ -545,8 +545,8 @@ footer>a:last-child{color:#555850}
     </section>
 
     <section class="collection-section" id="allArtworks">
-      <div class="collection-heading"><div><p class="eyebrow">THE WARDROBE EDIT</p><h2>Find your silhouette.</h2></div><span>06 SIGNATURE DRESSES</span></div>
-      <div class="collection-tools"><div class="collection-filters" id="collectionFilters"><button class="filter-chip active" data-filter="ALL">ALL</button><button class="filter-chip" data-filter="DAY">DAYWEAR</button><button class="filter-chip" data-filter="EVENING">EVENING</button><button class="filter-chip" data-filter="STATEMENT">STATEMENT</button></div><input class="collection-search" id="collectionSearch" type="search" placeholder="Search clothing" aria-label="Search dresses"></div>
+      <div class="collection-heading"><div><p class="eyebrow">THE WARDROBE EDIT</p><h2>Find your silhouette.</h2></div><span>06 SIGNATURE PIECES</span></div>
+      <div class="collection-tools"><div class="collection-filters" id="collectionFilters"><button class="filter-chip active" data-filter="ALL">ALL</button><button class="filter-chip" data-filter="DAY">DAYWEAR</button><button class="filter-chip" data-filter="EVENING">EVENING</button><button class="filter-chip" data-filter="STATEMENT">STATEMENT</button></div><input class="collection-search" id="collectionSearch" type="search" placeholder="Search clothing" aria-label="Search clothing"></div>
       <div class="collection-grid" id="collectionGrid" aria-live="polite"></div>
     </section>
 
@@ -562,8 +562,8 @@ footer>a:last-child{color:#555850}
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="cart-backdrop" id="savedBackdrop"></div>
-  <aside class="cart-drawer" id="savedDrawer" role="dialog" aria-modal="true" aria-label="Saved dresses" aria-hidden="true">
-    <div class="cart-head"><h2>Saved dresses</h2><button class="cart-close" id="savedClose" aria-label="Close saved artworks">×</button></div>
+  <aside class="cart-drawer" id="savedDrawer" role="dialog" aria-modal="true" aria-label="Saved pieces" aria-hidden="true">
+    <div class="cart-head"><h2>Saved pieces</h2><button class="cart-close" id="savedClose" aria-label="Close saved artworks">×</button></div>
     <div class="cart-items" id="savedItems"></div>
     <div class="cart-summary"><p class="cart-note">Your saved collection stays on this device.</p></div>
   </aside>
@@ -683,7 +683,7 @@ document.addEventListener("keydown",e=>{
 });
 window.addEventListener("popstate",closeProductDetail);
 function move(n){current=(current+n+products.length)%products.length;stage.classList.add("camera-shift");if(window.updateArtspace3D)window.updateArtspace3D();render();clearTimeout(move.cameraTimer);move.cameraTimer=setTimeout(()=>stage.classList.remove("camera-shift"),460)}
-function renderWishlist(){document.getElementById("savedCount").textContent=wishlist.length;const list=document.getElementById("savedItems");if(!wishlist.length){list.innerHTML='<div class="cart-empty">No saved dresses yet.<br>Save a dress to your wardrobe edit.</div>';return;}list.innerHTML=wishlist.map(index=>{const p=products[index];return '<article class="cart-item"><div class="cart-thumb"><img src="'+p.image+'" alt=""></div><div><h3>'+p.title+'</h3><div class="cart-meta">'+p.subtitle+'<br>'+money(p.price)+'</div><button class="saved-view" data-saved-view="'+index+'">VIEW DRESS ↗</button></div><button class="cart-close" data-saved-remove="'+index+'" aria-label="Remove '+p.title+'">×</button></article>';}).join("");}
+function renderWishlist(){document.getElementById("savedCount").textContent=wishlist.length;const list=document.getElementById("savedItems");if(!wishlist.length){list.innerHTML='<div class="cart-empty">No saved pieces yet.<br>Save a piece to your wardrobe edit.</div>';return;}list.innerHTML=wishlist.map(index=>{const p=products[index];return '<article class="cart-item"><div class="cart-thumb"><img src="'+p.image+'" alt=""></div><div><h3>'+p.title+'</h3><div class="cart-meta">'+p.subtitle+'<br>'+money(p.price)+'</div><button class="saved-view" data-saved-view="'+index+'">VIEW PIECE ↗</button></div><button class="cart-close" data-saved-remove="'+index+'" aria-label="Remove '+p.title+'">×</button></article>';}).join("");}
 function openWishlist(){closeCart();renderWishlist();document.getElementById("savedDrawer").classList.add("open");document.getElementById("savedBackdrop").classList.add("open");document.body.classList.add("wishlist-open");document.getElementById("savedDrawer").setAttribute("aria-hidden","false");document.getElementById("savedClose").focus();}
 function closeWishlist(){document.getElementById("savedDrawer").classList.remove("open");document.getElementById("savedBackdrop").classList.remove("open");document.body.classList.remove("wishlist-open");document.getElementById("savedDrawer").setAttribute("aria-hidden","true");}
 document.getElementById("wishlistButton").addEventListener("click",openWishlist);document.getElementById("savedClose").addEventListener("click",closeWishlist);document.getElementById("savedBackdrop").addEventListener("click",closeWishlist);document.getElementById("savedItems").addEventListener("click",e=>{const view=e.target.closest("[data-saved-view]"),remove=e.target.closest("[data-saved-remove]");if(view){current=Number(view.dataset.savedView);render();closeWishlist();document.getElementById("selectedProduct").scrollIntoView({behavior:"smooth"});}if(remove){wishlist=wishlist.filter(i=>i!==Number(remove.dataset.savedRemove));try{localStorage.setItem("artspace-dress-wishlist",JSON.stringify(wishlist));}catch(e){}renderWishlist();syncWishlistButton();}});
@@ -692,7 +692,7 @@ document.getElementById("saveButton").addEventListener("click",()=>{if(wishlist.
 document.getElementById("shareButton").addEventListener("click",async()=>{const url=location.href.split("#")[0]+"#dress-"+(current+1);const data={title:products[current].title,text:"Explore this ARTSPACE dress: "+products[current].title,url};if(navigator.share){try{await navigator.share(data);}catch(e){if(e.name!=="AbortError")toast("Could not open the share menu");}}else if(navigator.clipboard&&navigator.clipboard.writeText){try{await navigator.clipboard.writeText(url);toast("Artwork link copied");}catch(e){toast("Copy is unavailable in this browser");}}else toast("Sharing is not available in this browser");});
 let activeCollectionFilter="ALL";
 const collectionCategory=["DAY","EVENING","DAY","DAY","STATEMENT","DAY"];
-function renderCollection(){const grid=document.getElementById("collectionGrid"),query=document.getElementById("collectionSearch").value.trim().toLowerCase();const matches=products.map((p,index)=>({p,index})).filter(({p,index})=>(activeCollectionFilter==="ALL"||collectionCategory[index]===activeCollectionFilter)&&(p.title+" "+p.subtitle+" "+collectionCategory[index]).toLowerCase().includes(query));grid.innerHTML=matches.length?matches.map(({p,index})=>'<button class="collection-card" type="button" data-collection-index="'+index+'" aria-label="View '+p.title+'"><img src="'+p.image+'" alt="'+p.title+'" loading="lazy"><strong>'+p.title+'</strong><span>'+p.subtitle+'</span><em>'+money(p.price)+' · VIEW DRESS ↗</em></button>').join(""):'<p class="collection-empty">No pieces match your search. Try another style or colour.</p>';}
+function renderCollection(){const grid=document.getElementById("collectionGrid"),query=document.getElementById("collectionSearch").value.trim().toLowerCase();const matches=products.map((p,index)=>({p,index})).filter(({p,index})=>(activeCollectionFilter==="ALL"||collectionCategory[index]===activeCollectionFilter)&&(p.title+" "+p.subtitle+" "+collectionCategory[index]).toLowerCase().includes(query));grid.innerHTML=matches.length?matches.map(({p,index})=>'<button class="collection-card" type="button" data-collection-index="'+index+'" aria-label="View '+p.title+'"><img src="'+p.image+'" alt="'+p.title+'" loading="lazy"><strong>'+p.title+'</strong><span>'+p.subtitle+'</span><em>'+money(p.price)+' · VIEW PIECE ↗</em></button>').join(""):'<p class="collection-empty">No pieces match your search. Try another style or colour.</p>';}
 document.getElementById("collectionFilters").addEventListener("click",e=>{const b=e.target.closest("[data-filter]");if(!b)return;activeCollectionFilter=b.dataset.filter;document.querySelectorAll("#collectionFilters .filter-chip").forEach(x=>x.classList.toggle("active",x===b));renderCollection();});
 document.getElementById("collectionSearch").addEventListener("input",renderCollection);
 document.getElementById("collectionGrid").addEventListener("click",e=>{const card=e.target.closest("[data-collection-index]");if(!card)return;current=Number(card.dataset.collectionIndex);render();document.getElementById("selectedProduct").scrollIntoView({behavior:"smooth"});});
@@ -1515,7 +1515,7 @@ Promise.all([window.__artspaceThreeReady,Promise.race([window.__artspaceGLTFRead
   }
   const labelCanvas=document.createElement("canvas");labelCanvas.width=512;labelCanvas.height=96;
   const labelCtx=labelCanvas.getContext("2d");
-  if(labelCtx){labelCtx.fillStyle="#f7f3eb";labelCtx.fillRect(0,0,512,96);labelCtx.fillStyle="#777064";labelCtx.font="600 15px Arial";labelCtx.fillText("ARTSPACE  /  THE DRESS EDIT",18,27);labelCtx.fillStyle="#292722";labelCtx.font="600 25px Arial";labelCtx.fillText(product.title,18,62);}
+  if(labelCtx){labelCtx.fillStyle="#f7f3eb";labelCtx.fillRect(0,0,512,96);labelCtx.fillStyle="#777064";labelCtx.font="600 15px Arial";labelCtx.fillText("ARTSPACE  /  THE FASHION EDIT",18,27);labelCtx.fillStyle="#292722";labelCtx.font="600 25px Arial";labelCtx.fillText(product.title,18,62);}
   const labelTexture=new THREE.CanvasTexture(labelCanvas);labelTexture.encoding=THREE.sRGBEncoding;
   const label=new THREE.Mesh(new THREE.PlaneGeometry(1.05,.2),new THREE.MeshBasicMaterial({map:labelTexture}));label.position.set(0,.17,.57);group.add(label);
   /* Individual illuminated brass display frames: recessed shadow channel, warm LED edge and a soft top wash. */
