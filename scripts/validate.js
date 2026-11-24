@@ -288,16 +288,23 @@ if (!html.includes("new THREE.LatheGeometry(points,64)") ||
 }
 if (!html.includes("THE SOLSTICE DRESS") ||
     !html.includes("THE ATELIER SLIP") ||
-    !html.includes("THE SUNDAY SHIRT") ||
-    !html.includes("THE SCULPTED MIDI") ||
-    !html.includes("THE EVENING COLUMN") ||
+    !html.includes("THE PLEATED SKIRT") ||
+    !html.includes("THE DENIM JEANS") ||
+    !html.includes("THE WEEKEND HOODIE") ||
     !html.includes("THE GARDEN WRAP") ||
     !html.includes('id="productDescription"') ||
     !html.includes('data-size="XS"') ||
     !html.includes('data-size="XL"') ||
     !html.includes('data-finish="Ivory"') ||
-    !html.includes('data-finish="Sage"')) {
-  fail("The fashion catalogue must contain six dress styles, garment descriptions, apparel sizes and colour choices.");
+    !html.includes('data-finish="Sage"') ||
+    !html.includes('const garmentAssignments=["dress","dress","skirt","jeans","hoodie","dress"]') ||
+    !html.includes("clothing_dress.glb") ||
+    !html.includes("clothing_skirt.glb") ||
+    !html.includes("clothing_jeans.glb") ||
+    !html.includes("clothing_hoodie.glb") ||
+    !html.includes("THREE.SkeletonUtils.clone(gltf.scene)") ||
+    !html.includes("group.userData.proceduralGarment.visible=false")) {
+  fail("The clothing catalogue must include dresses, a skirt, jeans, a hoodie, and the four rigged CC0 garment assets with safe fallback behaviour.");
 }
 
 /* Walk-through threshold must be physically open: no full-width glass leaf may span the camera path. */
