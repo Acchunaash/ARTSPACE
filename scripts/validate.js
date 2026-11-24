@@ -307,6 +307,16 @@ if (!html.includes("THE SOLSTICE DRESS") ||
   fail("The clothing catalogue must include dresses, a skirt, jeans, a hoodie, and the four rigged CC0 garment assets with safe fallback behaviour.");
 }
 
+for (const asset of [
+  "assets/fashion/pleated-skirt.svg",
+  "assets/fashion/denim-jeans.svg",
+  "assets/fashion/weekend-hoodie.svg",
+  "docs/THIRD-PARTY-ASSETS.md"
+]) {
+  if (!fs.existsSync(asset)) fail("Missing clothing collection asset or licence note: " + asset);
+}
+
+
 /* Walk-through threshold must be physically open: no full-width glass leaf may span the camera path. */
 if (!modelBuilder.includes("Open central portal: glazed sidelights and a high transom frame a clear, walk-through entrance.") ||
     !modelBuilder.includes("box(3,1.55,5,.18,side*2.35,.85,11.86)") ||
