@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#e9e5dc">
+<meta name="description" content="Enter the ARTSPACE architectural fashion showroom. Explore the boutique in interactive 3D.">
+<title>The Showroom — ARTSPACE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#20231f;--paper:#f2f0e9;--muted:#77796f;--line:rgba(32,35,31,.16);--serif:"Playfair Display",Georgia,serif;--sans:"DM Sans",Arial,sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}a{color:inherit;text-decoration:none}button{font:inherit}.topline{height:30px;background:#242722;color:#eae7de;display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:.2em;text-transform:uppercase}.nav{height:76px;padding:0 5.5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:rgba(242,240,233,.94);position:relative;z-index:5}.wordmark{font:500 25px var(--serif);letter-spacing:.16em}.navlinks{display:flex;gap:34px;align-items:center}.navlinks a,.navright a{font-size:10px;letter-spacing:.12em;text-transform:uppercase}.navlinks a:hover,.navright a:hover{opacity:.55}.navright{display:flex;align-items:center;gap:22px}.navright .bag{background:var(--ink);color:white;border:0;padding:12px 17px;font-size:9px;letter-spacing:.13em;text-transform:uppercase}.hero{padding:62px 5.5% 36px;display:grid;grid-template-columns:1fr auto;gap:30px;align-items:end}.eyebrow{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}h1{font:400 clamp(54px,7vw,100px)/.98 var(--serif);letter-spacing:-.045em;margin:18px 0 14px}.hero-copy{max-width:430px;font-size:13px;line-height:1.9;color:#65675f;margin:0 0 5px}.hero-index{font-size:9px;letter-spacing:.17em;color:var(--muted);padding-bottom:8px;white-space:nowrap}.stage{margin:0 3.3%;position:relative;background:radial-gradient(ellipse at 50% 38%,#f6f3eb 0,#d6d1c6 62%,#c6c0b4 100%);min-height:650px;height:min(74vh,850px);overflow:hidden;border:1px solid rgba(32,35,31,.15);box-shadow:0 28px 70px rgba(39,37,31,.09)}#showroomCanvas{width:100%;height:100%;display:block;touch-action:none;outline:none}.stage:after{content:"";position:absolute;inset:auto 0 0;height:18%;background:linear-gradient(0deg,rgba(35,37,32,.13),transparent);pointer-events:none}.stage-status{position:absolute;top:22px;left:22px;z-index:2;background:rgba(246,243,235,.86);padding:10px 13px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#55584f;backdrop-filter:blur(8px)}.stage-status:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#8b9a78;margin:0 9px 1px 0}.stage-tools{position:absolute;z-index:3;right:20px;top:20px;display:flex;gap:7px}.stage-tools button,.tour-tabs button{border:1px solid rgba(32,35,31,.22);background:rgba(246,243,235,.88);color:var(--ink);padding:11px 13px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(8px)}.stage-tools button:hover,.tour-tabs button:hover,.tour-tabs button.active{background:var(--ink);color:white}.stage-hint{position:absolute;z-index:2;bottom:22px;left:22px;color:#41443e;background:rgba(246,243,235,.83);padding:10px 13px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;backdrop-filter:blur(8px)}.stage-fallback{display:none;position:absolute;inset:0;z-index:4;background:#e8e4da;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:28px}.stage.failed .stage-fallback{display:flex}.stage-fallback h2{font:400 38px var(--serif);margin:0 0 12px}.stage-fallback p{max-width:400px;font-size:12px;line-height:1.8;color:var(--muted)}.stage-fallback a{margin-top:10px;background:var(--ink);color:white;padding:14px 20px;font-size:9px;letter-spacing:.15em;text-transform:uppercase}.tourbar{margin:0 3.3%;padding:19px 22px;background:#e5e1d7;display:flex;align-items:center;justify-content:space-between;gap:20px}.tourbar-label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);white-space:nowrap}.tour-tabs{display:flex;gap:7px;flex-wrap:wrap}.tour-tabs button{background:transparent}.tour-note{font-size:10px;color:#77796f;text-align:right;line-height:1.6;max-width:240px}.details{padding:100px 8% 110px;display:grid;grid-template-columns:.85fr 1fr;gap:12%;align-items:start}.details h2{font:400 clamp(40px,5vw,68px)/1.04 var(--serif);letter-spacing:-.04em;margin:18px 0 0}.detail-copy{padding-top:6px}.detail-copy p{font-size:13px;line-height:2;color:#696b63;margin:0 0 22px}.detail-copy p strong{color:var(--ink);font-weight:600}.feature-list{display:grid;grid-template-columns:1fr 1fr;gap:0 24px;border-top:1px solid var(--line);margin-top:28px}.feature{padding:17px 0;border-bottom:1px solid var(--line)}.feature small{display:block;font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}.feature span{font:400 17px var(--serif)}.gallery{background:#e6e2d8;padding:82px 5.5% 90px}.gallery-head{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:32px}.gallery-head h2{font:400 clamp(38px,4.8vw,60px)/1 var(--serif);margin:13px 0 0}.gallery-head p{font-size:11px;color:var(--muted);max-width:290px;line-height:1.8;margin:0}.gallery-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}.gallery-card{position:relative;min-height:300px;background:#c9c3b7;overflow:hidden}.gallery-card img{width:100%;height:100%;min-height:300px;object-fit:cover;display:block;filter:saturate(.78)}.gallery-card:first-child img{object-position:center 53%}.gallery-card:last-child img{object-position:center 48%}.gallery-caption{position:absolute;left:18px;bottom:18px;padding:10px 13px;background:rgba(244,241,233,.88);font-size:9px;letter-spacing:.14em;text-transform:uppercase}.gallery-disclaimer{margin-top:16px;color:var(--muted);font-size:9px;line-height:1.7}.footer{background:#242722;color:#eae7de;padding:30px 5.5%;display:flex;align-items:center;justify-content:space-between;gap:18px}.footer small{font-size:9px;letter-spacing:.08em;color:#aaa99f}.footer a:last-child{font-size:9px;letter-spacing:.12em;text-transform:uppercase}.loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1;color:#65675f;font-size:10px;letter-spacing:.2em;text-transform:uppercase;pointer-events:none}.stage.loaded .loading{display:none}
+@media(max-width:850px){.nav{padding:0 4%}.navlinks{gap:14px}.navlinks a{font-size:8px}.hero{padding:50px 4% 25px}.stage{margin:0 2.5%;height:65vh;min-height:530px}.tourbar{margin:0 2.5%;align-items:flex-start;flex-direction:column}.tour-note{text-align:left;max-width:none}.details{padding:75px 6%;gap:7%}.gallery{padding:65px 4%}}
+@media(max-width:600px){.topline{height:27px;font-size:8px}.nav{height:62px}.wordmark{font-size:21px}.navlinks{gap:12px}.navlinks a{font-size:8px;letter-spacing:.06em}.navlinks a:nth-child(n+3){display:none}.navright a{display:none}.navright .bag{padding:10px 12px}.hero{grid-template-columns:1fr;padding:42px 5% 22px;gap:12px}h1{font-size:61px}.hero-copy{font-size:12px}.hero-index{display:none}.stage{height:65svh;min-height:440px;margin:0 2%;}.stage-status{left:10px;top:10px;font-size:8px;padding:8px 9px}.stage-tools{right:9px;top:9px;gap:4px}.stage-tools button{padding:9px;font-size:8px}.stage-hint{left:10px;bottom:10px;font-size:8px}.tourbar{padding:15px 12px}.tour-tabs{gap:5px}.tour-tabs button{padding:9px;font-size:8px}.details{grid-template-columns:1fr;padding:68px 7%;gap:25px}.details h2{font-size:48px}.gallery{padding:60px 5%}.gallery-head{align-items:flex-start;flex-direction:column}.gallery-grid{grid-template-columns:1fr}.gallery-card,.gallery-card img{min-height:250px}.footer{flex-direction:column;align-items:flex-start}.footer small{line-height:1.7}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="topline">ARTSPACE · A PLACE TO EXPERIENCE DESIGN</div>
+<header class="nav">
+<a class="wordmark" href="index.html">ARTSPACE</a>
+<nav class="navlinks" aria-label="Main navigation"><a href="index.html#collection">Collection</a><a href="showroom.html" aria-current="page">Showroom</a><a href="index.html#studio3d">3D study</a><a href="index.html#story">Our point of view</a></nav>
+<div class="navright"><a href="index.html#collection">Discover</a><a class="bag" href="index.html#collection">Shop collection ↗</a></div>
+</header>
+<main>
+<section class="hero"><div><div class="eyebrow">Architecture · Light · Material</div><h1>Enter the<br>ARTSPACE showroom.</h1><p class="hero-copy">A quieter kind of fashion destination. Explore the sculpted pavilion, discover the glass-fronted gallery and move around the architecture in an interactive 3D tour.</p></div><div class="hero-index">01 — THE DIGITAL FLAGSHIP</div></section>
+<section class="stage" id="stage" aria-label="Interactive three-dimensional ARTSPACE showroom"><div class="loading" id="loading">Preparing the showroom</div><div class="stage-status" id="stageStatus">Loading 3D architecture</div><div class="stage-tools"><button type="button" id="resetView">Reset view ↺</button><button type="button" id="zoomIn" aria-label="Zoom in">＋</button><button type="button" id="zoomOut" aria-label="Zoom out">－</button></div><canvas id="showroomCanvas" aria-label="Drag to rotate the three-dimensional showroom; use zoom controls to inspect"></canvas><div class="stage-hint">Drag to orbit · Pinch or use + / − to zoom</div><div class="stage-fallback"><h2>The 3D showroom could not start</h2><p>Your browser may not support WebGL or the 3D assets could not load. The rest of the showroom page is still available.</p><a href="index.html">Return to ARTSPACE</a></div></section>
+<div class="tourbar"><div class="tourbar-label">Choose a camera view</div><div class="tour-tabs" role="group" aria-label="Showroom camera views"><button class="active" data-view="arrival">Arrival</button><button data-view="facade">Glass facade</button><button data-view="garden">Side elevation</button><button data-view="interior">Interior view</button></div><div class="tour-note">A live 3D architectural model with a first interior fit-out study.</div></div>
+<section class="details"><div><div class="eyebrow">A considered space</div><h2>Designed to make the pieces feel at home.</h2></div><div class="detail-copy"><p>The showroom is built around a curved limestone pavilion, a bronze-framed glass entrance and a warm, gallery-like interior. Move around the model to explore its form and the relationship between the exterior and interior.</p><p><strong>Inside the first fit-out:</strong> display islands, sculptural seating, hanging rails, mirrors, planters and layered architectural lighting. These are spatial design elements, not finished product displays.</p><div class="feature-list"><div class="feature"><small>Material palette</small><span>Limestone & bronze</span></div><div class="feature"><small>Facade</small><span>Low-iron glass</span></div><div class="feature"><small>Interior</small><span>Gallery fit-out</span></div><div class="feature"><small>Experience</small><span>Interactive 3D tour</span></div></div></div></section>
+<section class="gallery"><div class="gallery-head"><div><div class="eyebrow">The atmosphere</div><h2>Space for discovery.</h2></div><p>Editorial references for the mood and material direction of the ARTSPACE interiors.</p></div><div class="gallery-grid"><div class="gallery-card"><img loading="lazy" src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1500&q=85" alt="Warm modern interior with natural stone and soft architectural lighting"><span class="gallery-caption">Warm architectural language</span></div><div class="gallery-card"><img loading="lazy" src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1100&q=85" alt="Minimal contemporary interior with warm materials"><span class="gallery-caption">Quiet material palette</span></div></div><p class="gallery-disclaimer">Atmosphere images are visual references, not photographs of the rendered ARTSPACE pavilion.</p></section>
+</main>
+<footer class="footer"><a class="wordmark" href="index.html">ARTSPACE</a><small>© 2026 ARTSPACE · THE DIGITAL FLAGSHIP</small><a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false">Back to top ↑</a></footer>
+<script src="./assets/vendor/three.min.js"></script>
+<script src="./assets/vendor/GLTFLoader.js"></script>
+<script>
+(()=>{
+ const stage=document.getElementById('stage'),canvas=document.getElementById('showroomCanvas'),status=document.getElementById('stageStatus');
+ if(!window.THREE||!THREE.GLTFLoader){stage.classList.add('failed');status.textContent='3D runtime unavailable';return;}
+ let renderer,scene,camera,architecture,interior,dragging=false,lastX=0,lastY=0,pointers=new Map(),distance=36,ready=false;
+ const target=new THREE.Vector3(0,1,0),clock=new THREE.Clock();
+ try{
+  renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.7));
+  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.12;
+  scene=new THREE.Scene();scene.background=new THREE.Color(0xd8d3c8);scene.fog=new THREE.Fog(0xd8d3c8,65,125);
+  camera=new THREE.PerspectiveCamera(34,1,.1,220);
+  const hemi=new THREE.HemisphereLight(0xfff4df,0x77766c,1.2);scene.add(hemi);
+  const key=new THREE.DirectionalLight(0xffe2b8,2.5);key.position.set(-16,25,22);key.castShadow=true;key.shadow.mapSize.set(2048,2048);key.shadow.camera.left=-30;key.shadow.camera.right=30;key.shadow.camera.top=30;key.shadow.camera.bottom=-30;key.shadow.bias=-.00025;scene.add(key);
+  const fill=new THREE.DirectionalLight(0xe0e9f2,1.25);fill.position.set(20,13,-18);scene.add(fill);
+  const warm=new THREE.PointLight(0xffc987,38,36,2);warm.position.set(0,2.7,5);scene.add(warm);
+  const ground=new THREE.Mesh(new THREE.PlaneGeometry(180,180),new THREE.MeshStandardMaterial({color:0xbdb8ad,roughness:.94}));ground.rotation.x=-Math.PI/2;ground.position.y=-1.9;ground.receiveShadow=true;scene.add(ground);
+  architecture=new THREE.Group();scene.add(architecture);
+  const mats={
+   stone:new THREE.MeshStandardMaterial({color:0xd6d0c1,roughness:.78}),
+   bronze:new THREE.MeshStandardMaterial({color:0x8a6846,metalness:.82,roughness:.27}),
+   dark:new THREE.MeshStandardMaterial({color:0x252b29,metalness:.72,roughness:.3}),
+   oak:new THREE.MeshStandardMaterial({color:0x79583b,roughness:.58}),
+   fabric:new THREE.MeshStandardMaterial({color:0xd9d3c7,roughness:.92}),
+   mirror:new THREE.MeshStandardMaterial({color:0x8d9a9a,metalness:.78,roughness:.14}),
+   green:new THREE.MeshStandardMaterial({color:0x53634e,roughness:.9})
+  };
+  function box(parent,w,h,d,x,y,z,mat,cast=true){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=cast;m.receiveShadow=true;parent.add(m);return m;}
+  function cylinder(parent,rt,rb,h,x,y,z,mat,segments=32){const m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,segments),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;}
+  function addInterior(){
+   const g=new THREE.Group();architecture.add(g);
+   // A long oak welcome desk with a stone counter and bronze reveal.
+   box(g,5.1,1.12,1.35,0,-.42,6.2,mats.oak);
+   box(g,5.25,.12,1.48,0,.2,6.2,mats.stone);
+   box(g,5.05,.035,1.5,0,.11,6.2,mats.bronze,false);
+   // Three low display islands create a gallery rhythm along the central axis.
+   for(const x of [-4.3,0,4.3]){
+    box(g,2.1,.72,2.25,x,-.61,-1.8,mats.stone);
+    box(g,2.16,.045,2.31,x,-.22,-1.8,mats.bronze,false);
+    box(g,1.88,.08,2.02,x,-.18,-1.8,mats.fabric,false);
+   }
+   // Double-sided bronze rails with oak feet; deliberately empty until real garment models are approved.
+   for(const z of [-7.1,-10.1]){
+    for(const x of [-5.7,5.7]){
+     cylinder(g,.045,.055,2.55,x,.05,z,mats.bronze,16);
+     cylinder(g,.06,.06,.08,x,-1.2,z,mats.dark,16);
+    }
+    cylinder(g,.045,.045,11.5,0,1.24,z,mats.bronze,20).rotation.z=Math.PI/2;
+   }
+   // A low lounge bench, upholstered top and slim metal feet.
+   for(const x of [-1.2,1.2])for(const z of [1.5,2.5])box(g,.07,.38,.07,x,-1.05,z,mats.bronze,false);
+   box(g,2.75,.24,1.25,0,-.69,2,mats.oak);
+   box(g,2.7,.2,1.2,0,-.47,2,mats.fabric);
+   // Tall mirrors and oak display wall panels at the rear of the gallery.
+   for(const x of [-7.6,7.6]){
+    box(g,.16,3.5,.18,x,.15,-11.3,mats.oak);
+    box(g,1.5,2.85,.035,x,.2,-11.2,mats.mirror,false);
+    box(g,1.62,.045,.08,x,-1.25,-11.1,mats.bronze,false);
+   }
+   // Planters with grouped stems soften the stone and glass.
+   for(const x of [-7.2,7.2]){
+    cylinder(g,.65,.72,.72,x,-1.42,5.0,mats.dark,32);
+    for(let n=0;n<7;n++){
+     const a=n*Math.PI*2/7;
+     const stem=cylinder(g,.035,.055,1.55,x+Math.cos(a)*.22,-.55,5+Math.sin(a)*.22,mats.green,8);
+     stem.rotation.z=Math.cos(a)*-.28;stem.rotation.x=Math.sin(a)*.28;
+     const leaf=new THREE.Mesh(new THREE.SphereGeometry(.22,10,8),mats.green);leaf.scale.set(.5,2.4,.55);leaf.position.set(x+Math.cos(a)*.43,.2,5+Math.sin(a)*.43);leaf.rotation.z=Math.cos(a)*-.3;g.add(leaf);
+    }
+   }
+   // Warm ceiling pendants: metal caps and softly glowing opal globes.
+   const glow=new THREE.MeshStandardMaterial({color:0xffe4b9,emissive:0xffc47e,emissiveIntensity:1.6,roughness:.25});
+   for(const x of [-5,0,5]){
+    cylinder(g,.18,.18,.06,x,2.78,-3.8,mats.bronze,24);
+    const orb=new THREE.Mesh(new THREE.SphereGeometry(.19,20,16),glow);orb.position.set(x,2.48,-3.8);g.add(orb);
+    const lamp=new THREE.PointLight(0xffd6a0,7,9,2);lamp.position.set(x,2.4,-3.8);g.add(lamp);
+   }
+   return g;
+  }
+  interior=addInterior();
+  new THREE.GLTFLoader().load('./assets/artspace-pavilion.glb',gltf=>{
+   const model=gltf.scene;
+   model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;if(o.scale&&o.scale.x>30&&o.scale.z>30)o.visible=false;}});
+   const bounds=new THREE.Box3().setFromObject(model),center=bounds.getCenter(new THREE.Vector3());
+   model.position.sub(center);interior.position.sub(center);
+   architecture.add(model);
+   ready=true;stage.classList.add('loaded');status.textContent='3D SHOWROOM READY · INTERACTIVE TOUR';
+   setView('arrival');
+  },xhr=>{if(xhr.total)status.textContent='LOADING SHOWROOM · '+Math.round(xhr.loaded/xhr.total*100)+'%';},error=>{
+   console.error('ARTSPACE showroom model failed',error);stage.classList.add('failed');status.textContent='Showroom model unavailable';
+  });
+  function setView(view){
+   const views={arrival:{p:[18,10,34],t:[0,1,0]},facade:{p:[-21,8,31],t:[0,1,0]},garden:{p:[24,8,-29],t:[0,1,0]},interior:{p:[0,2.2,23],t:[0,.8,-3]}};
+   const v=views[view]||views.arrival;camera.position.set(...v.p);target.set(...v.t);camera.lookAt(target);
+   document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+  }
+  window.setArtspaceView=setView;
+  document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{setView(b.dataset.view);if(architecture)architecture.rotation.y=0;}));
+  document.getElementById('resetView').addEventListener('click',()=>{architecture.rotation.set(0,0,0);distance=36;setView('arrival');});
+  document.getElementById('zoomIn').addEventListener('click',()=>{camera.position.multiplyScalar(.88);});
+  document.getElementById('zoomOut').addEventListener('click',()=>{camera.position.multiplyScalar(1.14);});
+  canvas.addEventListener('pointerdown',e=>{dragging=true;lastX=e.clientX;lastY=e.clientY;canvas.setPointerCapture(e.pointerId);});
+  canvas.addEventListener('pointermove',e=>{if(!dragging||!architecture)return;const dx=e.clientX-lastX,dy=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;architecture.rotation.y+=dx*.006;camera.position.y=Math.max(1,Math.min(18,camera.position.y-dy*.035));camera.lookAt(target);});
+  const stopDrag=()=>{dragging=false};canvas.addEventListener('pointerup',stopDrag);canvas.addEventListener('pointercancel',stopDrag);canvas.addEventListener('lostpointercapture',stopDrag);
+  canvas.addEventListener('wheel',e=>{e.preventDefault();camera.position.multiplyScalar(e.deltaY>0?1.08:.92);},{passive:false});
+  function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+  const observer=new ResizeObserver(resize);observer.observe(stage);resize();
+  function animate(){requestAnimationFrame(animate);if(ready)renderer.render(scene,camera);}
+  animate();
+ }catch(error){console.error('ARTSPACE showroom startup error',error);stage.classList.add('failed');status.textContent='3D startup error';}
+})();
+</script>
+</body>
+</html>
